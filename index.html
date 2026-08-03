@@ -4,15 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FC RACING - Accesorios & Repuestos Off Road</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,700;1,700&family=Inter:wght@300;400;500;600;700&family=Rajdhani:ital,wght@0,600;0,700;1,700&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- html2pdf library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <script>
@@ -100,7 +96,6 @@
     <!-- Header Navbar -->
     <header class="sticky top-0 z-40 bg-brand-dark/95 backdrop-blur-md border-b border-brand-border">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            
             <button id="openMobileMenu" class="p-2 text-white hover:text-brand-red transition-colors focus:outline-none" aria-label="Abrir Menú">
                 <i class="fa-solid fa-bars text-2xl"></i>
             </button>
@@ -117,12 +112,11 @@
                 </span>
             </a>
 
-            <!-- Right: Admin Button + Cart Icon -->
             <div class="flex items-center space-x-3">
-                <!-- Botón Modo Administrador -->
-                <button onclick="enterAdminMode()" class="hidden sm:flex items-center bg-amber-600 hover:bg-amber-500 border border-amber-500 text-white px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all space-x-1.5" title="Acceso Administrador">
-                    <i class="fa-solid fa-lock text-xs"></i>
-                    <span class="hidden md:inline">Admin</span>
+                <!-- BOTÓN ADMINISTRADOR -->
+                <button onclick="openAdminModal()" title="Modo Administrador" class="bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/40 text-purple-300 hover:text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center space-x-1.5 text-xs">
+                    <i class="fa-solid fa-shield-halved text-sm"></i>
+                    <span class="hidden sm:inline font-bold">ADMIN</span>
                 </button>
 
                 <button onclick="toggleCartDrawer()" class="relative flex items-center bg-brand-card hover:bg-brand-red/20 border border-brand-border hover:border-brand-red px-3 py-1.5 rounded-lg text-gray-200 transition-all">
@@ -183,7 +177,6 @@
             </button>
         </div>
 
-        <!-- TRUST CHIPS -->
         <div class="bg-[#0e0e12] border-t border-brand-border/60 py-2">
             <div class="max-w-7xl mx-auto px-2 grid grid-cols-3 divide-x divide-brand-border text-center text-[10px] sm:text-xs font-semibold text-gray-300">
                 <div class="flex items-center justify-center space-x-1.5 px-1 py-0.5">
@@ -274,7 +267,6 @@
         </section>
 
         <section id="categoriesSection" class="max-w-7xl mx-auto px-3 sm:px-6 py-8">
-            
             <div class="flex items-center justify-between mb-5 border-b border-brand-border pb-3">
                 <div>
                     <span class="text-brand-red font-bold text-xs uppercase tracking-widest">// CATEGORÍAS PRINCIPALES</span>
@@ -519,15 +511,12 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    
                     <div class="bg-black/60 rounded-lg p-5 border border-brand-border flex flex-col justify-between hover:border-brand-red/60 transition-all">
                         <div>
                             <div class="w-12 h-12 rounded-lg bg-brand-red/20 border border-brand-red/40 flex items-center justify-center text-brand-red text-xl mb-4">
                                 <i class="fa-solid fa-store"></i>
                             </div>
-                            <h3 class="font-racing font-bold text-lg text-white uppercase italic mb-2">
-                                DIRECCIÓN DEL LOCAL
-                            </h3>
+                            <h3 class="font-racing font-bold text-lg text-white uppercase italic mb-2">DIRECCIÓN DEL LOCAL</h3>
                             <p class="text-sm text-gray-300 font-medium leading-relaxed">
                                 Ernesto Negrete 27<br>
                                 <span class="text-brand-red font-bold">Esq. Alfredo Palacios</span>
@@ -543,19 +532,12 @@
                             <div class="w-12 h-12 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 text-xl mb-4">
                                 <i class="fa-solid fa-map-location-dot"></i>
                             </div>
-                            <h3 class="font-racing font-bold text-lg text-white uppercase italic mb-2">
-                                NAVEGACIÓN GPS
-                            </h3>
+                            <h3 class="font-racing font-bold text-lg text-white uppercase italic mb-2">NAVEGACIÓN GPS</h3>
                             <p class="text-sm text-gray-300 leading-relaxed mb-4">
                                 Abrí la ubicación exacta directamente en tu teléfono con Google Maps.
                             </p>
                         </div>
-                        <a 
-                            href="https://maps.app.goo.gl/n6a3xVZXCsswcCPf8" 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded text-xs uppercase tracking-wider text-center transition-colors flex items-center justify-center space-x-2"
-                        >
+                        <a href="https://maps.app.goo.gl/n6a3xVZXCsswcCPf8" target="_blank" rel="noopener noreferrer" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded text-xs uppercase tracking-wider text-center transition-colors flex items-center justify-center space-x-2">
                             <i class="fa-solid fa-diamond-turn-right"></i>
                             <span>ABRIR EN GOOGLE MAPS</span>
                         </a>
@@ -566,34 +548,22 @@
                             <div class="w-12 h-12 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl mb-4">
                                 <i class="fa-brands fa-whatsapp"></i>
                             </div>
-                            <h3 class="font-racing font-bold text-lg text-white uppercase italic mb-1">
-                                ATENCIÓN TELEFÓNICA / WHATSAPP
-                            </h3>
-                            <p class="font-racing font-black text-2xl text-emerald-400 my-2">
-                                3543546389
-                            </p>
+                            <h3 class="font-racing font-bold text-lg text-white uppercase italic mb-1">ATENCIÓN TELEFÓNICA / WHATSAPP</h3>
+                            <p class="font-racing font-black text-2xl text-emerald-400 my-2">3543546389</p>
                             <p class="text-xs text-gray-400">
                                 Asesoramiento técnico personalizado, consultas de stock y ventas telefónicas.
                             </p>
                         </div>
                         <div class="mt-4 pt-3 flex space-x-2">
-                            <a 
-                                href="https://wa.me/5493543546389?text=Hola!%20Consulta%20desde%20la%20web" 
-                                target="_blank" 
-                                class="flex-grow bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded text-xs uppercase text-center transition-colors flex items-center justify-center space-x-1"
-                            >
+                            <a href="https://wa.me/5493543546389?text=Hola!%20Consulta%20desde%20la%20web" target="_blank" class="flex-grow bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded text-xs uppercase text-center transition-colors flex items-center justify-center space-x-1">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span>WHATSAPP</span>
                             </a>
-                            <a 
-                                href="tel:3543546389" 
-                                class="bg-brand-card hover:bg-brand-cardHover text-white border border-brand-border font-bold py-2 px-3 rounded text-xs transition-colors flex items-center justify-center"
-                            >
+                            <a href="tel:3543546389" class="bg-brand-card hover:bg-brand-cardHover text-white border border-brand-border font-bold py-2 px-3 rounded text-xs transition-colors flex items-center justify-center">
                                 <i class="fa-solid fa-phone"></i>
                             </a>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
@@ -602,7 +572,6 @@
 
     <footer class="bg-brand-dark border-t border-brand-border text-gray-400 text-xs py-8 px-4">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            
             <div class="space-y-3">
                 <div class="flex items-center space-x-1">
                     <span class="text-brand-red text-xl font-black italic">//</span>
@@ -611,14 +580,12 @@
                     </span>
                 </div>
                 <p class="text-gray-400 text-xs leading-relaxed">
-                    Especialistas en repuestos, accesorios y equipamiento off-road para Enduro, Motocross y Trail. Sincronización de stock en tiempo real con envíos a todo el país.
+                    Especialistas en repuestos, accesorios y equipamiento off-road para Enduro, Motocross y Trail.
                 </p>
             </div>
 
             <div>
-                <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">
-                    Navegación
-                </h5>
+                <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">Navegación</h5>
                 <ul class="space-y-2">
                     <li><a href="#" onclick="scrollToCategories()" class="hover:text-brand-red transition-colors">Categorías</a></li>
                     <li><a href="#" onclick="filterByCategory('Equipamiento Rider')" class="hover:text-brand-red transition-colors">Equipamiento Rider</a></li>
@@ -628,9 +595,7 @@
             </div>
 
             <div>
-                <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">
-                    Ubicación y Contacto
-                </h5>
+                <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">Ubicación y Contacto</h5>
                 <ul class="space-y-2">
                     <li class="flex items-start space-x-2">
                         <i class="fa-solid fa-location-dot text-brand-red mt-0.5"></i>
@@ -648,9 +613,7 @@
             </div>
 
             <div>
-                <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">
-                    Medios de Pago
-                </h5>
+                <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">Medios de Pago</h5>
                 <ul class="space-y-1.5 text-gray-300 text-xs mb-3">
                     <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Transferencia Bancaria</li>
                     <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Mercado Pago</li>
@@ -660,7 +623,6 @@
                     Sincronizado vía Google Sheets API.
                 </p>
             </div>
-
         </div>
 
         <div class="max-w-7xl mx-auto pt-4 border-t border-brand-border/40 text-center text-[11px] text-gray-500">
@@ -678,6 +640,64 @@
     >
         <i class="fa-brands fa-whatsapp text-3xl"></i>
     </a>
+
+    <!-- ADMIN PASSWORD MODAL -->
+    <div id="adminModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
+        <div class="bg-brand-dark border border-brand-border rounded-xl shadow-2xl p-6 max-w-md w-full mx-4">
+            <div class="flex items-center justify-between mb-5 border-b border-brand-border pb-3">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-shield-halved text-purple-400 text-xl"></i>
+                    <h3 class="font-racing font-bold text-lg text-white uppercase italic tracking-wider">
+                        Acceso Administrador
+                    </h3>
+                </div>
+                <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white text-xl p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-300 font-semibold text-xs mb-2">
+                        <i class="fa-solid fa-key text-purple-400 mr-1"></i>
+                        Ingresá la clave de administrador:
+                    </label>
+                    <input 
+                        type="password" 
+                        id="adminPassword" 
+                        placeholder="Clave secreta..." 
+                        onkeydown="if(event.key === 'Enter') verifyAdminPassword()"
+                        class="w-full bg-black border border-brand-border rounded px-3 py-2.5 text-white focus:outline-none focus:border-purple-500 text-sm"
+                        autocomplete="off"
+                    >
+                    <p id="adminError" class="text-red-400 text-xs mt-1.5 hidden">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Clave incorrecta. Intentá nuevamente.
+                    </p>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button 
+                        onclick="verifyAdminPassword()" 
+                        class="flex-grow bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded text-xs uppercase tracking-wider transition-colors flex items-center justify-center space-x-2"
+                    >
+                        <i class="fa-solid fa-unlock"></i>
+                        <span>INGRESAR</span>
+                    </button>
+                    <button 
+                        onclick="closeAdminModal()" 
+                        class="bg-brand-card hover:bg-brand-cardHover text-gray-300 border border-brand-border font-bold py-2.5 px-4 rounded text-xs uppercase tracking-wider transition-colors"
+                    >
+                        Cancelar
+                    </button>
+                </div>
+
+                <div class="bg-black/40 border border-brand-border/60 rounded p-3 text-[10px] text-gray-400 text-center">
+                    <i class="fa-solid fa-info-circle text-purple-400 mr-1"></i>
+                    Solo personal autorizado puede acceder a la edición de la base de datos.
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="mobileDrawer" class="fixed inset-0 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out pointer-events-none">
         <div id="drawerBackdrop" class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300"></div>
@@ -712,9 +732,6 @@
                     <a href="#" onclick="filterByCategory('Mantenimiento'); closeDrawer();" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40">
                         <i class="fa-solid fa-gears text-brand-red mr-2"></i> Repuestos & Mantenimiento
                     </a>
-                    <button onclick="enterAdminMode(); closeDrawer();" class="w-full text-left block text-white hover:text-amber-400 py-2 border-b border-brand-border/40">
-                        <i class="fa-solid fa-lock text-amber-500 mr-2"></i> Modo Administrador
-                    </button>
                 </nav>
             </div>
 
@@ -762,7 +779,6 @@
                     </div>
 
                     <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)" class="space-y-3 text-xs">
-                        
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Nombre y Apellido <span class="text-brand-red">*</span></label>
                             <input 
@@ -820,7 +836,6 @@
                         </button>
                     </form>
                 </div>
-
             </div>
 
             <div class="pt-3 text-center text-[10px] text-gray-500">
@@ -850,7 +865,7 @@
 
     <div id="pdfReceiptTemplate" class="hidden">
         <div id="receiptContent" style="padding: 30px; background-color: #ffffff; color: #111111; font-family: Arial, sans-serif; max-width: 700px; margin: auto;">
-            <div style="display: flex; justify-between; align-items: center; border-bottom: 2px solid #e50914; padding-bottom: 15px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e50914; padding-bottom: 15px; margin-bottom: 20px;">
                 <div>
                     <h1 style="font-size: 26px; font-weight: 900; margin: 0; color: #e50914; font-style: italic;">FC RACING</h1>
                     <p style="font-size: 11px; margin: 2px 0 0 0; color: #555555; text-transform: uppercase;">ACCESORIOS & REPUESTOS OFF ROAD</p>
@@ -883,8 +898,7 @@
                         <th style="padding: 8px; border: 1px solid #111111; text-align: right;">SUBTOTAL</th>
                     </tr>
                 </thead>
-                <tbody id="pdfTableBody">
-                </tbody>
+                <tbody id="pdfTableBody"></tbody>
             </table>
 
             <div style="text-align: right; margin-bottom: 30px;">
@@ -901,6 +915,8 @@
 
     <script>
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1U24EVKy05DUCElXnJ-9yW7VTT8DAwB_3Nu2VZXqOKYI/gviz/tq?tqx=out:csv';
+        const ADMIN_SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/1U24EVKy05DUCElXnJ-9yW7VTT8DAwB_3Nu2VZXqOKYI/edit';
+        const ADMIN_PASSWORD = 'FABIAN3112';
 
         const DEFAULT_PRODUCTS = [
             { id: 101, codigo: 'FC-101', descripcion: 'Antiparras 100% Strata 2 Off Road Lens Red', category: 'Equipamiento Rider', precio: 48500, stock: 8, imagen: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=400&q=80' },
@@ -962,7 +978,7 @@
             if (syncText) syncText.textContent = 'Sincronizando...';
 
             try {
-                const response = await fetch(SHEET_CSV_URL);
+                const response = await fetch(SHEET_CSV_URL + '&t=' + Date.now());
                 if (!response.ok) throw new Error('Network error');
                 const csvData = await response.text();
                 const fetchedProducts = parseCSV(csvData);
@@ -970,6 +986,7 @@
                 if (fetchedProducts && fetchedProducts.length > 0) {
                     PRODUCTS = fetchedProducts;
                     if (syncText) syncText.textContent = `${PRODUCTS.length} Productos OK`;
+                    console.log(`✅ Base de datos sincronizada: ${PRODUCTS.length} productos cargados desde Google Sheets.`);
                 } else {
                     if (syncText) syncText.textContent = 'Stock Local Activo';
                 }
@@ -982,7 +999,10 @@
             }
         }
 
-        // NUEVA LÓGICA DE STOCK: < 3 (ROJO), >= 3 y <= 10 (AMARILLO), > 10 (VERDE)
+        // LÓGICA DE STOCK ACTUALIZADA:
+        // < 3 = ROJO (Últimas unidades)
+        // 3 - 10 = AMARILLO (Stock medio)
+        // > 10 = VERDE (Stock completo)
         function renderStockBadge(stock) {
             let colorBg = '';
             let colorText = '';
@@ -994,11 +1014,11 @@
                 colorText = 'text-red-400';
                 dotBg = 'bg-red-500';
                 labelText = stock <= 0 ? 'SIN STOCK' : `ÚLTIMAS ${stock} UN.`;
-            } else if (stock >= 3 && stock <= 10) {
+            } else if (stock <= 10) {
                 colorBg = 'bg-amber-500/10 border-amber-500/40';
                 colorText = 'text-amber-400';
                 dotBg = 'bg-amber-400';
-                labelText = `STOCK (${stock} un.)`;
+                labelText = `STOCK MEDIO (${stock} un.)`;
             } else {
                 colorBg = 'bg-emerald-500/10 border-emerald-500/40';
                 colorText = 'text-emerald-400';
@@ -1035,9 +1055,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-2">
-                            ${renderStockBadge(p.stock)}
-                        </div>
+                        <div class="mb-2">${renderStockBadge(p.stock)}</div>
 
                         <span class="text-[10px] text-brand-red uppercase font-bold tracking-wider">${p.category}</span>
                         <h4 class="text-xs font-bold text-white line-clamp-2 mt-0.5 leading-snug">${p.descripcion}</h4>
@@ -1245,13 +1263,8 @@
             currentSlide = index;
         }
 
-        function nextHeroSlide() {
-            setHeroSlide((currentSlide + 1) % slides.length);
-        }
-
-        function prevHeroSlide() {
-            setHeroSlide((currentSlide - 1 + slides.length) % slides.length);
-        }
+        function nextHeroSlide() { setHeroSlide((currentSlide + 1) % slides.length); }
+        function prevHeroSlide() { setHeroSlide((currentSlide - 1 + slides.length) % slides.length); }
 
         setInterval(nextHeroSlide, 5000);
 
@@ -1280,41 +1293,50 @@
 
             modalTitle.textContent = categoryName;
 
-            const filtered = PRODUCTS.filter(p => categoryName === 'Todas' || p.category === categoryName || categoryName === 'TODOS LOS PRODUCTOS');
+            const filtered = PRODUCTS.filter(p => {
+                if (categoryName === 'Todas' || categoryName === 'TODOS LOS PRODUCTOS') return true;
+                return normalizeText(p.category) === normalizeText(categoryName);
+            });
 
-            productsGrid.innerHTML = filtered.map(p => `
-                <div class="bg-brand-card rounded-lg border border-brand-border p-3 flex flex-col justify-between group hover:border-brand-red transition-all shadow-lg">
-                    <div>
-                        <div class="w-full h-36 rounded bg-black overflow-hidden mb-2 relative border border-brand-border/40">
-                            <img src="${p.imagen}" alt="${p.descripcion}" onerror="this.src='https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                            <span class="absolute top-2 left-2 bg-black/80 text-gray-300 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border border-gray-700">COD: ${p.codigo}</span>
-                        </div>
-
-                        <div class="mb-2">
-                            ${renderStockBadge(p.stock)}
-                        </div>
-
-                        <span class="text-[10px] text-brand-red uppercase font-bold">${p.category}</span>
-                        <h4 class="text-xs font-bold text-white line-clamp-2 mt-0.5 leading-snug">${p.descripcion}</h4>
+            if (filtered.length === 0) {
+                productsGrid.innerHTML = `
+                    <div class="col-span-full text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
+                        <i class="fa-solid fa-box-open text-4xl text-brand-red mb-3 block"></i>
+                        <h4 class="text-lg font-bold text-white mb-1">Categoría sin productos</h4>
+                        <p class="text-xs text-gray-400">Actualmente no hay productos en "${categoryName}". Sincronizá la base de datos o probá otra categoría.</p>
                     </div>
-                    <div class="mt-3 pt-2 border-t border-brand-border">
-                        <div class="font-racing font-bold text-base text-white mb-2">$ ${p.precio.toLocaleString('es-AR')}</div>
-                        <button onclick="addToCart('${p.codigo}'); closeProductsModal();" class="w-full bg-brand-red hover:bg-brand-redDark text-white py-1.5 rounded text-[11px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center space-x-1">
-                            <i class="fa-solid fa-cart-plus"></i>
-                            <span>Agregar al Carrito</span>
-                        </button>
+                `;
+            } else {
+                productsGrid.innerHTML = filtered.map(p => `
+                    <div class="bg-brand-card rounded-lg border border-brand-border p-3 flex flex-col justify-between group hover:border-brand-red transition-all shadow-lg">
+                        <div>
+                            <div class="w-full h-36 rounded bg-black overflow-hidden mb-2 relative border border-brand-border/40">
+                                <img src="${p.imagen}" alt="${p.descripcion}" onerror="this.src='https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                <span class="absolute top-2 left-2 bg-black/80 text-gray-300 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border border-gray-700">COD: ${p.codigo}</span>
+                            </div>
+
+                            <div class="mb-2">${renderStockBadge(p.stock)}</div>
+
+                            <span class="text-[10px] text-brand-red uppercase font-bold">${p.category}</span>
+                            <h4 class="text-xs font-bold text-white line-clamp-2 mt-0.5 leading-snug">${p.descripcion}</h4>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-brand-border">
+                            <div class="font-racing font-bold text-base text-white mb-2">$ ${p.precio.toLocaleString('es-AR')}</div>
+                            <button onclick="addToCart('${p.codigo}'); closeProductsModal();" class="w-full bg-brand-red hover:bg-brand-redDark text-white py-1.5 rounded text-[11px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center space-x-1">
+                                <i class="fa-solid fa-cart-plus"></i>
+                                <span>Agregar al Carrito</span>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             document.body.style.overflow = 'hidden';
         }
 
-        function showAllProductsModal() {
-            filterByCategory('TODOS LOS PRODUCTOS');
-        }
+        function showAllProductsModal() { filterByCategory('TODOS LOS PRODUCTOS'); }
 
         function closeProductsModal() {
             const modal = document.getElementById('productsModal');
@@ -1327,9 +1349,7 @@
             e.preventDefault();
             const query = document.getElementById('searchInput').value.trim();
             closeAutocompleteDropdown();
-            if (query) {
-                filterSearchQuery(query);
-            }
+            if (query) { filterSearchQuery(query); }
         }
 
         function normalizeText(str) {
@@ -1356,11 +1376,8 @@
             const query = val.trim();
 
             if (clearBtn) {
-                if (query.length > 0) {
-                    clearBtn.classList.remove('hidden');
-                } else {
-                    clearBtn.classList.add('hidden');
-                }
+                if (query.length > 0) { clearBtn.classList.remove('hidden'); }
+                else { clearBtn.classList.add('hidden'); }
             }
 
             if (query.length < 1) {
@@ -1374,7 +1391,7 @@
                 dropdown.innerHTML = `
                     <div class="p-4 text-center text-xs text-gray-400">
                         <i class="fa-solid fa-magnifying-glass-minus text-brand-red text-base mb-1 block"></i>
-                        No se encontraron productos o códigos para "<span class="text-white font-semibold">${query}</span>"
+                        No se encontraron productos para "<span class="text-white font-semibold">${query}</span>"
                     </div>
                 `;
             } else {
@@ -1449,9 +1466,7 @@
         });
 
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeAutocompleteDropdown();
-            }
+            if (e.key === 'Escape') { closeAutocompleteDropdown(); }
         });
 
         function filterSearchQuery(q) {
@@ -1468,7 +1483,7 @@
                     <div class="col-span-full text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
                         <i class="fa-solid fa-magnifying-glass-xmark text-4xl text-brand-red mb-3 block"></i>
                         <h4 class="text-lg font-bold text-white mb-1">Sin coincidencias</h4>
-                        <p class="text-xs text-gray-400">No se encontraron repuestos o accesorios que coincidan con "${q}". Prueba buscando por código (ej: FC-101) o palabra clave (ej: Casco, Mitas, Transmisión).</p>
+                        <p class="text-xs text-gray-400">No se encontraron repuestos o accesorios que coincidan con "${q}".</p>
                     </div>
                 `;
             } else {
@@ -1503,19 +1518,46 @@
             document.getElementById('categoriesSection').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // FUNCION MODO ADMINISTRADOR - Solicita clave FABIAN3112 y abre Google Sheets
-        function enterAdminMode() {
-            const password = prompt('🔒 Ingresá la clave de administrador:');
-            if (password === 'FABIAN3112') {
-                window.open('https://docs.google.com/spreadsheets/d/1U24EVKy05DUCElXnJ-9yW7VTT8DAwB_3Nu2VZXqOKYI/edit?usp=sharing', '_blank');
-                alert('✅ Acceso concedido. Se abrió la base de datos en una nueva pestaña para edición.');
-            } else if (password !== null) {
-                alert('❌ Clave incorrecta. Acceso denegado.');
+        // ===================== MODO ADMINISTRADOR =====================
+        function openAdminModal() {
+            const modal = document.getElementById('adminModal');
+            modal.classList.remove('hidden');
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminError').classList.add('hidden');
+            setTimeout(() => document.getElementById('adminPassword').focus(), 100);
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function verifyAdminPassword() {
+            const password = document.getElementById('adminPassword').value.trim();
+            const errorMsg = document.getElementById('adminError');
+
+            if (password === ADMIN_PASSWORD) {
+                closeAdminModal();
+                // Abrir Google Sheets en modo edición en nueva pestaña
+                window.open(ADMIN_SHEET_EDIT_URL, '_blank');
+                
+                // Opcional: mostrar confirmación
+                const confirmDiv = document.createElement('div');
+                confirmDiv.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-6 py-3 rounded-lg shadow-2xl z-[200] text-xs font-bold uppercase tracking-wider flex items-center space-x-2';
+                confirmDiv.innerHTML = '<i class="fa-solid fa-unlock"></i><span>Acceso autorizado. Redirigiendo a Google Sheets...</span>';
+                document.body.appendChild(confirmDiv);
+                setTimeout(() => confirmDiv.remove(), 3500);
+            } else {
+                errorMsg.classList.remove('hidden');
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
             }
         }
 
+        // Inicializar la app al cargar la página
         window.onload = function() {
             syncGoogleSheetData();
+            // Auto-refresh cada 2 minutos para mantener stock actualizado
+            setInterval(syncGoogleSheetData, 120000);
         };
     </script>
 </body>
