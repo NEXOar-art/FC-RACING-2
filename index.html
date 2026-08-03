@@ -63,7 +63,6 @@
         }
         .whatsapp-pulse { animation: pulse-ring 2s infinite; }
 
-        /* ===== NUEVO: BANNER SUPERIOR ANIMADO (MARQUEE) ===== */
         @keyframes bannerScroll {
             0% { transform: translateX(0%); }
             100% { transform: translateX(-50%); }
@@ -74,7 +73,6 @@
         }
         .animate-banner:hover { animation-play-state: paused; }
 
-        /* ===== NUEVO: MOVIMIENTO KEN BURNS EN IMÁGENES DEL CARRUSEL ===== */
         @keyframes kenBurns {
             0%   { transform: scale(1) translate(0, 0); }
             50%  { transform: scale(1.12) translate(-1.5%, 1%); }
@@ -84,7 +82,6 @@
             animation: kenBurns 14s ease-in-out infinite;
         }
 
-        /* ===== NUEVO: EFECTO DE BORDES + BRILLO EN TARJETAS DE CATÁLOGO ===== */
         .fx-card {
             position: relative;
             overflow: hidden;
@@ -108,7 +105,6 @@
             box-shadow: 0 12px 30px -12px rgba(229, 9, 20, 0.45), 0 0 0 1px rgba(229, 9, 20, 0.35);
         }
 
-        /* ===== NUEVO: EFECTO SUTIL EN TARJETAS DE CATEGORÍAS PRINCIPALES ===== */
         .cat-card { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
         .cat-card::after {
             content: "";
@@ -148,7 +144,7 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased">
 
-    <!-- ===== BANNER SUPERIOR ANIMADO, MÁS ALTO Y EDITABLE POR ADMIN ===== -->
+    <!-- BANNER SUPERIOR ANIMADO -->
     <div class="bg-gradient-to-r from-brand-redDark via-brand-red to-brand-redDark text-white relative z-50 overflow-hidden py-3 sm:py-4 border-b border-black/50 shadow-lg">
         <button 
             id="bannerEditBtn" 
@@ -160,7 +156,6 @@
         </button>
         <div class="overflow-hidden">
             <div id="bannerTrack" class="animate-banner flex items-center whitespace-nowrap w-max">
-                <!-- Se inyecta dinámicamente con JavaScript -->
             </div>
         </div>
     </div>
@@ -770,7 +765,7 @@
         </div>
     </div>
 
-    <!-- ===== NUEVO: MODAL EDITOR DE BANNER (SOLO ADMIN) ===== -->
+    <!-- MODAL EDITOR DE BANNER (SOLO ADMIN) -->
     <div id="bannerEditorModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
         <div class="bg-brand-dark border border-brand-border rounded-xl shadow-2xl p-6 max-w-lg w-full mx-4">
             <div class="flex items-center justify-between mb-5 border-b border-brand-border pb-3">
@@ -893,9 +888,28 @@
                     <p class="text-center text-gray-500 text-xs py-8">Tu carrito está vacío. Agregá productos para generar tu pedido.</p>
                 </div>
 
-                <div class="bg-black/60 p-3 rounded-lg border border-brand-border mb-5 flex justify-between items-center">
-                    <span class="text-gray-300 uppercase font-bold text-xs">Total del Pedido:</span>
-                    <span id="cartTotalPrice" class="font-racing font-black text-2xl text-brand-red">$ 0</span>
+                <!-- SUBTOTAL (TOTAL DEL PEDIDO SIN DESCUENTO) -->
+                <div class="bg-black/60 p-3 rounded-lg border border-brand-border mb-2 flex justify-between items-center">
+                    <span class="text-gray-400 uppercase font-bold text-xs">Total del Pedido:</span>
+                    <span id="cartSubtotalPrice" class="font-racing font-bold text-base text-gray-300 line-through">$ 0</span>
+                </div>
+
+                <!-- DESCUENTO 5% -->
+                <div class="bg-emerald-900/30 p-2.5 rounded-lg border border-emerald-500/50 mb-2 flex justify-between items-center">
+                    <span class="text-emerald-400 uppercase font-bold text-xs flex items-center space-x-1.5">
+                        <i class="fa-solid fa-tag"></i>
+                        <span>Descuento Carrito (5%):</span>
+                    </span>
+                    <span id="cartDiscountAmount" class="font-racing font-bold text-sm text-emerald-400">- $ 0</span>
+                </div>
+
+                <!-- TOTAL FINAL CON DESCUENTO (este es el que se envía por WhatsApp y PDF) -->
+                <div class="bg-gradient-to-r from-brand-redDark/40 to-brand-red/40 p-4 rounded-lg border-2 border-brand-red mb-5 flex justify-between items-center shadow-lg">
+                    <div class="flex flex-col">
+                        <span class="text-white uppercase font-black text-xs tracking-wider">Total Final a Pagar:</span>
+                        <span class="text-[9px] text-gray-300 uppercase tracking-wider">CON 5% DE DESCUENTO</span>
+                    </div>
+                    <span id="cartTotalPrice" class="font-racing font-black text-2xl text-white red-glow">$ 0</span>
                 </div>
 
                 <div class="bg-brand-card p-4 rounded-lg border border-brand-border space-y-3">
@@ -967,7 +981,7 @@
             </div>
 
             <div class="pt-3 text-center text-[10px] text-gray-500">
-                Al enviar, se descargará automáticamente tu Recibo de Venta PDF y se abrirá WhatsApp con el Asesor (3543546389).
+                Al enviar, se descargará automáticamente tu Recibo de Venta PDF con el <strong class="text-emerald-400">5% de descuento aplicado</strong> y se abrirá WhatsApp con el Asesor (3543546389).
             </div>
         </div>
     </div>
@@ -1032,13 +1046,25 @@
                 <tbody id="pdfTableBody"></tbody>
             </table>
 
-            <div style="text-align: right; margin-bottom: 30px;">
-                <span style="font-size: 14px; font-weight: bold; margin-right: 15px;">TOTAL GENERAL:</span>
-                <span style="font-size: 20px; font-weight: 900; color: #e50914;" id="pdfTotalAmount">$ 0</span>
+            <!-- RESUMEN CON SUBTOTAL, DESCUENTO Y TOTAL FINAL -->
+            <div style="text-align: right; margin-bottom: 30px; font-size: 12px;">
+                <div style="margin-bottom: 6px;">
+                    <span style="font-weight: bold; margin-right: 15px; color: #555555;">SUBTOTAL:</span>
+                    <span id="pdfSubtotal" style="text-decoration: line-through; color: #888888;">$ 0</span>
+                </div>
+                <div style="margin-bottom: 10px; color: #059669; font-weight: bold;">
+                    <span style="margin-right: 15px;">DESCUENTO 5% (Carrito):</span>
+                    <span id="pdfDiscount">- $ 0</span>
+                </div>
+                <div style="border-top: 2px solid #e50914; padding-top: 10px;">
+                    <span style="font-size: 14px; font-weight: bold; margin-right: 15px;">TOTAL FINAL A PAGAR:</span>
+                    <span style="font-size: 22px; font-weight: 900; color: #e50914;" id="pdfTotalAmount">$ 0</span>
+                </div>
             </div>
 
             <div style="border-top: 1px solid #dddddd; padding-top: 12px; font-size: 10px; color: #777777; text-align: center;">
                 Gracias por tu compra en FC RACING. Conservá este recibo para cualquier cambio o gestión de garantía.<br>
+                <strong style="color: #059669;">✓ Descuento del 5% aplicado automáticamente por compra mediante carrito.</strong><br>
                 Contacto de Ventas: WhatsApp 3543546389
             </div>
         </div>
@@ -1049,7 +1075,6 @@
         const ADMIN_SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/1U24EVKy05DUCElXnJ-9yW7VTT8DAwB_3Nu2VZXqOKYI/edit';
         const ADMIN_PASSWORD = 'FABIAN3112';
 
-        // ===== BANNER SUPERIOR: MENSAJES POR DEFECTO (EDITABLES POR ADMIN) =====
         const DEFAULT_BANNER_MESSAGES = [
             'ENVÍOS A TODO EL PAÍS • COMPRA DIRECTA SIN REGISTRO O CUENTA',
             'HOY 5% EN TU COMPRA MEDIANTE EL CARRITO DE COMPRAS',
@@ -1058,12 +1083,13 @@
         ];
         const BANNER_ICONS = ['fa-solid fa-truck-fast', 'fa-solid fa-tags', 'fa-solid fa-location-dot', 'fa-brands fa-whatsapp', 'fa-solid fa-bullhorn', 'fa-solid fa-bolt'];
 
+        // ===== MAPEO CORREGIDO: "Plásticos" → "PLASTICOS Y KITS" =====
         const CATEGORY_MAP = {
             'Equipamiento Rider': 'EQUIPAMIENTO RIDER',
             'Cubiertas & Ruedas': 'CUBIERTAS & RUEDAS',
             'Mantenimiento': 'MANTENIMIENTO',
             'Accesorios Moto': 'ACCESORIOS MOTO',
-            'Plásticos': 'PLÁSTICOS',
+            'Plásticos': 'PLASTICOS Y KITS',
             'Taller & Transporte': 'TALLER & TRANSPORTE'
         };
 
@@ -1073,7 +1099,7 @@
             { id: 103, codigo: 'FC-103', descripcion: 'Cubierta Mitas C-19 90/90-21 Super Light', category: 'Cubiertas & Ruedas', precio: 110000, stock: 4, imagen: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80' },
             { id: 104, codigo: 'FC-104', descripcion: 'Kit Transmisión Chain & Sprocket Z-Tech 520', category: 'Mantenimiento', precio: 92000, stock: 12, imagen: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=400&q=80' },
             { id: 105, codigo: 'FC-105', descripcion: 'Manubrio Renthal Fatbar 28mm Red Competition', category: 'Accesorios Moto', precio: 125000, stock: 1, imagen: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=400&q=80' },
-            { id: 106, codigo: 'FC-106', descripcion: 'Kit Plásticos Acerbis CRF 250/450 Red Replica', category: 'Plásticos', precio: 175000, stock: 6, imagen: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80' },
+            { id: 106, codigo: 'FC-106', descripcion: 'Kit Plásticos Acerbis CRF 250/450 Red Replica', category: 'PLASTICOS Y KITS', precio: 175000, stock: 6, imagen: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80' },
             { id: 107, codigo: 'FC-107', descripcion: 'Caballete Z-Tech Lift Stand Aluminio Taller', category: 'Taller & Transporte', precio: 85000, stock: 3, imagen: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80' },
             { id: 108, codigo: 'FC-108', descripcion: 'Aceite Motul 7100 10W40 Sintético 1 Litro', category: 'Mantenimiento', precio: 24000, stock: 15, imagen: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=400&q=80' }
         ];
@@ -1124,7 +1150,6 @@
 
         const FALLBACK_IMG = 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80';
 
-        // ===== BANNER SUPERIOR: RENDER + EDICIÓN =====
         function getBannerMessages() {
             try {
                 const saved = localStorage.getItem('fc_banner_messages');
@@ -1149,7 +1174,6 @@
                 </span>
             `).join('');
 
-            // Duplicado para loop infinito sin cortes
             track.innerHTML = group + group;
         }
 
@@ -1181,7 +1205,6 @@
             renderBanner();
         }
 
-        // ===== PARSER CSV =====
         function parseCSVLine(line) {
             const result = [];
             let cur = '';
@@ -1414,20 +1437,28 @@
             updateCartUI();
         }
 
+        // ===== UPDATE CART UI CON DESCUENTO 5% =====
         function updateCartUI() {
             const cartItemsList = document.getElementById('cartItemsList');
             const cartCountBadge = document.getElementById('cartCountBadge');
             const cartTotalItems = document.getElementById('cartTotalItems');
+            const cartSubtotalPrice = document.getElementById('cartSubtotalPrice');
+            const cartDiscountAmount = document.getElementById('cartDiscountAmount');
             const cartTotalPrice = document.getElementById('cartTotalPrice');
             const navCartTotal = document.getElementById('navCartTotal');
 
             const totalItems = CART.reduce((sum, item) => sum + item.qty, 0);
-            const totalSum = CART.reduce((sum, item) => sum + (item.precio * item.qty), 0);
+            const subtotal = CART.reduce((sum, item) => sum + (item.precio * item.qty), 0);
+            const discount = subtotal * 0.05;
+            const totalFinal = subtotal - discount;
 
             if (cartCountBadge) cartCountBadge.textContent = totalItems;
             if (cartTotalItems) cartTotalItems.textContent = totalItems;
-            if (cartTotalPrice) cartTotalPrice.textContent = formatPrice(totalSum);
-            if (navCartTotal) navCartTotal.textContent = formatPrice(totalSum);
+            if (cartSubtotalPrice) cartSubtotalPrice.textContent = formatPrice(subtotal);
+            if (cartDiscountAmount) cartDiscountAmount.textContent = `- ${formatPrice(discount)}`;
+            if (cartTotalPrice) cartTotalPrice.textContent = formatPrice(totalFinal);
+            // En el navbar también se muestra el total final con descuento
+            if (navCartTotal) navCartTotal.textContent = formatPrice(totalFinal);
 
             if (CART.length === 0) {
                 cartItemsList.innerHTML = '<p class="text-center text-gray-500 text-xs py-8">Tu carrito está vacío. Agregá productos para generar tu pedido.</p>';
@@ -1466,6 +1497,7 @@
             }
         }
 
+        // ===== CHECKOUT CON DESCUENTO 5% =====
         async function handleCheckoutSubmit(e) {
             e.preventDefault();
 
@@ -1486,7 +1518,9 @@
 
             const orderNum = Math.floor(1000 + Math.random() * 9000);
             const orderDate = new Date().toLocaleDateString('es-AR');
-            const totalSum = CART.reduce((sum, item) => sum + (item.precio * item.qty), 0);
+            const subtotal = CART.reduce((sum, item) => sum + (item.precio * item.qty), 0);
+            const discount = subtotal * 0.05;
+            const totalFinal = subtotal - discount;
 
             document.getElementById('pdfOrderNum').textContent = `N° #: ${orderNum}`;
             document.getElementById('pdfOrderDate').textContent = `Fecha: ${orderDate}`;
@@ -1494,7 +1528,9 @@
             document.getElementById('pdfCustAddress').textContent = address;
             document.getElementById('pdfCustEmail').textContent = email;
             document.getElementById('pdfCustPayment').textContent = payment;
-            document.getElementById('pdfTotalAmount').textContent = formatPrice(totalSum);
+            document.getElementById('pdfSubtotal').textContent = formatPrice(subtotal);
+            document.getElementById('pdfDiscount').textContent = `- ${formatPrice(discount)}`;
+            document.getElementById('pdfTotalAmount').textContent = formatPrice(totalFinal);
 
             const tableBody = document.getElementById('pdfTableBody');
             tableBody.innerHTML = CART.map(item => `
@@ -1526,6 +1562,7 @@
                 document.getElementById('pdfReceiptTemplate').classList.add('hidden');
             }
 
+            // ===== MENSAJE WHATSAPP CON DESCUENTO 5% =====
             let message = `🏁 *NUEVO PEDIDO - FC RACING*\n`;
             message += `*Recibo N°:* ${orderNum}\n`;
             message += `*Fecha:* ${orderDate}\n\n`;
@@ -1540,8 +1577,10 @@
                 message += `${index + 1}. [${item.codigo}] ${item.descripcion} (x${item.qty}) - ${formatPrice(item.precio * item.qty)}\n`;
             });
 
-            message += `\n💰 *TOTAL:* ${formatPrice(totalSum)}\n\n`;
-            message += `_Generé mi Recibo PDF en la web. Aguardo confirmación para completar el pago._`;
+            message += `\n💰 *SUBTOTAL:* ${formatPrice(subtotal)}`;
+            message += `\n🏷️ *DESCUENTO 5% (Carrito):* - ${formatPrice(discount)}`;
+            message += `\n\n✅ *TOTAL FINAL A PAGAR:* *${formatPrice(totalFinal)}*\n\n`;
+            message += `_Generé mi Recibo PDF en la web con el 5% de descuento aplicado. Aguardo confirmación para completar el pago._`;
 
             const encodedMsg = encodeURIComponent(message);
             const waTarget = `https://wa.me/5493543546389?text=${encodedMsg}`;
@@ -1822,7 +1861,6 @@
                 closeAdminModal();
                 window.open(ADMIN_SHEET_EDIT_URL, '_blank');
 
-                // Habilitar edición del banner superior
                 const bannerBtn = document.getElementById('bannerEditBtn');
                 if (bannerBtn) bannerBtn.classList.remove('hidden');
                 
