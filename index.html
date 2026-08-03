@@ -6,13 +6,13 @@
     <title>FC RACING - Accesorios & Repuestos Off Road</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Rajdhani & Inter for aggressive motorsport aesthetic -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,700;1,700&family=Inter:wght@300;400;500;600;700&family=Rajdhani:ital,wght@0,600;0,700;1,700&display=swap" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- html2pdf library for PDF receipt generation -->
+    <!-- html2pdf library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <script>
@@ -53,50 +53,24 @@
             font-family: 'Chakra Petch', 'Rajdhani', sans-serif;
         }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0a0c;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #e50914;
-            border-radius: 3px;
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0c; }
+        ::-webkit-scrollbar-thumb { background: #e50914; border-radius: 3px; }
 
-        /* Glow effects */
-        .red-glow {
-            box-shadow: 0 0 15px rgba(229, 9, 20, 0.35);
-        }
-        .green-glow {
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.35);
-        }
+        .red-glow { box-shadow: 0 0 15px rgba(229, 9, 20, 0.35); }
+        .green-glow { box-shadow: 0 0 15px rgba(34, 197, 94, 0.35); }
 
-        /* Pulse WhatsApp animation */
         @keyframes pulse-ring {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
             70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(34, 197, 94, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
         }
-        .whatsapp-pulse {
-            animation: pulse-ring 2s infinite;
-        }
+        .whatsapp-pulse { animation: pulse-ring 2s infinite; }
 
-        /* Category Card Hover effect */
-        .cat-card {
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .cat-card:hover .cat-arrow {
-            transform: translateX(6px);
-            color: #ff1e27;
-        }
-        .cat-card:hover img {
-            transform: scale(1.06);
-        }
+        .cat-card { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        .cat-card:hover .cat-arrow { transform: translateX(6px); color: #ff1e27; }
+        .cat-card:hover img { transform: scale(1.06); }
 
-        /* Infinite Marquee Animation for Brands */
         @keyframes marqueeScroll {
             0% { transform: translateX(0%); }
             100% { transform: translateX(-50%); }
@@ -106,18 +80,13 @@
             width: max-content;
             animation: marqueeScroll 25s linear infinite;
         }
-        .animate-marquee:hover {
-            animation-play-state: paused;
-        }
+        .animate-marquee:hover { animation-play-state: paused; }
 
-        /* Blinking light animation for stock indicator */
         @keyframes stockBlink {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.3; transform: scale(0.85); }
         }
-        .stock-pulse {
-            animation: stockBlink 1.2s infinite ease-in-out;
-        }
+        .stock-pulse { animation: stockBlink 1.2s infinite ease-in-out; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased">
@@ -132,12 +101,10 @@
     <header class="sticky top-0 z-40 bg-brand-dark/95 backdrop-blur-md border-b border-brand-border">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             
-            <!-- Left: Burger Menu Button -->
             <button id="openMobileMenu" class="p-2 text-white hover:text-brand-red transition-colors focus:outline-none" aria-label="Abrir Menú">
                 <i class="fa-solid fa-bars text-2xl"></i>
             </button>
 
-            <!-- Center/Left: Logo FC RACING -->
             <a href="#" class="flex flex-col items-start select-none group">
                 <div class="flex items-center space-x-1">
                     <span class="text-brand-red text-2xl font-black italic tracking-tighter">//</span>
@@ -150,8 +117,14 @@
                 </span>
             </a>
 
-            <!-- Right: Cart Icon (Direct Access, No Account Required) -->
+            <!-- Right: Admin Button + Cart Icon -->
             <div class="flex items-center space-x-3">
+                <!-- Botón Modo Administrador -->
+                <button onclick="enterAdminMode()" class="hidden sm:flex items-center bg-amber-600 hover:bg-amber-500 border border-amber-500 text-white px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all space-x-1.5" title="Acceso Administrador">
+                    <i class="fa-solid fa-lock text-xs"></i>
+                    <span class="hidden md:inline">Admin</span>
+                </button>
+
                 <button onclick="toggleCartDrawer()" class="relative flex items-center bg-brand-card hover:bg-brand-red/20 border border-brand-border hover:border-brand-red px-3 py-1.5 rounded-lg text-gray-200 transition-all">
                     <div class="relative mr-2">
                         <i class="fa-solid fa-cart-shopping text-lg sm:text-xl text-brand-red"></i>
@@ -167,7 +140,7 @@
             </div>
         </div>
 
-        <!-- SEARCH BAR & LIVE DATABASE STATUS -->
+        <!-- SEARCH BAR -->
         <div class="max-w-7xl mx-auto px-4 pb-3 flex flex-col sm:flex-row gap-2 items-center">
             <div class="w-full relative">
                 <form onsubmit="handleSearch(event)" class="w-full flex items-center rounded-lg overflow-hidden border border-brand-border bg-black/60 focus-within:border-brand-red transition-colors">
@@ -200,20 +173,17 @@
                     </button>
                 </form>
 
-                <!-- DESPLEGABLE DE AUTOCOMPLETADO FLOTANTE -->
                 <div id="autocompleteDropdown" class="hidden absolute top-full left-0 right-0 mt-1.5 bg-brand-dark/95 backdrop-blur-md border border-brand-border rounded-lg shadow-2xl z-50 overflow-hidden max-h-96 overflow-y-auto divide-y divide-brand-border/60">
-                    <!-- Se inyecta dinámicamente con JavaScript -->
                 </div>
             </div>
 
-            <!-- Sync Indicator Button -->
             <button onclick="syncGoogleSheetData()" title="Sincronizar productos con Google Sheets" class="shrink-0 bg-brand-card hover:bg-black text-gray-300 hover:text-white border border-brand-border text-xs px-3 py-2 rounded-lg flex items-center space-x-1.5 transition-colors w-full sm:w-auto justify-center">
                 <i id="syncIcon" class="fa-solid fa-rotate text-emerald-400 text-xs"></i>
                 <span id="syncText" class="text-[11px] font-semibold truncate">Stock en Vivo</span>
             </button>
         </div>
 
-        <!-- TRUST CHIPS / QUICK ACCESS BAR -->
+        <!-- TRUST CHIPS -->
         <div class="bg-[#0e0e12] border-t border-brand-border/60 py-2">
             <div class="max-w-7xl mx-auto px-2 grid grid-cols-3 divide-x divide-brand-border text-center text-[10px] sm:text-xs font-semibold text-gray-300">
                 <div class="flex items-center justify-center space-x-1.5 px-1 py-0.5">
@@ -238,7 +208,6 @@
         <section class="relative bg-black overflow-hidden border-b border-brand-border">
             <div id="heroSlider" class="relative w-full h-[280px] sm:h-[400px] lg:h-[480px]">
                 
-                <!-- Slide 1: RALLY DAKAR -->
                 <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-100 flex items-center">
                     <img 
                         src="RALLY DAKAR.png" 
@@ -265,7 +234,6 @@
                     </div>
                 </div>
 
-                <!-- Slide 2: moto1 -->
                 <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-0 flex items-center">
                     <img 
                         src="moto1.png" 
@@ -291,7 +259,6 @@
                     </div>
                 </div>
 
-                <!-- Navigation Arrows -->
                 <button onclick="prevHeroSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 bg-black/60 hover:bg-brand-red text-white w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-colors border border-white/20">
                     <i class="fa-solid fa-chevron-left text-sm sm:text-base"></i>
                 </button>
@@ -299,7 +266,6 @@
                     <i class="fa-solid fa-chevron-right text-sm sm:text-base"></i>
                 </button>
 
-                <!-- Pagination Dots -->
                 <div class="absolute bottom-4 left-0 right-0 z-20 flex justify-center space-x-2">
                     <span onclick="setHeroSlide(0)" class="hero-dot w-3 h-3 rounded-full bg-brand-red cursor-pointer transition-all border border-black"></span>
                     <span onclick="setHeroSlide(1)" class="hero-dot w-3 h-3 rounded-full bg-gray-600 cursor-pointer transition-all border border-black"></span>
@@ -309,7 +275,6 @@
 
         <section id="categoriesSection" class="max-w-7xl mx-auto px-3 sm:px-6 py-8">
             
-            <!-- Section Header -->
             <div class="flex items-center justify-between mb-5 border-b border-brand-border pb-3">
                 <div>
                     <span class="text-brand-red font-bold text-xs uppercase tracking-widest">// CATEGORÍAS PRINCIPALES</span>
@@ -323,10 +288,8 @@
                 </button>
             </div>
 
-            <!-- Categories Card List - Stacked Full Width -->
             <div class="flex flex-col space-y-3.5 w-full" id="categoriesGrid">
 
-                <!-- 1. EQUIPAMIENTO RIDER -->
                 <div onclick="filterByCategory('Equipamiento Rider')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
@@ -351,7 +314,6 @@
                     </div>
                 </div>
 
-                <!-- 2. CUBIERTAS & RUEDAS -->
                 <div onclick="filterByCategory('Cubiertas & Ruedas')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
@@ -376,7 +338,6 @@
                     </div>
                 </div>
 
-                <!-- 3. MANTENIMIENTO -->
                 <div onclick="filterByCategory('Mantenimiento')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
@@ -401,7 +362,6 @@
                     </div>
                 </div>
 
-                <!-- 4. ACCESORIOS MOTO -->
                 <div onclick="filterByCategory('Accesorios Moto')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
@@ -426,7 +386,6 @@
                     </div>
                 </div>
 
-                <!-- 5. PLÁSTICOS -->
                 <div onclick="filterByCategory('Plásticos')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
@@ -451,7 +410,6 @@
                     </div>
                 </div>
 
-                <!-- 6. TALLER & TRANSPORTE -->
                 <div onclick="filterByCategory('Taller & Transporte')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
@@ -493,9 +451,7 @@
                 </div>
             </div>
 
-            <!-- Featured Products Grid Container -->
             <div id="featuredProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <!-- Injected via JavaScript from Google Sheets Data -->
             </div>
         </section>
 
@@ -527,7 +483,6 @@
                         FOX RACING
                     </div>
 
-                    <!-- Duplicate for infinite marquee -->
                     <div class="shrink-0 font-racing font-black text-xl italic tracking-tighter text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
                         <span class="text-brand-red">Z</span>TECH
                     </div>
@@ -552,7 +507,6 @@
 
         <section class="max-w-7xl mx-auto px-4 py-10">
             <div class="bg-gradient-to-br from-brand-card via-[#16161c] to-black rounded-xl border border-brand-border p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-                <!-- Accent background stripe -->
                 <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-brand-red/10 rounded-full blur-3xl pointer-events-none"></div>
 
                 <div class="text-center sm:text-left mb-8 border-b border-brand-border pb-4">
@@ -566,7 +520,6 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     
-                    <!-- Card 1: Dirección del Local -->
                     <div class="bg-black/60 rounded-lg p-5 border border-brand-border flex flex-col justify-between hover:border-brand-red/60 transition-all">
                         <div>
                             <div class="w-12 h-12 rounded-lg bg-brand-red/20 border border-brand-red/40 flex items-center justify-center text-brand-red text-xl mb-4">
@@ -585,7 +538,6 @@
                         </div>
                     </div>
 
-                    <!-- Card 2: Ubicación Google Maps -->
                     <div class="bg-black/60 rounded-lg p-5 border border-brand-border flex flex-col justify-between hover:border-brand-red/60 transition-all">
                         <div>
                             <div class="w-12 h-12 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 text-xl mb-4">
@@ -609,7 +561,6 @@
                         </a>
                     </div>
 
-                    <!-- Card 3: Atención Telefónica / WhatsApp -->
                     <div class="bg-black/60 rounded-lg p-5 border border-brand-border flex flex-col justify-between hover:border-brand-red/60 transition-all">
                         <div>
                             <div class="w-12 h-12 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl mb-4">
@@ -652,7 +603,6 @@
     <footer class="bg-brand-dark border-t border-brand-border text-gray-400 text-xs py-8 px-4">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             
-            <!-- Col 1: Store info -->
             <div class="space-y-3">
                 <div class="flex items-center space-x-1">
                     <span class="text-brand-red text-xl font-black italic">//</span>
@@ -665,7 +615,6 @@
                 </p>
             </div>
 
-            <!-- Col 2: Quick Links -->
             <div>
                 <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">
                     Navegación
@@ -678,7 +627,6 @@
                 </ul>
             </div>
 
-            <!-- Col 3: Contact Info -->
             <div>
                 <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">
                     Ubicación y Contacto
@@ -699,7 +647,6 @@
                 </ul>
             </div>
 
-            <!-- Col 4: Payment Methods -->
             <div>
                 <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">
                     Medios de Pago
@@ -765,6 +712,9 @@
                     <a href="#" onclick="filterByCategory('Mantenimiento'); closeDrawer();" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40">
                         <i class="fa-solid fa-gears text-brand-red mr-2"></i> Repuestos & Mantenimiento
                     </a>
+                    <button onclick="enterAdminMode(); closeDrawer();" class="w-full text-left block text-white hover:text-amber-400 py-2 border-b border-brand-border/40">
+                        <i class="fa-solid fa-lock text-amber-500 mr-2"></i> Modo Administrador
+                    </button>
                 </nav>
             </div>
 
@@ -782,7 +732,6 @@
         
         <div class="relative ml-auto w-full max-w-lg bg-brand-dark h-full shadow-2xl border-l border-brand-border p-4 sm:p-6 flex flex-col justify-between pointer-events-auto overflow-y-auto">
             <div>
-                <!-- Cart Header -->
                 <div class="flex items-center justify-between pb-3 border-b border-brand-border mb-4">
                     <div class="flex items-center space-x-2">
                         <i class="fa-solid fa-cart-shopping text-brand-red text-xl"></i>
@@ -795,18 +744,15 @@
                     </button>
                 </div>
 
-                <!-- Product list in cart -->
                 <div id="cartItemsList" class="space-y-3 max-h-[35vh] overflow-y-auto pr-1 mb-4">
                     <p class="text-center text-gray-500 text-xs py-8">Tu carrito está vacío. Agregá productos para generar tu pedido.</p>
                 </div>
 
-                <!-- Cart Total Summary -->
                 <div class="bg-black/60 p-3 rounded-lg border border-brand-border mb-5 flex justify-between items-center">
                     <span class="text-gray-300 uppercase font-bold text-xs">Total del Pedido:</span>
                     <span id="cartTotalPrice" class="font-racing font-black text-2xl text-brand-red">$ 0</span>
                 </div>
 
-                <!-- FORMULARIO DE DATOS PARA GENERAR TU RECIBO DE VENTA -->
                 <div class="bg-brand-card p-4 rounded-lg border border-brand-border space-y-3">
                     <div class="border-b border-brand-border pb-2 flex items-center justify-between">
                         <h4 class="font-racing font-bold text-sm text-white uppercase tracking-wider text-brand-red">
@@ -817,7 +763,6 @@
 
                     <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)" class="space-y-3 text-xs">
                         
-                        <!-- 1. Nombre y Apellido -->
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Nombre y Apellido <span class="text-brand-red">*</span></label>
                             <input 
@@ -829,7 +774,6 @@
                             >
                         </div>
 
-                        <!-- 2. Ciudad y Dirección -->
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Ciudad y Dirección <span class="text-brand-red">*</span></label>
                             <input 
@@ -841,7 +785,6 @@
                             >
                         </div>
 
-                        <!-- 3. Correo -->
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Correo Electrónico <span class="text-brand-red">*</span></label>
                             <input 
@@ -853,7 +796,6 @@
                             >
                         </div>
 
-                        <!-- 4. Desplegable de Pagos -->
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Método de Pago <span class="text-brand-red">*</span></label>
                             <select 
@@ -868,7 +810,6 @@
                             </select>
                         </div>
 
-                        <!-- Action Submit Button -->
                         <button 
                             type="submit" 
                             id="submitOrderBtn"
@@ -882,7 +823,6 @@
 
             </div>
 
-            <!-- Notice Footer -->
             <div class="pt-3 text-center text-[10px] text-gray-500">
                 Al enviar, se descargará automáticamente tu Recibo de Venta PDF y se abrirá WhatsApp con el Asesor (3543546389).
             </div>
@@ -903,17 +843,13 @@
                 </button>
             </div>
 
-            <!-- Filtered products grid -->
             <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <!-- Dynamic Content injected via JS -->
             </div>
         </div>
     </div>
 
-    <!-- HIDDEN RECEIPT CONTAINER FOR PDF GENERATION -->
     <div id="pdfReceiptTemplate" class="hidden">
         <div id="receiptContent" style="padding: 30px; background-color: #ffffff; color: #111111; font-family: Arial, sans-serif; max-width: 700px; margin: auto;">
-            <!-- Receipt Header -->
             <div style="display: flex; justify-between; align-items: center; border-bottom: 2px solid #e50914; padding-bottom: 15px; margin-bottom: 20px;">
                 <div>
                     <h1 style="font-size: 26px; font-weight: 900; margin: 0; color: #e50914; font-style: italic;">FC RACING</h1>
@@ -927,7 +863,6 @@
                 </div>
             </div>
 
-            <!-- Customer Details -->
             <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 12px; margin-bottom: 20px; font-size: 12px;">
                 <h4 style="margin: 0 0 8px 0; color: #e50914; font-size: 13px; text-transform: uppercase;">DATOS DEL CLIENTE</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
@@ -938,7 +873,6 @@
                 </div>
             </div>
 
-            <!-- Items Table -->
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px;">
                 <thead>
                     <tr style="background-color: #111111; color: #ffffff; text-align: left;">
@@ -950,17 +884,14 @@
                     </tr>
                 </thead>
                 <tbody id="pdfTableBody">
-                    <!-- Dynamic -->
                 </tbody>
             </table>
 
-            <!-- Total -->
             <div style="text-align: right; margin-bottom: 30px;">
                 <span style="font-size: 14px; font-weight: bold; margin-right: 15px;">TOTAL GENERAL:</span>
                 <span style="font-size: 20px; font-weight: 900; color: #e50914;" id="pdfTotalAmount">$ 0</span>
             </div>
 
-            <!-- Footer terms -->
             <div style="border-top: 1px solid #dddddd; padding-top: 12px; font-size: 10px; color: #777777; text-align: center;">
                 Gracias por tu compra en FC RACING. Conservá este recibo para cualquier cambio o gestión de garantía.<br>
                 Contacto de Ventas: WhatsApp 3543546389
@@ -969,10 +900,8 @@
     </div>
 
     <script>
-        // GOOGLE SHEETS PUBLIC DATABASE CSV URL
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1U24EVKy05DUCElXnJ-9yW7VTT8DAwB_3Nu2VZXqOKYI/gviz/tq?tqx=out:csv';
 
-        // Local Fallback Database in case of network offline mode
         const DEFAULT_PRODUCTS = [
             { id: 101, codigo: 'FC-101', descripcion: 'Antiparras 100% Strata 2 Off Road Lens Red', category: 'Equipamiento Rider', precio: 48500, stock: 8, imagen: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=400&q=80' },
             { id: 102, codigo: 'FC-102', descripcion: 'Casco Fox V1 Motocross Solid White ECE', category: 'Equipamiento Rider', precio: 280000, stock: 2, imagen: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=400&q=80' },
@@ -987,7 +916,6 @@
         let PRODUCTS = [...DEFAULT_PRODUCTS];
         let CART = [];
 
-        // Simple CSV Parser Function
         function parseCSV(text) {
             const lines = text.split('\n').filter(line => line.trim() !== '');
             if (lines.length < 2) return [];
@@ -996,7 +924,6 @@
             const products = [];
 
             for (let i = 1; i < lines.length; i++) {
-                // Regex for quoted CSV fields
                 const row = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(',');
                 if (!row) continue;
 
@@ -1009,7 +936,6 @@
                 let category = cleanRow[4] || 'General';
                 let imagen = cleanRow[5] || 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80';
 
-                // Assign default image if missing or short
                 if (!imagen || imagen.length < 5) {
                     imagen = 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80';
                 }
@@ -1028,7 +954,6 @@
             return products;
         }
 
-        // Synchronize database with Google Sheets
         async function syncGoogleSheetData() {
             const syncIcon = document.getElementById('syncIcon');
             const syncText = document.getElementById('syncText');
@@ -1057,8 +982,7 @@
             }
         }
 
-        // STOCK INDICATOR LOGIC BUILDER
-        // Rule: < 3 unidades (ROJO TITILANDO), < 5 unidades (AMARILLO TITILANDO), >= 5 unidades (VERDE TITILANDO)
+        // NUEVA LÓGICA DE STOCK: < 3 (ROJO), >= 3 y <= 10 (AMARILLO), > 10 (VERDE)
         function renderStockBadge(stock) {
             let colorBg = '';
             let colorText = '';
@@ -1066,19 +990,16 @@
             let labelText = '';
 
             if (stock < 3) {
-                // RED BLINKING INDICATOR
                 colorBg = 'bg-red-500/10 border-red-500/40';
                 colorText = 'text-red-400';
                 dotBg = 'bg-red-500';
                 labelText = stock <= 0 ? 'SIN STOCK' : `ÚLTIMAS ${stock} UN.`;
-            } else if (stock < 5) {
-                // YELLOW BLINKING INDICATOR
+            } else if (stock >= 3 && stock <= 10) {
                 colorBg = 'bg-amber-500/10 border-amber-500/40';
                 colorText = 'text-amber-400';
                 dotBg = 'bg-amber-400';
-                labelText = `POCO STOCK (${stock} un.)`;
+                labelText = `STOCK (${stock} un.)`;
             } else {
-                // GREEN BLINKING INDICATOR
                 colorBg = 'bg-emerald-500/10 border-emerald-500/40';
                 colorText = 'text-emerald-400';
                 dotBg = 'bg-emerald-500';
@@ -1096,7 +1017,6 @@
             `;
         }
 
-        // Render Featured Products Grid on Page
         function renderFeaturedProducts() {
             const grid = document.getElementById('featuredProductsGrid');
             if (!grid) return;
@@ -1115,7 +1035,6 @@
                             </div>
                         </div>
 
-                        <!-- Stock Badge Titilando -->
                         <div class="mb-2">
                             ${renderStockBadge(p.stock)}
                         </div>
@@ -1138,7 +1057,6 @@
             `).join('');
         }
 
-        // Cart State & Functionality
         function addToCart(codigo) {
             const product = PRODUCTS.find(p => p.codigo === codigo);
             if (!product) return;
@@ -1207,7 +1125,6 @@
             `).join('');
         }
 
-        // Toggle Cart Drawer Window
         function toggleCartDrawer(forceOpen = false) {
             const cartDrawer = document.getElementById('cartDrawer');
             const cartBackdrop = document.getElementById('cartBackdrop');
@@ -1220,7 +1137,6 @@
             }
         }
 
-        // HANDLE CHECKOUT SUBMISSION & RECEIPT PDF GENERATION
         async function handleCheckoutSubmit(e) {
             e.preventDefault();
 
@@ -1243,7 +1159,6 @@
             const orderDate = new Date().toLocaleDateString('es-AR');
             const totalSum = CART.reduce((sum, item) => sum + (item.precio * item.qty), 0);
 
-            // Populate PDF Receipt Template
             document.getElementById('pdfOrderNum').textContent = `N° #: ${orderNum}`;
             document.getElementById('pdfOrderDate').textContent = `Fecha: ${orderDate}`;
             document.getElementById('pdfCustName').textContent = name;
@@ -1263,7 +1178,6 @@
                 </tr>
             `).join('');
 
-            // Generate PDF Receipt with html2pdf
             const pdfElement = document.getElementById('receiptContent');
             document.getElementById('pdfReceiptTemplate').classList.remove('hidden');
 
@@ -1283,7 +1197,6 @@
                 document.getElementById('pdfReceiptTemplate').classList.add('hidden');
             }
 
-            // Build WhatsApp Message Text
             let message = `🏁 *NUEVO PEDIDO - FC RACING*\n`;
             message += `*Recibo N°:* ${orderNum}\n`;
             message += `*Fecha:* ${orderDate}\n\n`;
@@ -1304,11 +1217,9 @@
             const encodedMsg = encodeURIComponent(message);
             const waTarget = `https://wa.me/5493543546389?text=${encodedMsg}`;
 
-            // Open WhatsApp
             window.open(waTarget, '_blank');
         }
 
-        // Hero Slider Controls
         let currentSlide = 0;
         const slides = document.querySelectorAll('.hero-slide');
         const dots = document.querySelectorAll('.hero-dot');
@@ -1344,7 +1255,6 @@
 
         setInterval(nextHeroSlide, 5000);
 
-        // Mobile Menu Drawer Handler
         const mobileDrawer = document.getElementById('mobileDrawer');
         const drawerBackdrop = document.getElementById('drawerBackdrop');
         const openMobileMenu = document.getElementById('openMobileMenu');
@@ -1363,7 +1273,6 @@
         closeMobileMenu.addEventListener('click', closeDrawer);
         drawerBackdrop.addEventListener('click', closeDrawer);
 
-        // Filter and Modal displaying
         function filterByCategory(categoryName) {
             const modal = document.getElementById('productsModal');
             const modalTitle = document.getElementById('modalCategoryTitle');
@@ -1423,17 +1332,14 @@
             }
         }
 
-        // Convierte texto a minúsculas y remueve tildes para coincidencias exactas
         function normalizeText(str) {
             return (str || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
         }
 
-        // Evalúa si un producto coincide con la búsqueda (por código, descripción o categoría)
         function matchProduct(p, query) {
             const q = normalizeText(query);
             if (!q) return false;
             
-            // Limpieza de caracteres no alfanuméricos para buscar códigos sin guiones (ej: "fc101" encuentra "FC-101")
             const qClean = q.replace(/[^a-z0-9]/g, '');
             const codeClean = normalizeText(p.codigo).replace(/[^a-z0-9]/g, '');
 
@@ -1472,7 +1378,7 @@
                     </div>
                 `;
             } else {
-                const topMatches = matches.slice(0, 5); // Mostrar hasta 5 sugerencias rápidas
+                const topMatches = matches.slice(0, 5);
                 dropdown.innerHTML = `
                     <div class="px-3 py-1.5 bg-black/60 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
                         <span><i class="fa-solid fa-bolt text-brand-red mr-1"></i> Sugerencias de búsqueda</span>
@@ -1534,7 +1440,6 @@
             closeAutocompleteDropdown();
         }
 
-        // Event listener para cerrar el menú desplegable al hacer clic fuera
         document.addEventListener('click', function(e) {
             const dropdown = document.getElementById('autocompleteDropdown');
             const searchInput = document.getElementById('searchInput');
@@ -1543,7 +1448,6 @@
             }
         });
 
-        // Event listener para presionar tecla Esc
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeAutocompleteDropdown();
@@ -1599,7 +1503,17 @@
             document.getElementById('categoriesSection').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Initialize application on page load
+        // FUNCION MODO ADMINISTRADOR - Solicita clave FABIAN3112 y abre Google Sheets
+        function enterAdminMode() {
+            const password = prompt('🔒 Ingresá la clave de administrador:');
+            if (password === 'FABIAN3112') {
+                window.open('https://docs.google.com/spreadsheets/d/1U24EVKy05DUCElXnJ-9yW7VTT8DAwB_3Nu2VZXqOKYI/edit?usp=sharing', '_blank');
+                alert('✅ Acceso concedido. Se abrió la base de datos en una nueva pestaña para edición.');
+            } else if (password !== null) {
+                alert('❌ Clave incorrecta. Acceso denegado.');
+            }
+        }
+
         window.onload = function() {
             syncGoogleSheetData();
         };
