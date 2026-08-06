@@ -45,9 +45,7 @@
             overflow-x: hidden;
         }
         
-        .font-racing {
-            font-family: 'Chakra Petch', 'Rajdhani', sans-serif;
-        }
+        .font-racing { font-family: 'Chakra Petch', 'Rajdhani', sans-serif; }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #0a0a0c; }
@@ -55,6 +53,82 @@
 
         .red-glow { box-shadow: 0 0 15px rgba(229, 9, 20, 0.35); }
         .green-glow { box-shadow: 0 0 15px rgba(34, 197, 94, 0.35); }
+
+        /* ====== LOGO FC RACING CIRCULAR CON REFLEJO Y LUZ CONTINUA ====== */
+        @keyframes logoPulseLight {
+            0% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.85), 0 0 25px 4px rgba(229, 9, 20, 0.55); }
+            50% { box-shadow: 0 0 0 12px rgba(229, 9, 20, 0), 0 0 40px 10px rgba(229, 9, 20, 0.35); }
+            100% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.85), 0 0 25px 4px rgba(229, 9, 20, 0.55); }
+        }
+        @keyframes logoShine {
+            0%   { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .logo-fc-wrapper {
+            position: relative;
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform .3s ease;
+            animation: logoPulseLight 2.4s infinite ease-in-out;
+            overflow: hidden;
+        }
+        .logo-fc-wrapper:hover { transform: scale(1.08); }
+        .logo-fc-wrapper::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            padding: 2px;
+            background: conic-gradient(from 0deg, #e50914, #ff1e27, #ffffff, #ff1e27, #e50914);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: logoShine 4s linear infinite;
+            z-index: 0;
+        }
+        .logo-fc-img {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: radial-gradient(circle at 30% 30%, #2a2a32 0%, #0a0a0c 70%);
+            border: 1px solid rgba(255,255,255,0.15);
+            z-index: 2;
+        }
+        .logo-fc-shine {
+            position: absolute;
+            top: -40%;
+            left: -30%;
+            width: 50%;
+            height: 45%;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(-30deg);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        /* Botón scroll to top flotante */
+        #scrollToTopBtn {
+            position: fixed;
+            bottom: 85px;
+            right: 20px;
+            z-index: 40;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .35s ease, transform .35s ease;
+        }
+        #scrollToTopBtn.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #scrollToTopBtn:hover { transform: translateY(-3px) scale(1.08); }
 
         @keyframes pulse-ring {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
@@ -78,9 +152,7 @@
             50%  { transform: scale(1.12) translate(-1.5%, 1%); }
             100% { transform: scale(1) translate(0, 0); }
         }
-        .hero-slide img {
-            animation: kenBurns 14s ease-in-out infinite;
-        }
+        .hero-slide img { animation: kenBurns 14s ease-in-out infinite; }
 
         .fx-card {
             position: relative;
@@ -140,6 +212,135 @@
             50% { opacity: 0.3; transform: scale(0.85); }
         }
         .stock-pulse { animation: stockBlink 1.2s infinite ease-in-out; }
+
+        /* ====== CARRUSEL HORIZONTAL DE TARJETAS DEL CATÁLOGO ====== */
+        .catalog-scroll-container {
+            position: relative;
+            width: 100%;
+        }
+        .catalog-scroll-track {
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            gap: 1rem;
+            padding: 1rem 0.5rem 1.5rem;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .catalog-scroll-track::-webkit-scrollbar { height: 8px; }
+        .catalog-scroll-track::-webkit-scrollbar-track { background: #1a1a20; border-radius: 4px; }
+        .catalog-scroll-track::-webkit-scrollbar-thumb { background: #e50914; border-radius: 4px; }
+        .catalog-scroll-track > .catalog-card {
+            flex: 0 0 280px;
+            scroll-snap-align: start;
+        }
+        @media (min-width: 640px) {
+            .catalog-scroll-track > .catalog-card { flex: 0 0 310px; }
+        }
+        .catalog-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 15;
+            background: rgba(229, 9, 20, 0.85);
+            backdrop-filter: blur(6px);
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+            cursor: pointer;
+            transition: all .25s ease;
+        }
+        .catalog-nav-btn:hover {
+            background: #b80710;
+            transform: translateY(-50%) scale(1.1);
+        }
+        .catalog-nav-btn.prev { left: -6px; }
+        .catalog-nav-btn.next { right: -6px; }
+
+        /* Modo vertical: grid normal */
+        .catalog-grid-view {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1rem;
+            padding: 1rem 0.25rem;
+        }
+        @media (min-width: 640px) { .catalog-grid-view { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 768px) { .catalog-grid-view { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { .catalog-grid-view { grid-template-columns: repeat(4, 1fr); } }
+
+        .catalog-card {
+            background-color: #121215;
+            border: 1px solid #22222a;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .catalog-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -80%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.07), transparent);
+            transform: skewX(-20deg);
+            transition: left .7s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .catalog-card:hover::before { left: 130%; }
+        .catalog-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(229, 9, 20, 0.9);
+            box-shadow: 0 12px 30px -12px rgba(229, 9, 20, 0.45), 0 0 0 1px rgba(229, 9, 20, 0.35);
+        }
+
+        /* Vista expandida de tarjeta seleccionada */
+        .expanded-card-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            background: rgba(0,0,0,0.88);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: fadeIn .3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.85); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .expanded-card {
+            background: linear-gradient(145deg, #16161c, #0a0a0c);
+            border: 2px solid #e50914;
+            border-radius: 1rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 0 60px rgba(229, 9, 20, 0.45);
+            animation: scaleIn .35s ease;
+            padding: 1.5rem;
+            position: relative;
+        }
+        @media (min-width: 640px) { .expanded-card { padding: 2rem; } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased">
@@ -155,37 +356,56 @@
             <i class="fa-solid fa-pen"></i>
         </button>
         <div class="overflow-hidden">
-            <div id="bannerTrack" class="animate-banner flex items-center whitespace-nowrap w-max">
-            </div>
+            <div id="bannerTrack" class="animate-banner flex items-center whitespace-nowrap w-max"></div>
         </div>
     </div>
 
     <!-- Header Navbar -->
     <header class="sticky top-0 z-40 bg-brand-dark/95 backdrop-blur-md border-b border-brand-border">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            <button id="openMobileMenu" class="p-2 text-white hover:text-brand-red transition-colors focus:outline-none" aria-label="Abrir Menú">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+            <button id="openMobileMenu" class="p-2 text-white hover:text-brand-red transition-colors focus:outline-none shrink-0" aria-label="Abrir Menú">
                 <i class="fa-solid fa-bars text-2xl"></i>
             </button>
 
-            <a href="#" class="flex flex-col items-start select-none group">
-                <div class="flex items-center space-x-1">
-                    <span class="text-brand-red text-2xl font-black italic tracking-tighter">//</span>
-                    <span class="font-racing text-2xl sm:text-3xl font-black italic tracking-wider text-white group-hover:text-gray-100">
-                        FC <span class="text-brand-red">RACING</span>
+            <div class="flex items-center gap-2 sm:gap-4 flex-grow min-w-0">
+                <a href="#" onclick="scrollToTop(event)" class="flex flex-col items-start select-none group shrink-0 min-w-0">
+                    <div class="flex items-center space-x-1">
+                        <span class="text-brand-red text-2xl font-black italic tracking-tighter">//</span>
+                        <span class="font-racing text-xl sm:text-3xl font-black italic tracking-wider text-white group-hover:text-gray-100 truncate">
+                            FC <span class="text-brand-red">RACING</span>
+                        </span>
+                    </div>
+                    <span class="text-[9px] sm:text-[10px] font-bold tracking-widest text-gray-400 uppercase -mt-1 pl-4 truncate">
+                        ACCESORIOS & REPUESTOS OFF ROAD
                     </span>
-                </div>
-                <span class="text-[9px] sm:text-[10px] font-bold tracking-widest text-gray-400 uppercase -mt-1 pl-4">
-                    ACCESORIOS & REPUESTOS OFF ROAD
-                </span>
-            </a>
+                </a>
 
-            <div class="flex items-center space-x-3">
-                <button onclick="openAdminModal()" title="Modo Administrador" class="bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/40 text-purple-300 hover:text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center space-x-1.5 text-xs">
+                <!-- LOGO FC CIRCULAR CON REFLEJO + LUZ CONTINUA + SCROLL TO TOP -->
+                <div 
+                    onclick="scrollToTop(event)" 
+                    class="logo-fc-wrapper shrink-0" 
+                    title="Volver al inicio"
+                >
+                    <div class="logo-fc-shine"></div>
+                    <img 
+                        src="LOGO FC.png" 
+                        onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        alt="FC Racing Logo" 
+                        class="logo-fc-img"
+                    >
+                    <div style="display:none; position:relative; z-index:2;" class="w-full h-full rounded-full bg-gradient-to-br from-brand-red to-black items-center justify-center">
+                        <span class="font-racing font-black text-white text-lg">FC</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+                <button onclick="openAdminModal()" title="Modo Administrador" class="bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/40 text-purple-300 hover:text-white px-2 sm:px-2.5 py-1.5 rounded-lg transition-all flex items-center space-x-1 sm:space-x-1.5 text-xs">
                     <i class="fa-solid fa-shield-halved text-sm"></i>
-                    <span class="hidden sm:inline font-bold">ADMIN</span>
+                    <span class="hidden md:inline font-bold">ADMIN</span>
                 </button>
 
-                <button onclick="toggleCartDrawer()" class="relative flex items-center bg-brand-card hover:bg-brand-red/20 border border-brand-border hover:border-brand-red px-3 py-1.5 rounded-lg text-gray-200 transition-all">
+                <button onclick="toggleCartDrawer()" class="relative flex items-center bg-brand-card hover:bg-brand-red/20 border border-brand-border hover:border-brand-red px-2 sm:px-3 py-1.5 rounded-lg text-gray-200 transition-all">
                     <div class="relative mr-2">
                         <i class="fa-solid fa-cart-shopping text-lg sm:text-xl text-brand-red"></i>
                         <span id="cartCountBadge" class="absolute -top-2 -right-2 bg-brand-red text-white text-[10px] font-black rounded-full h-4 w-4 flex items-center justify-center border border-brand-dark">
@@ -200,9 +420,9 @@
             </div>
         </div>
 
-        <!-- SEARCH BAR -->
-        <div class="max-w-7xl mx-auto px-4 pb-3 flex flex-col sm:flex-row gap-2 items-center">
-            <div class="w-full relative">
+        <!-- SEARCH BAR MEJORADO -->
+        <div class="max-w-7xl mx-auto px-4 pb-3">
+            <div class="w-full relative mb-2">
                 <form onsubmit="handleSearch(event)" class="w-full flex items-center rounded-lg overflow-hidden border border-brand-border bg-black/60 focus-within:border-brand-red transition-colors">
                     <div class="pl-3 text-gray-400">
                         <i class="fa-solid fa-magnifying-glass text-sm"></i>
@@ -210,7 +430,7 @@
                     <input 
                         type="text" 
                         id="searchInput"
-                        placeholder="Buscar por código, producto, marca o descripción..." 
+                        placeholder="Buscar por categoría, subcategoría, código, marca, producto, precio o palabras clave..." 
                         class="w-full bg-transparent px-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none"
                         oninput="handleAutocompleteInput(this.value)"
                         onfocus="handleAutocompleteInput(this.value)"
@@ -237,10 +457,22 @@
                 </div>
             </div>
 
-            <button onclick="syncGoogleSheetData()" title="Sincronizar productos con Google Sheets" class="shrink-0 bg-brand-card hover:bg-black text-gray-300 hover:text-white border border-brand-border text-xs px-3 py-2 rounded-lg flex items-center space-x-1.5 transition-colors w-full sm:w-auto justify-center">
-                <i id="syncIcon" class="fa-solid fa-rotate text-emerald-400 text-xs"></i>
-                <span id="syncText" class="text-[11px] font-semibold truncate">Stock en Vivo</span>
-            </button>
+            <!-- FILTROS POR DESPLEGABLES: CATEGORÍA / SUBCATEGORÍA / MARCA -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 items-center">
+                <select id="filterCategory" onchange="handleFilterChange()" class="bg-black/70 border border-brand-border text-white text-[11px] sm:text-xs font-semibold uppercase rounded-lg px-2.5 py-2 focus:outline-none focus:border-brand-red cursor-pointer w-full">
+                    <option value="">Todas las Categorías</option>
+                </select>
+                <select id="filterSubcategory" onchange="handleFilterChange()" class="bg-black/70 border border-brand-border text-white text-[11px] sm:text-xs font-semibold uppercase rounded-lg px-2.5 py-2 focus:outline-none focus:border-brand-red cursor-pointer w-full">
+                    <option value="">Todas las Subcategorías</option>
+                </select>
+                <select id="filterBrand" onchange="handleFilterChange()" class="bg-black/70 border border-brand-border text-white text-[11px] sm:text-xs font-semibold uppercase rounded-lg px-2.5 py-2 focus:outline-none focus:border-brand-red cursor-pointer w-full col-span-2 sm:col-span-1">
+                    <option value="">Todas las Marcas</option>
+                </select>
+                <button onclick="syncGoogleSheetData()" title="Sincronizar productos con Google Sheets" class="bg-brand-card hover:bg-black text-gray-300 hover:text-white border border-brand-border text-[11px] sm:text-xs px-3 py-2 rounded-lg flex items-center justify-center space-x-1.5 transition-colors w-full">
+                    <i id="syncIcon" class="fa-solid fa-rotate text-emerald-400 text-xs"></i>
+                    <span id="syncText" class="font-semibold truncate">Stock en Vivo</span>
+                </button>
+            </div>
         </div>
 
         <div class="bg-[#0e0e12] border-t border-brand-border/60 py-2">
@@ -268,24 +500,12 @@
             <div id="heroSlider" class="relative w-full h-[280px] sm:h-[400px] lg:h-[480px]">
                 
                 <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-100 flex items-center">
-                    <img 
-                        src="RALLY DAKAR.png" 
-                        onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=1400&q=80';" 
-                        alt="Rally Dakar Off Road" 
-                        class="absolute inset-0 w-full h-full object-cover object-center opacity-70"
-                    >
+                    <img src="RALLY DAKAR.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=1400&q=80';" alt="Rally Dakar Off Road" class="absolute inset-0 w-full h-full object-cover object-center opacity-70">
                     <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
-                    
                     <div class="relative max-w-7xl mx-auto px-6 sm:px-12 w-full z-10">
-                        <span class="bg-brand-red text-white text-[10px] sm:text-xs font-black uppercase tracking-widest px-2.5 py-1 rounded inline-block mb-2">
-                            DESAFÍO EXTREMO
-                        </span>
-                        <h1 class="font-racing italic font-black text-3xl sm:text-6xl text-white tracking-wider uppercase leading-none my-1 drop-shadow-lg">
-                            RALLY <span class="text-brand-red">DAKAR</span>
-                        </h1>
-                        <p class="text-xs sm:text-sm font-semibold tracking-widest text-gray-300 uppercase mb-5 max-w-md">
-                            EQUIPAMIENTO Y REPUESTOS OFICIALES PARA LAS EXIGENCIAS MÁS EXTREMAS DEL OFF ROAD
-                        </p>
+                        <span class="bg-brand-red text-white text-[10px] sm:text-xs font-black uppercase tracking-widest px-2.5 py-1 rounded inline-block mb-2">DESAFÍO EXTREMO</span>
+                        <h1 class="font-racing italic font-black text-3xl sm:text-6xl text-white tracking-wider uppercase leading-none my-1 drop-shadow-lg">RALLY <span class="text-brand-red">DAKAR</span></h1>
+                        <p class="text-xs sm:text-sm font-semibold tracking-widest text-gray-300 uppercase mb-5 max-w-md">EQUIPAMIENTO Y REPUESTOS OFICIALES PARA LAS EXIGENCIAS MÁS EXTREMAS DEL OFF ROAD</p>
                         <button onclick="scrollToCategories()" class="bg-brand-red hover:bg-brand-redDark text-white px-6 py-2.5 rounded text-xs sm:text-sm font-bold uppercase tracking-wider transition-all red-glow inline-flex items-center space-x-2">
                             <span>VER CATÁLOGO DAKAR</span>
                             <i class="fa-solid fa-chevron-right text-xs"></i>
@@ -294,27 +514,13 @@
                 </div>
 
                 <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-0 flex items-center">
-                    <img 
-                        src="moto1.png" 
-                        onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1400&q=80';" 
-                        alt="Motos Off Road" 
-                        class="absolute inset-0 w-full h-full object-cover object-center opacity-70"
-                    >
+                    <img src="moto1.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1400&q=80';" alt="Motos Off Road" class="absolute inset-0 w-full h-full object-cover object-center opacity-70">
                     <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
-                    
                     <div class="relative max-w-7xl mx-auto px-6 sm:px-12 w-full z-10">
-                        <span class="bg-emerald-600 text-white text-[10px] sm:text-xs font-black uppercase tracking-widest px-2.5 py-1 rounded inline-block mb-2">
-                            POTENCIA & CONTROL
-                        </span>
-                        <h2 class="font-racing italic font-black text-3xl sm:text-6xl text-brand-red tracking-wider uppercase leading-none my-1">
-                            MOTO 1 <span class="text-white">RACER</span>
-                        </h2>
-                        <p class="text-xs sm:text-sm font-semibold tracking-widest text-gray-300 uppercase mb-5 max-w-md">
-                            TRANSMISIÓN, SUSPENSIÓN Y PLÁSTICOS DE ALTA PERFORMANCE
-                        </p>
-                        <button onclick="filterByCategory('Accesorios Moto')" class="bg-brand-red hover:bg-brand-redDark text-white px-6 py-2.5 rounded text-xs sm:text-sm font-bold uppercase tracking-wider transition-all red-glow">
-                            VER REPUESTOS DE MOTO
-                        </button>
+                        <span class="bg-emerald-600 text-white text-[10px] sm:text-xs font-black uppercase tracking-widest px-2.5 py-1 rounded inline-block mb-2">POTENCIA & CONTROL</span>
+                        <h2 class="font-racing italic font-black text-3xl sm:text-6xl text-brand-red tracking-wider uppercase leading-none my-1">MOTO 1 <span class="text-white">RACER</span></h2>
+                        <p class="text-xs sm:text-sm font-semibold tracking-widest text-gray-300 uppercase mb-5 max-w-md">TRANSMISIÓN, SUSPENSIÓN Y PLÁSTICOS DE ALTA PERFORMANCE</p>
+                        <button onclick="filterByCategory('Accesorios Moto')" class="bg-brand-red hover:bg-brand-redDark text-white px-6 py-2.5 rounded text-xs sm:text-sm font-bold uppercase tracking-wider transition-all red-glow">VER REPUESTOS DE MOTO</button>
                     </div>
                 </div>
 
@@ -336,11 +542,9 @@
             <div class="flex items-center justify-between mb-5 border-b border-brand-border pb-3">
                 <div>
                     <span class="text-brand-red font-bold text-xs uppercase tracking-widest">// CATEGORÍAS PRINCIPALES</span>
-                    <h2 class="font-racing font-bold text-2xl sm:text-3xl text-white tracking-wider uppercase italic">
-                        EXPLORA POR SECCIÓN
-                    </h2>
+                    <h2 class="font-racing font-bold text-2xl sm:text-3xl text-white tracking-wider uppercase italic">EXPLORA POR SECCIÓN</h2>
                 </div>
-                <button onclick="showAllProductsModal()" class="bg-brand-card hover:bg-brand-cardHover border border-brand-border text-brand-red hover:text-white px-4 py-2 rounded text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center space-x-1.5 transition-all">
+                <button onclick="showAllProductsModal()" class="bg-brand-card hover:bg-brand-cardHover border border-brand-border text-brand-red hover:text-white px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center space-x-1.5 transition-all">
                     <span>Ver Todo el Catálogo</span>
                     <i class="fa-solid fa-chevron-right text-[10px]"></i>
                 </button>
@@ -351,20 +555,11 @@
                 <div onclick="filterByCategory('Equipamiento Rider')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
-                            <img 
-                                src="EQUIPAMIENTO RIDER.png" 
-                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=300&q=80';" 
-                                alt="EQUIPAMIENTO RIDER" 
-                                class="w-full h-full object-cover transition-transform duration-300"
-                            >
+                            <img src="EQUIPAMIENTO RIDER.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=300&q=80';" alt="EQUIPAMIENTO RIDER" class="w-full h-full object-cover transition-transform duration-300">
                         </div>
                         <div class="min-w-0">
-                            <h3 class="font-racing font-bold text-base sm:text-xl text-white tracking-wide uppercase group-hover:text-brand-red transition-colors italic">
-                                EQUIPAMIENTO RIDER
-                            </h3>
-                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">
-                                Cascos • Antiparras • Protecciones • Botas • Guantes • Pecheras Off Road
-                            </p>
+                            <h3 class="font-racing font-bold text-base sm:text-xl text-white tracking-wide uppercase group-hover:text-brand-red transition-colors italic">EQUIPAMIENTO RIDER</h3>
+                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">Cascos • Antiparras • Protecciones • Botas • Guantes • Pecheras Off Road</p>
                         </div>
                     </div>
                     <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0">
@@ -375,20 +570,11 @@
                 <div onclick="filterByCategory('Cubiertas & Ruedas')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
-                            <img 
-                                src="CUBIERTAS & RUEDAS.png" 
-                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80';" 
-                                alt="CUBIERTAS & RUEDAS" 
-                                class="w-full h-full object-cover transition-transform duration-300"
-                            >
+                            <img src="CUBIERTAS & RUEDAS.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80';" alt="CUBIERTAS & RUEDAS" class="w-full h-full object-cover transition-transform duration-300">
                         </div>
                         <div class="min-w-0">
-                            <h3 class="font-racing font-bold text-base sm:text-xl text-white tracking-wide uppercase group-hover:text-brand-red transition-colors italic">
-                                CUBIERTAS & RUEDAS
-                            </h3>
-                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">
-                                Cubiertas Enduro & MX • Llantas • Cámaras Reforzadas • Mousse • Niple & Rayos
-                            </p>
+                            <h3 class="font-racing font-bold text-base sm:text-xl text-white tracking-wide uppercase group-hover:text-brand-red transition-colors italic">CUBIERTAS & RUEDAS</h3>
+                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">Cubiertas Enduro & MX • Llantas • Cámaras Reforzadas • Mousse • Niple & Rayos</p>
                         </div>
                     </div>
                     <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0">
@@ -399,20 +585,11 @@
                 <div onclick="filterByCategory('Mantenimiento')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
-                            <img 
-                                src="MANTENIMIENTO.png" 
-                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=300&q=80';" 
-                                alt="MANTENIMIENTO" 
-                                class="w-full h-full object-cover transition-transform duration-300"
-                            >
+                            <img src="MANTENIMIENTO.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=300&q=80';" alt="MANTENIMIENTO" class="w-full h-full object-cover transition-transform duration-300">
                         </div>
                         <div class="min-w-0">
-                            <h3 class="font-racing font-bold text-base sm:text-xl text-white tracking-wide uppercase group-hover:text-brand-red transition-colors italic">
-                                MANTENIMIENTO
-                            </h3>
-                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">
-                                Transmisión • Pastillas de Freno • Filtros de Aire & Aceite • Lubricantes • Bujías
-                            </p>
+                            <h3 class="font-racing font-bold text-base sm:text-xl text-white tracking-wide uppercase group-hover:text-brand-red transition-colors italic">MANTENIMIENTO</h3>
+                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">Transmisión • Pastillas de Freno • Filtros de Aire & Aceite • Lubricantes • Bujías</p>
                         </div>
                     </div>
                     <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0">
@@ -423,20 +600,11 @@
                 <div onclick="filterByCategory('Accesorios Moto')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
-                            <img 
-                                src="ACCESORIO MOTOS.png" 
-                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=300&q=80';" 
-                                alt="ACCESORIO MOTOS" 
-                                class="w-full h-full object-cover transition-transform duration-300"
-                            >
+                            <img src="ACCESORIO MOTOS.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=300&q=80';" alt="ACCESORIO MOTOS" class="w-full h-full object-cover transition-transform duration-300">
                         </div>
                         <div class="min-w-0">
-                            <h3 class="font-racing font-bold text-base sm:text-xl text-white tracking-wide uppercase group-hover:text-brand-red transition-colors italic">
-                                ACCESORIOS MOTO
-                            </h3>
-                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">
-                                Manubrios • Comandos • Cubre Puños • Levas Rebatibles • Equipaje & Bolsos
-                            </p>
+                            <h3 class="font-racing font-bold text-base sm:text-xl text-white tracking-wide uppercase group-hover:text-brand-red transition-colors italic">ACCESORIOS MOTO</h3>
+                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">Manubrios • Comandos • Cubre Puños • Levas Rebatibles • Equipaje & Bolsos</p>
                         </div>
                     </div>
                     <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0">
@@ -447,20 +615,11 @@
                 <div onclick="filterByCategory('Plásticos')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
-                            <img 
-                                src="PLASTICOS.png" 
-                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80';" 
-                                alt="PLASTICOS" 
-                                class="w-full h-full object-cover transition-transform duration-300"
-                            >
+                            <img src="PLASTICOS.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80';" alt="PLASTICOS" class="w-full h-full object-cover transition-transform duration-300">
                         </div>
                         <div class="min-w-0">
-                            <h3 class="font-racing font-bold text-base sm:text-xl text-white tracking-wide uppercase group-hover:text-brand-red transition-colors italic">
-                                PLÁSTICOS
-                            </h3>
-                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">
-                                Kits Completos • Guardabarros • Cachas Radiador • Cubre Carter • Cubre Disco & Cuadro
-                            </p>
+                            <h3 class="font-racing font-bold text-base sm:text-xl text-white tracking-wide uppercase group-hover:text-brand-red transition-colors italic">PLÁSTICOS</h3>
+                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">Kits Completos • Guardabarros • Cachas Radiador • Cubre Carter • Cubre Disco & Cuadro</p>
                         </div>
                     </div>
                     <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0">
@@ -471,20 +630,11 @@
                 <div onclick="filterByCategory('Taller & Transporte')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
-                            <img 
-                                src="TALLER Y TRANSPORTE.png" 
-                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=300&q=80';" 
-                                alt="TALLER Y TRANSPORTE" 
-                                class="w-full h-full object-cover transition-transform duration-300"
-                            >
+                            <img src="TALLER Y TRANSPORTE.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=300&q=80';" alt="TALLER Y TRANSPORTE" class="w-full h-full object-cover transition-transform duration-300">
                         </div>
                         <div class="min-w-0">
-                            <h3 class="font-racing font-bold text-base sm:text-xl text-white tracking-wide uppercase group-hover:text-brand-red transition-colors italic">
-                                TALLER & TRANSPORTE
-                            </h3>
-                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">
-                                Caballetes Elevadores • Zunchos de Amarre • Bidones Homologados • Herramientas
-                            </p>
+                            <h3 class="font-racing font-bold text-base sm:text-xl text-white tracking-wide uppercase group-hover:text-brand-red transition-colors italic">TALLER & TRANSPORTE</h3>
+                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">Caballetes Elevadores • Zunchos de Amarre • Bidones Homologados • Herramientas</p>
                         </div>
                     </div>
                     <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0">
@@ -499,9 +649,7 @@
             <div class="flex items-center justify-between mb-4">
                 <div>
                     <span class="text-brand-red font-bold text-xs uppercase tracking-widest">// DESTACADOS EN STOCK</span>
-                    <h2 class="font-racing font-bold text-xl sm:text-2xl text-white tracking-wider uppercase italic">
-                        REPUESTOS DESTACADOS
-                    </h2>
+                    <h2 class="font-racing font-bold text-xl sm:text-2xl text-white tracking-wider uppercase italic">REPUESTOS DESTACADOS</h2>
                 </div>
                 <div class="flex items-center space-x-2 text-xs text-gray-400">
                     <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
@@ -509,8 +657,7 @@
                 </div>
             </div>
 
-            <div id="featuredProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            </div>
+            <div id="featuredProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         </section>
 
         <section class="bg-black py-4 border-y border-brand-border overflow-hidden">
@@ -519,46 +666,19 @@
                 <div class="absolute top-0 bottom-0 right-0 w-12 sm:w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none"></div>
 
                 <div class="animate-marquee flex items-center space-x-6 sm:space-x-10 py-1">
-                    <div class="shrink-0 font-racing font-black text-xl italic tracking-tighter text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
-                        <span class="text-brand-red">Z</span>TECH
-                    </div>
-                    <div class="shrink-0 font-racing font-black text-xl tracking-widest text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
-                        ACERBIS
-                    </div>
-                    <div class="shrink-0 font-racing font-black text-xl italic text-red-600 bg-white px-3 py-1 rounded font-bold border border-red-600">
-                        100%
-                    </div>
-                    <div class="shrink-0 font-racing font-black text-xl italic tracking-wider text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
-                        RENTHAL
-                    </div>
-                    <div class="shrink-0 font-racing font-black text-lg italic tracking-wider text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
-                        UFO <span class="text-xs text-brand-red uppercase">Plast</span>
-                    </div>
-                    <div class="shrink-0 font-racing font-black text-xl italic tracking-wider text-blue-500 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
-                        Mitas
-                    </div>
-                    <div class="shrink-0 font-racing font-black text-xl tracking-widest text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
-                        FOX RACING
-                    </div>
-
-                    <div class="shrink-0 font-racing font-black text-xl italic tracking-tighter text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
-                        <span class="text-brand-red">Z</span>TECH
-                    </div>
-                    <div class="shrink-0 font-racing font-black text-xl tracking-widest text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
-                        ACERBIS
-                    </div>
-                    <div class="shrink-0 font-racing font-black text-xl italic text-red-600 bg-white px-3 py-1 rounded font-bold border border-red-600">
-                        100%
-                    </div>
-                    <div class="shrink-0 font-racing font-black text-xl italic tracking-wider text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
-                        RENTHAL
-                    </div>
-                    <div class="shrink-0 font-racing font-black text-lg italic tracking-wider text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
-                        UFO <span class="text-xs text-brand-red uppercase">Plast</span>
-                    </div>
-                    <div class="shrink-0 font-racing font-black text-xl italic tracking-wider text-blue-500 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
-                        Mitas
-                    </div>
+                    <div class="shrink-0 font-racing font-black text-xl italic tracking-tighter text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded"><span class="text-brand-red">Z</span>TECH</div>
+                    <div class="shrink-0 font-racing font-black text-xl tracking-widest text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">ACERBIS</div>
+                    <div class="shrink-0 font-racing font-black text-xl italic text-red-600 bg-white px-3 py-1 rounded font-bold border border-red-600">100%</div>
+                    <div class="shrink-0 font-racing font-black text-xl italic tracking-wider text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">RENTHAL</div>
+                    <div class="shrink-0 font-racing font-black text-lg italic tracking-wider text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">UFO <span class="text-xs text-brand-red uppercase">Plast</span></div>
+                    <div class="shrink-0 font-racing font-black text-xl italic tracking-wider text-blue-500 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">Mitas</div>
+                    <div class="shrink-0 font-racing font-black text-xl tracking-widest text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">FOX RACING</div>
+                    <div class="shrink-0 font-racing font-black text-xl italic tracking-tighter text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded"><span class="text-brand-red">Z</span>TECH</div>
+                    <div class="shrink-0 font-racing font-black text-xl tracking-widest text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">ACERBIS</div>
+                    <div class="shrink-0 font-racing font-black text-xl italic text-red-600 bg-white px-3 py-1 rounded font-bold border border-red-600">100%</div>
+                    <div class="shrink-0 font-racing font-black text-xl italic tracking-wider text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">RENTHAL</div>
+                    <div class="shrink-0 font-racing font-black text-lg italic tracking-wider text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">UFO <span class="text-xs text-brand-red uppercase">Plast</span></div>
+                    <div class="shrink-0 font-racing font-black text-xl italic tracking-wider text-blue-500 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">Mitas</div>
                 </div>
             </div>
         </section>
@@ -568,40 +688,25 @@
                 <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-brand-red/10 rounded-full blur-3xl pointer-events-none"></div>
 
                 <div class="text-center sm:text-left mb-8 border-b border-brand-border pb-4">
-                    <span class="bg-brand-red/20 text-brand-red font-bold text-xs uppercase tracking-widest px-3 py-1 rounded border border-brand-red/30">
-                        <i class="fa-solid fa-location-dot mr-1"></i> NUESTRO LOCAL & ATENCIÓN
-                    </span>
-                    <h2 class="font-racing font-black text-2xl sm:text-4xl text-white tracking-wider uppercase italic mt-2">
-                        VISÍTANOS O CONTACTA DIRECTO NUESTRA UBICACIÓN
-                    </h2>
+                    <span class="bg-brand-red/20 text-brand-red font-bold text-xs uppercase tracking-widest px-3 py-1 rounded border border-brand-red/30"><i class="fa-solid fa-location-dot mr-1"></i> NUESTRO LOCAL & ATENCIÓN</span>
+                    <h2 class="font-racing font-black text-2xl sm:text-4xl text-white tracking-wider uppercase italic mt-2">VISÍTANOS O CONTACTA DIRECTO NUESTRA UBICACIÓN</h2>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-black/60 rounded-lg p-5 border border-brand-border flex flex-col justify-between hover:border-brand-red/60 transition-all">
                         <div>
-                            <div class="w-12 h-12 rounded-lg bg-brand-red/20 border border-brand-red/40 flex items-center justify-center text-brand-red text-xl mb-4">
-                                <i class="fa-solid fa-store"></i>
-                            </div>
+                            <div class="w-12 h-12 rounded-lg bg-brand-red/20 border border-brand-red/40 flex items-center justify-center text-brand-red text-xl mb-4"><i class="fa-solid fa-store"></i></div>
                             <h3 class="font-racing font-bold text-lg text-white uppercase italic mb-2">DIRECCIÓN DEL LOCAL</h3>
-                            <p class="text-sm text-gray-300 font-medium leading-relaxed">
-                                Ernesto Negrete 27<br>
-                                <span class="text-brand-red font-bold">Esq. Alfredo Palacios</span>
-                            </p>
+                            <p class="text-sm text-gray-300 font-medium leading-relaxed">Ernesto Negrete 27<br><span class="text-brand-red font-bold">Esq. Alfredo Palacios</span></p>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-brand-border/40 text-xs text-gray-400">
-                            Atención presencial y retiro de pedidos.
-                        </div>
+                        <div class="mt-4 pt-3 border-t border-brand-border/40 text-xs text-gray-400">Atención presencial y retiro de pedidos.</div>
                     </div>
 
                     <div class="bg-black/60 rounded-lg p-5 border border-brand-border flex flex-col justify-between hover:border-brand-red/60 transition-all">
                         <div>
-                            <div class="w-12 h-12 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 text-xl mb-4">
-                                <i class="fa-solid fa-map-location-dot"></i>
-                            </div>
+                            <div class="w-12 h-12 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 text-xl mb-4"><i class="fa-solid fa-map-location-dot"></i></div>
                             <h3 class="font-racing font-bold text-lg text-white uppercase italic mb-2">NAVEGACIÓN GPS</h3>
-                            <p class="text-sm text-gray-300 leading-relaxed mb-4">
-                                Abrí la ubicación exacta directamente en tu teléfono con Google Maps.
-                            </p>
+                            <p class="text-sm text-gray-300 leading-relaxed mb-4">Abrí la ubicación exacta directamente en tu teléfono con Google Maps.</p>
                         </div>
                         <a href="https://maps.app.goo.gl/n6a3xVZXCsswcCPf8" target="_blank" rel="noopener noreferrer" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded text-xs uppercase tracking-wider text-center transition-colors flex items-center justify-center space-x-2">
                             <i class="fa-solid fa-diamond-turn-right"></i>
@@ -611,23 +716,17 @@
 
                     <div class="bg-black/60 rounded-lg p-5 border border-brand-border flex flex-col justify-between hover:border-brand-red/60 transition-all">
                         <div>
-                            <div class="w-12 h-12 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl mb-4">
-                                <i class="fa-brands fa-whatsapp"></i>
-                            </div>
+                            <div class="w-12 h-12 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl mb-4"><i class="fa-brands fa-whatsapp"></i></div>
                             <h3 class="font-racing font-bold text-lg text-white uppercase italic mb-1">ATENCIÓN TELEFÓNICA / WHATSAPP</h3>
                             <p class="font-racing font-black text-2xl text-emerald-400 my-2">3543546389</p>
-                            <p class="text-xs text-gray-400">
-                                Asesoramiento técnico personalizado, consultas de stock y ventas telefónicas.
-                            </p>
+                            <p class="text-xs text-gray-400">Asesoramiento técnico personalizado, consultas de stock y ventas telefónicas.</p>
                         </div>
                         <div class="mt-4 pt-3 flex space-x-2">
                             <a href="https://wa.me/5493543546389?text=Hola!%20Consulta%20desde%20la%20web" target="_blank" class="flex-grow bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded text-xs uppercase text-center transition-colors flex items-center justify-center space-x-1">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span>WHATSAPP</span>
                             </a>
-                            <a href="tel:3543546389" class="bg-brand-card hover:bg-brand-cardHover text-white border border-brand-border font-bold py-2 px-3 rounded text-xs transition-colors flex items-center justify-center">
-                                <i class="fa-solid fa-phone"></i>
-                            </a>
+                            <a href="tel:3543546389" class="bg-brand-card hover:bg-brand-cardHover text-white border border-brand-border font-bold py-2 px-3 rounded text-xs transition-colors flex items-center justify-center"><i class="fa-solid fa-phone"></i></a>
                         </div>
                     </div>
                 </div>
@@ -641,13 +740,9 @@
             <div class="space-y-3">
                 <div class="flex items-center space-x-1">
                     <span class="text-brand-red text-xl font-black italic">//</span>
-                    <span class="font-racing text-xl font-black italic tracking-wider text-white">
-                        FC <span class="text-brand-red">RACING</span>
-                    </span>
+                    <span class="font-racing text-xl font-black italic tracking-wider text-white">FC <span class="text-brand-red">RACING</span></span>
                 </div>
-                <p class="text-gray-400 text-xs leading-relaxed">
-                    Especialistas en repuestos, accesorios y equipamiento off-road para Enduro, Motocross y Trail.
-                </p>
+                <p class="text-gray-400 text-xs leading-relaxed">Especialistas en repuestos, accesorios y equipamiento off-road para Enduro, Motocross y Trail.</p>
             </div>
 
             <div>
@@ -663,18 +758,9 @@
             <div>
                 <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">Ubicación y Contacto</h5>
                 <ul class="space-y-2">
-                    <li class="flex items-start space-x-2">
-                        <i class="fa-solid fa-location-dot text-brand-red mt-0.5"></i>
-                        <span>Ernesto Negrete 27, Esq. Alfredo Palacios</span>
-                    </li>
-                    <li class="flex items-center space-x-2">
-                        <i class="fa-brands fa-whatsapp text-emerald-400"></i>
-                        <span>3543546389</span>
-                    </li>
-                    <li class="flex items-center space-x-2">
-                        <i class="fa-regular fa-envelope text-brand-red"></i>
-                        <span>contacto@fcracing.com.ar</span>
-                    </li>
+                    <li class="flex items-start space-x-2"><i class="fa-solid fa-location-dot text-brand-red mt-0.5"></i><span>Ernesto Negrete 27, Esq. Alfredo Palacios</span></li>
+                    <li class="flex items-center space-x-2"><i class="fa-brands fa-whatsapp text-emerald-400"></i><span>3543546389</span></li>
+                    <li class="flex items-center space-x-2"><i class="fa-regular fa-envelope text-brand-red"></i><span>contacto@fcracing.com.ar</span></li>
                 </ul>
             </div>
 
@@ -685,9 +771,7 @@
                     <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Mercado Pago</li>
                     <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Pago Efectivo en Local</li>
                 </ul>
-                <p class="text-[11px] text-gray-500">
-                    Sincronizado vía Google Sheets API.
-                </p>
+                <p class="text-[11px] text-gray-500">Sincronizado vía Google Sheets API.</p>
             </div>
         </div>
 
@@ -697,15 +781,18 @@
     </footer>
 
     <!-- FLOATING WHATSAPP BUTTON -->
-    <a 
-        href="https://wa.me/5493543546389?text=Hola!%20Vengo%20desde%20la%20web%20FC%20RACING%20y%20quisiera%20consultar%20por%20un%20producto" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        class="fixed bottom-5 right-5 z-50 bg-green-600 hover:bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl whatsapp-pulse transition-transform hover:scale-110"
-        aria-label="Contactar por WhatsApp"
-    >
+    <a href="https://wa.me/5493543546389?text=Hola!%20Vengo%20desde%20la%20web%20FC%20RACING%20y%20quisiera%20consultar%20por%20un%20producto" target="_blank" rel="noopener noreferrer" class="fixed bottom-5 right-5 z-50 bg-green-600 hover:bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl whatsapp-pulse transition-transform hover:scale-110" aria-label="Contactar por WhatsApp">
         <i class="fa-brands fa-whatsapp text-3xl"></i>
     </a>
+
+    <!-- BOTÓN SCROLL TO TOP -->
+    <button id="scrollToTopBtn" onclick="scrollToTop()" class="logo-fc-wrapper shrink-0" title="Volver al inicio" aria-label="Volver al inicio">
+        <div class="logo-fc-shine"></div>
+        <img src="LOGO FC.png" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';" alt="FC Logo" class="logo-fc-img">
+        <div style="display:none; position:relative; z-index:2;" class="w-full h-full rounded-full bg-gradient-to-br from-brand-red to-black items-center justify-center">
+            <i class="fa-solid fa-arrow-up text-white"></i>
+        </div>
+    </button>
 
     <!-- ADMIN PASSWORD MODAL -->
     <div id="adminModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
@@ -713,54 +800,24 @@
             <div class="flex items-center justify-between mb-5 border-b border-brand-border pb-3">
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-shield-halved text-purple-400 text-xl"></i>
-                    <h3 class="font-racing font-bold text-lg text-white uppercase italic tracking-wider">
-                        Acceso Administrador
-                    </h3>
+                    <h3 class="font-racing font-bold text-lg text-white uppercase italic tracking-wider">Acceso Administrador</h3>
                 </div>
-                <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white text-xl p-1">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white text-xl p-1"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-gray-300 font-semibold text-xs mb-2">
-                        <i class="fa-solid fa-key text-purple-400 mr-1"></i>
-                        Ingresá la clave de administrador:
-                    </label>
-                    <input 
-                        type="password" 
-                        id="adminPassword" 
-                        placeholder="Clave secreta..." 
-                        onkeydown="if(event.key === 'Enter') verifyAdminPassword()"
-                        class="w-full bg-black border border-brand-border rounded px-3 py-2.5 text-white focus:outline-none focus:border-purple-500 text-sm"
-                        autocomplete="off"
-                    >
-                    <p id="adminError" class="text-red-400 text-xs mt-1.5 hidden">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Clave incorrecta. Intentá nuevamente.
-                    </p>
+                    <label class="block text-gray-300 font-semibold text-xs mb-2"><i class="fa-solid fa-key text-purple-400 mr-1"></i>Ingresá la clave de administrador:</label>
+                    <input type="password" id="adminPassword" placeholder="Clave secreta..." onkeydown="if(event.key === 'Enter') verifyAdminPassword()" class="w-full bg-black border border-brand-border rounded px-3 py-2.5 text-white focus:outline-none focus:border-purple-500 text-sm" autocomplete="off">
+                    <p id="adminError" class="text-red-400 text-xs mt-1.5 hidden"><i class="fa-solid fa-triangle-exclamation"></i> Clave incorrecta. Intentá nuevamente.</p>
                 </div>
 
                 <div class="flex space-x-2">
-                    <button 
-                        onclick="verifyAdminPassword()" 
-                        class="flex-grow bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded text-xs uppercase tracking-wider transition-colors flex items-center justify-center space-x-2"
-                    >
-                        <i class="fa-solid fa-unlock"></i>
-                        <span>INGRESAR</span>
-                    </button>
-                    <button 
-                        onclick="closeAdminModal()" 
-                        class="bg-brand-card hover:bg-brand-cardHover text-gray-300 border border-brand-border font-bold py-2.5 px-4 rounded text-xs uppercase tracking-wider transition-colors"
-                    >
-                        Cancelar
-                    </button>
+                    <button onclick="verifyAdminPassword()" class="flex-grow bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded text-xs uppercase tracking-wider transition-colors flex items-center justify-center space-x-2"><i class="fa-solid fa-unlock"></i><span>INGRESAR</span></button>
+                    <button onclick="closeAdminModal()" class="bg-brand-card hover:bg-brand-cardHover text-gray-300 border border-brand-border font-bold py-2.5 px-4 rounded text-xs uppercase tracking-wider transition-colors">Cancelar</button>
                 </div>
 
-                <div class="bg-black/40 border border-brand-border/60 rounded p-3 text-[10px] text-gray-400 text-center">
-                    <i class="fa-solid fa-info-circle text-purple-400 mr-1"></i>
-                    Solo personal autorizado puede acceder a la edición de la base de datos y del banner.
-                </div>
+                <div class="bg-black/40 border border-brand-border/60 rounded p-3 text-[10px] text-gray-400 text-center"><i class="fa-solid fa-info-circle text-purple-400 mr-1"></i>Solo personal autorizado puede acceder a la edición de la base de datos y del banner.</div>
             </div>
         </div>
     </div>
@@ -769,54 +826,21 @@
     <div id="bannerEditorModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
         <div class="bg-brand-dark border border-brand-border rounded-xl shadow-2xl p-6 max-w-lg w-full mx-4">
             <div class="flex items-center justify-between mb-5 border-b border-brand-border pb-3">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-pen-to-square text-brand-red text-xl"></i>
-                    <h3 class="font-racing font-bold text-lg text-white uppercase italic tracking-wider">
-                        Editar Banner Superior
-                    </h3>
-                </div>
-                <button onclick="closeBannerEditor()" class="text-gray-400 hover:text-white text-xl p-1">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <div class="flex items-center space-x-2"><i class="fa-solid fa-pen-to-square text-brand-red text-xl"></i><h3 class="font-racing font-bold text-lg text-white uppercase italic tracking-wider">Editar Banner Superior</h3></div>
+                <button onclick="closeBannerEditor()" class="text-gray-400 hover:text-white text-xl p-1"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-gray-300 font-semibold text-xs mb-2">
-                        <i class="fa-solid fa-bullhorn text-brand-red mr-1"></i>
-                        Escribí un mensaje por línea:
-                    </label>
-                    <textarea 
-                        id="bannerTextarea" 
-                        rows="5" 
-                        class="w-full bg-black border border-brand-border rounded px-3 py-2.5 text-white focus:outline-none focus:border-brand-red text-xs leading-relaxed"
-                    ></textarea>
-                    <p class="text-[10px] text-gray-500 mt-1.5">
-                        Cada línea se mostrará como un aviso independiente en el banner animado superior.
-                    </p>
+                    <label class="block text-gray-300 font-semibold text-xs mb-2"><i class="fa-solid fa-bullhorn text-brand-red mr-1"></i>Escribí un mensaje por línea:</label>
+                    <textarea id="bannerTextarea" rows="5" class="w-full bg-black border border-brand-border rounded px-3 py-2.5 text-white focus:outline-none focus:border-brand-red text-xs leading-relaxed"></textarea>
+                    <p class="text-[10px] text-gray-500 mt-1.5">Cada línea se mostrará como un aviso independiente en el banner animado superior.</p>
                 </div>
 
                 <div class="flex space-x-2">
-                    <button 
-                        onclick="saveBannerEditor()" 
-                        class="flex-grow bg-brand-red hover:bg-brand-redDark text-white font-bold py-2.5 rounded text-xs uppercase tracking-wider transition-colors flex items-center justify-center space-x-2"
-                    >
-                        <i class="fa-solid fa-floppy-disk"></i>
-                        <span>GUARDAR CAMBIOS</span>
-                    </button>
-                    <button 
-                        onclick="resetBannerEditor()" 
-                        class="bg-brand-card hover:bg-brand-cardHover text-gray-300 border border-brand-border font-bold py-2.5 px-3 rounded text-xs uppercase tracking-wider transition-colors"
-                        title="Restaurar mensajes originales"
-                    >
-                        <i class="fa-solid fa-rotate-left"></i>
-                    </button>
-                    <button 
-                        onclick="closeBannerEditor()" 
-                        class="bg-brand-card hover:bg-brand-cardHover text-gray-300 border border-brand-border font-bold py-2.5 px-4 rounded text-xs uppercase tracking-wider transition-colors"
-                    >
-                        Cancelar
-                    </button>
+                    <button onclick="saveBannerEditor()" class="flex-grow bg-brand-red hover:bg-brand-redDark text-white font-bold py-2.5 rounded text-xs uppercase tracking-wider transition-colors flex items-center justify-center space-x-2"><i class="fa-solid fa-floppy-disk"></i><span>GUARDAR CAMBIOS</span></button>
+                    <button onclick="resetBannerEditor()" class="bg-brand-card hover:bg-brand-cardHover text-gray-300 border border-brand-border font-bold py-2.5 px-3 rounded text-xs uppercase tracking-wider transition-colors" title="Restaurar mensajes originales"><i class="fa-solid fa-rotate-left"></i></button>
+                    <button onclick="closeBannerEditor()" class="bg-brand-card hover:bg-brand-cardHover text-gray-300 border border-brand-border font-bold py-2.5 px-4 rounded text-xs uppercase tracking-wider transition-colors">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -824,45 +848,24 @@
 
     <div id="mobileDrawer" class="fixed inset-0 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out pointer-events-none">
         <div id="drawerBackdrop" class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300"></div>
-        
         <div class="relative w-4/5 max-w-sm bg-brand-dark h-full shadow-2xl border-r border-brand-border p-5 flex flex-col justify-between pointer-events-auto overflow-y-auto">
             <div>
                 <div class="flex items-center justify-between pb-4 border-b border-brand-border mb-4">
-                    <div class="flex items-center space-x-1">
-                        <span class="text-brand-red text-xl font-black italic">//</span>
-                        <span class="font-racing text-xl font-black italic tracking-wider text-white">
-                            FC <span class="text-brand-red">RACING</span>
-                        </span>
-                    </div>
-                    <button id="closeMobileMenu" class="text-gray-400 hover:text-white text-xl p-1">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
+                    <div class="flex items-center space-x-1"><span class="text-brand-red text-xl font-black italic">//</span><span class="font-racing text-xl font-black italic tracking-wider text-white">FC <span class="text-brand-red">RACING</span></span></div>
+                    <button id="closeMobileMenu" class="text-gray-400 hover:text-white text-xl p-1"><i class="fa-solid fa-xmark"></i></button>
                 </div>
 
                 <nav class="space-y-3 font-racing font-bold text-sm tracking-wider uppercase">
-                    <a href="#" onclick="closeDrawer()" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40">
-                        <i class="fa-solid fa-house text-brand-red mr-2"></i> Inicio
-                    </a>
-                    <a href="#categoriesSection" onclick="closeDrawer()" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40">
-                        <i class="fa-solid fa-list-ul text-brand-red mr-2"></i> Ver Categorías
-                    </a>
-                    <a href="#" onclick="filterByCategory('Equipamiento Rider'); closeDrawer();" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40">
-                        <i class="fa-solid fa-helmet-safety text-brand-red mr-2"></i> Equipamiento Rider
-                    </a>
-                    <a href="#" onclick="filterByCategory('Cubiertas & Ruedas'); closeDrawer();" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40">
-                        <i class="fa-solid fa-circle-notch text-brand-red mr-2"></i> Cubiertas & Ruedas
-                    </a>
-                    <a href="#" onclick="filterByCategory('Mantenimiento'); closeDrawer();" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40">
-                        <i class="fa-solid fa-gears text-brand-red mr-2"></i> Repuestos & Mantenimiento
-                    </a>
+                    <a href="#" onclick="closeDrawer()" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40"><i class="fa-solid fa-house text-brand-red mr-2"></i> Inicio</a>
+                    <a href="#categoriesSection" onclick="closeDrawer()" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40"><i class="fa-solid fa-list-ul text-brand-red mr-2"></i> Ver Categorías</a>
+                    <a href="#" onclick="filterByCategory('Equipamiento Rider'); closeDrawer();" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40"><i class="fa-solid fa-helmet-safety text-brand-red mr-2"></i> Equipamiento Rider</a>
+                    <a href="#" onclick="filterByCategory('Cubiertas & Ruedas'); closeDrawer();" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40"><i class="fa-solid fa-circle-notch text-brand-red mr-2"></i> Cubiertas & Ruedas</a>
+                    <a href="#" onclick="filterByCategory('Mantenimiento'); closeDrawer();" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40"><i class="fa-solid fa-gears text-brand-red mr-2"></i> Repuestos & Mantenimiento</a>
                 </nav>
             </div>
 
             <div class="pt-4 border-t border-brand-border space-y-3 text-xs">
-                <a href="https://wa.me/5493543546389" target="_blank" class="w-full bg-green-600 text-white font-bold py-2.5 rounded flex items-center justify-center space-x-2">
-                    <i class="fa-brands fa-whatsapp text-base"></i>
-                    <span>Contactar: 3543546389</span>
-                </a>
+                <a href="https://wa.me/5493543546389" target="_blank" class="w-full bg-green-600 text-white font-bold py-2.5 rounded flex items-center justify-center space-x-2"><i class="fa-brands fa-whatsapp text-base"></i><span>Contactar: 3543546389</span></a>
             </div>
         </div>
     </div>
@@ -873,37 +876,24 @@
         <div class="relative ml-auto w-full max-w-lg bg-brand-dark h-full shadow-2xl border-l border-brand-border p-4 sm:p-6 flex flex-col justify-between pointer-events-auto overflow-y-auto">
             <div>
                 <div class="flex items-center justify-between pb-3 border-b border-brand-border mb-4">
-                    <div class="flex items-center space-x-2">
-                        <i class="fa-solid fa-cart-shopping text-brand-red text-xl"></i>
-                        <h3 class="font-racing font-bold text-xl text-white uppercase italic tracking-wider">
-                            Tu Carrito DE COMPRAS (<span id="cartTotalItems">0</span>)
-                        </h3>
-                    </div>
-                    <button onclick="toggleCartDrawer()" class="text-gray-400 hover:text-white text-xl p-1">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
+                    <div class="flex items-center space-x-2"><i class="fa-solid fa-cart-shopping text-brand-red text-xl"></i><h3 class="font-racing font-bold text-xl text-white uppercase italic tracking-wider">Tu Carrito DE COMPRAS (<span id="cartTotalItems">0</span>)</h3></div>
+                    <button onclick="toggleCartDrawer()" class="text-gray-400 hover:text-white text-xl p-1"><i class="fa-solid fa-xmark"></i></button>
                 </div>
 
                 <div id="cartItemsList" class="space-y-3 max-h-[35vh] overflow-y-auto pr-1 mb-4">
                     <p class="text-center text-gray-500 text-xs py-8">Tu carrito está vacío. Agregá productos para generar tu pedido.</p>
                 </div>
 
-                <!-- SUBTOTAL (TOTAL DEL PEDIDO SIN DESCUENTO) -->
                 <div class="bg-black/60 p-3 rounded-lg border border-brand-border mb-2 flex justify-between items-center">
                     <span class="text-gray-400 uppercase font-bold text-xs">Total del Pedido:</span>
                     <span id="cartSubtotalPrice" class="font-racing font-bold text-base text-gray-300 line-through">$ 0</span>
                 </div>
 
-                <!-- DESCUENTO 5% -->
                 <div class="bg-emerald-900/30 p-2.5 rounded-lg border border-emerald-500/50 mb-2 flex justify-between items-center">
-                    <span class="text-emerald-400 uppercase font-bold text-xs flex items-center space-x-1.5">
-                        <i class="fa-solid fa-tag"></i>
-                        <span>Descuento Carrito (5%):</span>
-                    </span>
+                    <span class="text-emerald-400 uppercase font-bold text-xs flex items-center space-x-1.5"><i class="fa-solid fa-tag"></i><span>Descuento Carrito (5%):</span></span>
                     <span id="cartDiscountAmount" class="font-racing font-bold text-sm text-emerald-400">- $ 0</span>
                 </div>
 
-                <!-- TOTAL FINAL CON DESCUENTO (este es el que se envía por WhatsApp y PDF) -->
                 <div class="bg-gradient-to-r from-brand-redDark/40 to-brand-red/40 p-4 rounded-lg border-2 border-brand-red mb-5 flex justify-between items-center shadow-lg">
                     <div class="flex flex-col">
                         <span class="text-white uppercase font-black text-xs tracking-wider">Total Final a Pagar:</span>
@@ -914,53 +904,29 @@
 
                 <div class="bg-brand-card p-4 rounded-lg border border-brand-border space-y-3">
                     <div class="border-b border-brand-border pb-2 flex items-center justify-between">
-                        <h4 class="font-racing font-bold text-sm text-white uppercase tracking-wider text-brand-red">
-                            <i class="fa-solid fa-file-invoice mr-1.5"></i> Datos para generar tu Recibo de Venta
-                        </h4>
+                        <h4 class="font-racing font-bold text-sm text-white uppercase tracking-wider text-brand-red"><i class="fa-solid fa-file-invoice mr-1.5"></i> Datos para generar tu Recibo de Venta</h4>
                         <span class="text-[10px] text-gray-400 font-normal">Paso final</span>
                     </div>
 
                     <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)" class="space-y-3 text-xs">
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Nombre y Apellido <span class="text-brand-red">*</span></label>
-                            <input 
-                                type="text" 
-                                id="custName" 
-                                required 
-                                placeholder="Ej: Juan Pérez" 
-                                class="w-full bg-black border border-brand-border rounded px-3 py-2 text-white focus:outline-none focus:border-brand-red"
-                            >
+                            <input type="text" id="custName" required placeholder="Ej: Juan Pérez" class="w-full bg-black border border-brand-border rounded px-3 py-2 text-white focus:outline-none focus:border-brand-red">
                         </div>
 
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Ciudad y Dirección <span class="text-brand-red">*</span></label>
-                            <input 
-                                type="text" 
-                                id="custAddress" 
-                                required 
-                                placeholder="Ej: Córdoba Cap., Av. San Martín 450" 
-                                class="w-full bg-black border border-brand-border rounded px-3 py-2 text-white focus:outline-none focus:border-brand-red"
-                            >
+                            <input type="text" id="custAddress" required placeholder="Ej: Córdoba Cap., Av. San Martín 450" class="w-full bg-black border border-brand-border rounded px-3 py-2 text-white focus:outline-none focus:border-brand-red">
                         </div>
 
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Correo Electrónico <span class="text-brand-red">*</span></label>
-                            <input 
-                                type="email" 
-                                id="custEmail" 
-                                required 
-                                placeholder="ejemplo@correo.com" 
-                                class="w-full bg-black border border-brand-border rounded px-3 py-2 text-white focus:outline-none focus:border-brand-red"
-                            >
+                            <input type="email" id="custEmail" required placeholder="ejemplo@correo.com" class="w-full bg-black border border-brand-border rounded px-3 py-2 text-white focus:outline-none focus:border-brand-red">
                         </div>
 
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Método de Pago <span class="text-brand-red">*</span></label>
-                            <select 
-                                id="custPayment" 
-                                required 
-                                class="w-full bg-black border border-brand-border rounded px-3 py-2 text-white focus:outline-none focus:border-brand-red cursor-pointer"
-                            >
+                            <select id="custPayment" required class="w-full bg-black border border-brand-border rounded px-3 py-2 text-white focus:outline-none focus:border-brand-red cursor-pointer">
                                 <option value="" disabled selected>Seleccioná un medio de pago</option>
                                 <option value="PAGO TRANSFERENCIA BANCARIA">PAGO TRANSFERENCIA BANCARIA</option>
                                 <option value="PAGO CON MERCADO PAGO">PAGO CON MERCADO PAGO</option>
@@ -968,11 +934,7 @@
                             </select>
                         </div>
 
-                        <button 
-                            type="submit" 
-                            id="submitOrderBtn"
-                            class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg flex items-center justify-center space-x-2 uppercase tracking-wider text-xs shadow-lg transition-colors mt-2"
-                        >
+                        <button type="submit" id="submitOrderBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg flex items-center justify-center space-x-2 uppercase tracking-wider text-xs shadow-lg transition-colors mt-2">
                             <i class="fa-brands fa-whatsapp text-lg"></i>
                             <span>ENVIAR PEDIDO Y GENERAR RECIBO PDF</span>
                         </button>
@@ -986,25 +948,48 @@
         </div>
     </div>
 
-    <div id="productsModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex-col overflow-y-auto">
-        <div class="max-w-6xl mx-auto w-full px-4 py-6">
-            <div class="flex items-center justify-between pb-4 border-b border-brand-border mb-6">
+    <!-- MODAL CATÁLOGO GENERAL CON VISTA HORIZONTAL Y GRID -->
+    <div id="productsModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex-col overflow-y-auto">
+        <div class="max-w-7xl mx-auto w-full px-4 py-6">
+            <div class="flex items-center justify-between pb-4 border-b border-brand-border mb-6 sticky top-0 bg-black/90 backdrop-blur-md -mx-4 px-4 z-10">
                 <div>
                     <span class="text-brand-red font-bold text-xs uppercase tracking-widest">// CATÁLOGO GENERAL FC RACING</span>
-                    <h2 id="modalCategoryTitle" class="font-racing font-bold text-2xl sm:text-3xl text-white uppercase italic">
-                        TODOS LOS PRODUCTOS
-                    </h2>
-                    <p id="modalCategoryCount" class="text-[11px] text-emerald-400 font-semibold mt-1">
-                        <i class="fa-solid fa-database mr-1"></i>Sincronizado con Google Sheets
-                    </p>
+                    <h2 id="modalCategoryTitle" class="font-racing font-bold text-2xl sm:text-3xl text-white uppercase italic">TODOS LOS PRODUCTOS</h2>
+                    <p id="modalCategoryCount" class="text-[11px] text-emerald-400 font-semibold mt-1"><i class="fa-solid fa-database mr-1"></i>Sincronizado con Google Sheets</p>
                 </div>
-                <button onclick="closeProductsModal()" class="text-gray-400 hover:text-white text-2xl p-2">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <div class="flex items-center space-x-2">
+                    <button onclick="toggleCatalogLayout()" id="catalogLayoutToggle" title="Cambiar vista" class="bg-brand-card hover:bg-brand-red/20 border border-brand-border hover:border-brand-red text-white w-9 h-9 rounded-lg flex items-center justify-center transition-all">
+                        <i id="layoutIcon" class="fa-solid fa-table-columns"></i>
+                    </button>
+                    <button onclick="closeProductsModal()" class="text-gray-400 hover:text-white text-2xl p-2"><i class="fa-solid fa-xmark"></i></button>
+                </div>
             </div>
 
-            <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div class="mb-4 flex items-center justify-between">
+                <p id="catalogViewLabel" class="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">
+                    <i class="fa-solid fa-arrows-left-right text-brand-red mr-1"></i> Deslizá horizontalmente para explorar • Scroll vertical para continuar
+                </p>
+                <div class="text-[11px] text-emerald-400 font-semibold hidden sm:flex items-center space-x-1">
+                    <i class="fa-solid fa-hand-pointer"></i>
+                    <span>Click en tarjeta = Vista ampliada</span>
+                </div>
             </div>
+
+            <div class="catalog-scroll-container" id="catalogScrollContainer">
+                <button onclick="scrollCatalog(-1)" class="catalog-nav-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+                <div id="productsGrid" class="catalog-scroll-track"></div>
+                <button onclick="scrollCatalog(1)" class="catalog-nav-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL VISTA EXPANDIDA DE TARJETA -->
+    <div id="expandedCardModal" class="hidden expanded-card-overlay" onclick="if(event.target === this) closeExpandedCard()">
+        <div class="expanded-card">
+            <button onclick="closeExpandedCard()" class="absolute top-3 right-3 bg-black/70 hover:bg-brand-red text-white w-9 h-9 rounded-full flex items-center justify-center transition-colors z-10 border border-brand-border">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+            <div id="expandedCardContent"></div>
         </div>
     </div>
 
@@ -1037,6 +1022,7 @@
                 <thead>
                     <tr style="background-color: #111111; color: #ffffff; text-align: left;">
                         <th style="padding: 8px; border: 1px solid #111111;">CÓDIGO</th>
+                        <th style="padding: 8px; border: 1px solid #111111;">MARCA</th>
                         <th style="padding: 8px; border: 1px solid #111111;">DESCRIPCIÓN</th>
                         <th style="padding: 8px; border: 1px solid #111111; text-align: center;">CANT</th>
                         <th style="padding: 8px; border: 1px solid #111111; text-align: right;">PRECIO U.</th>
@@ -1046,20 +1032,10 @@
                 <tbody id="pdfTableBody"></tbody>
             </table>
 
-            <!-- RESUMEN CON SUBTOTAL, DESCUENTO Y TOTAL FINAL -->
             <div style="text-align: right; margin-bottom: 30px; font-size: 12px;">
-                <div style="margin-bottom: 6px;">
-                    <span style="font-weight: bold; margin-right: 15px; color: #555555;">SUBTOTAL:</span>
-                    <span id="pdfSubtotal" style="text-decoration: line-through; color: #888888;">$ 0</span>
-                </div>
-                <div style="margin-bottom: 10px; color: #059669; font-weight: bold;">
-                    <span style="margin-right: 15px;">DESCUENTO 5% (Carrito):</span>
-                    <span id="pdfDiscount">- $ 0</span>
-                </div>
-                <div style="border-top: 2px solid #e50914; padding-top: 10px;">
-                    <span style="font-size: 14px; font-weight: bold; margin-right: 15px;">TOTAL FINAL A PAGAR:</span>
-                    <span style="font-size: 22px; font-weight: 900; color: #e50914;" id="pdfTotalAmount">$ 0</span>
-                </div>
+                <div style="margin-bottom: 6px;"><span style="font-weight: bold; margin-right: 15px; color: #555555;">SUBTOTAL:</span><span id="pdfSubtotal" style="text-decoration: line-through; color: #888888;">$ 0</span></div>
+                <div style="margin-bottom: 10px; color: #059669; font-weight: bold;"><span style="margin-right: 15px;">DESCUENTO 5% (Carrito):</span><span id="pdfDiscount">- $ 0</span></div>
+                <div style="border-top: 2px solid #e50914; padding-top: 10px;"><span style="font-size: 14px; font-weight: bold; margin-right: 15px;">TOTAL FINAL A PAGAR:</span><span style="font-size: 22px; font-weight: 900; color: #e50914;" id="pdfTotalAmount">$ 0</span></div>
             </div>
 
             <div style="border-top: 1px solid #dddddd; padding-top: 12px; font-size: 10px; color: #777777; text-align: center;">
@@ -1083,7 +1059,6 @@
         ];
         const BANNER_ICONS = ['fa-solid fa-truck-fast', 'fa-solid fa-tags', 'fa-solid fa-location-dot', 'fa-brands fa-whatsapp', 'fa-solid fa-bullhorn', 'fa-solid fa-bolt'];
 
-        // ===== MAPEO CORREGIDO: "Plásticos" → "PLASTICOS Y KITS" =====
         const CATEGORY_MAP = {
             'Equipamiento Rider': 'EQUIPAMIENTO RIDER',
             'Cubiertas & Ruedas': 'CUBIERTAS & RUEDAS',
@@ -1094,18 +1069,19 @@
         };
 
         const DEFAULT_PRODUCTS = [
-            { id: 101, codigo: 'FC-101', descripcion: 'Antiparras 100% Strata 2 Off Road Lens Red', category: 'Equipamiento Rider', precio: 48500, stock: 8, imagen: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=400&q=80' },
-            { id: 102, codigo: 'FC-102', descripcion: 'Casco Fox V1 Motocross Solid White ECE', category: 'Equipamiento Rider', precio: 280000, stock: 2, imagen: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=400&q=80' },
-            { id: 103, codigo: 'FC-103', descripcion: 'Cubierta Mitas C-19 90/90-21 Super Light', category: 'Cubiertas & Ruedas', precio: 110000, stock: 4, imagen: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80' },
-            { id: 104, codigo: 'FC-104', descripcion: 'Kit Transmisión Chain & Sprocket Z-Tech 520', category: 'Mantenimiento', precio: 92000, stock: 12, imagen: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=400&q=80' },
-            { id: 105, codigo: 'FC-105', descripcion: 'Manubrio Renthal Fatbar 28mm Red Competition', category: 'Accesorios Moto', precio: 125000, stock: 1, imagen: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=400&q=80' },
-            { id: 106, codigo: 'FC-106', descripcion: 'Kit Plásticos Acerbis CRF 250/450 Red Replica', category: 'PLASTICOS Y KITS', precio: 175000, stock: 6, imagen: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80' },
-            { id: 107, codigo: 'FC-107', descripcion: 'Caballete Z-Tech Lift Stand Aluminio Taller', category: 'Taller & Transporte', precio: 85000, stock: 3, imagen: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80' },
-            { id: 108, codigo: 'FC-108', descripcion: 'Aceite Motul 7100 10W40 Sintético 1 Litro', category: 'Mantenimiento', precio: 24000, stock: 15, imagen: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=400&q=80' }
+            { id: 101, codigo: 'FC-101', descripcion: 'Antiparras 100% Strata 2 Off Road Lens Red', category: 'EQUIPAMIENTO RIDER', subcategoria: 'GAFAS', marca: '100%', precio: 48500, stock: 8, imagen: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=400&q=80' },
+            { id: 102, codigo: 'FC-102', descripcion: 'Casco Fox V1 Motocross Solid White ECE', category: 'EQUIPAMIENTO RIDER', subcategoria: 'CASCO', marca: 'FOX', precio: 280000, stock: 2, imagen: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=400&q=80' },
+            { id: 103, codigo: 'FC-103', descripcion: 'Cubierta Mitas C-19 90/90-21 Super Light', category: 'CUBIERTAS & RUEDAS', subcategoria: 'CUBIERTAS', marca: 'MITAS', precio: 110000, stock: 4, imagen: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80' },
+            { id: 104, codigo: 'FC-104', descripcion: 'Kit Transmisión Chain & Sprocket Z-Tech 520', category: 'MANTENIMIENTO', subcategoria: 'TRANSMISION', marca: 'Z-TECH', precio: 92000, stock: 12, imagen: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=400&q=80' },
+            { id: 105, codigo: 'FC-105', descripcion: 'Manubrio Renthal Fatbar 28mm Red Competition', category: 'ACCESORIOS MOTO', subcategoria: 'MANUBRIOS', marca: 'RENTHAL', precio: 125000, stock: 1, imagen: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=400&q=80' },
+            { id: 106, codigo: 'FC-106', descripcion: 'Kit Plásticos Acerbis CRF 250/450 Red Replica', category: 'PLASTICOS Y KITS', subcategoria: 'KITS', marca: 'ACERBIS', precio: 175000, stock: 6, imagen: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80' },
+            { id: 107, codigo: 'FC-107', descripcion: 'Caballete Z-Tech Lift Stand Aluminio Taller', category: 'TALLER & TRANSPORTE', subcategoria: 'CABALLETE', marca: 'Z-TECH', precio: 85000, stock: 3, imagen: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80' },
+            { id: 108, codigo: 'FC-108', descripcion: 'Aceite Motul 7100 10W40 Sintético 1 Litro', category: 'MANTENIMIENTO', subcategoria: 'LUBRICANTES', marca: 'MOTUL', precio: 24000, stock: 15, imagen: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=400&q=80' }
         ];
 
         let PRODUCTS = [...DEFAULT_PRODUCTS];
         let CART = [];
+        let CATALOG_VIEW = 'horizontal'; // 'horizontal' | 'grid'
 
         function escapeHTML(str) {
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -1119,26 +1095,17 @@
             if (typeof raw === 'number') return raw;
             let s = String(raw || '').replace(/[^0-9.,-]/g, '');
             if (!s) return 0;
-            
             const lastDot = s.lastIndexOf('.');
             const lastComma = s.lastIndexOf(',');
-            
             if (lastDot > -1 && lastComma > -1) {
-                if (lastComma > lastDot) {
-                    s = s.replace(/\./g, '').replace(',', '.');
-                } else {
-                    s = s.replace(/,/g, '');
-                }
-            } else if (lastComma > -1) {
-                s = s.replace(/,/g, '.');
-            } else if (lastDot > -1) {
+                if (lastComma > lastDot) { s = s.replace(/\./g, '').replace(',', '.'); }
+                else { s = s.replace(/,/g, ''); }
+            } else if (lastComma > -1) { s = s.replace(/,/g, '.'); }
+            else if (lastDot > -1) {
                 const dotCount = (s.match(/\./g) || []).length;
                 const decLen = s.length - lastDot - 1;
-                if (dotCount > 1 || decLen === 3) {
-                    s = s.replace(/\./g, '');
-                }
+                if (dotCount > 1 || decLen === 3) { s = s.replace(/\./g, ''); }
             }
-            
             const v = parseFloat(s);
             return isNaN(v) ? 0 : v;
         }
@@ -1165,7 +1132,6 @@
             const track = document.getElementById('bannerTrack');
             if (!track) return;
             const msgs = getBannerMessages();
-
             const group = msgs.map((m, i) => `
                 <span class="inline-flex items-center space-x-2.5 mx-6 sm:mx-10 text-xs sm:text-sm font-black uppercase tracking-wider">
                     <i class="${BANNER_ICONS[i % BANNER_ICONS.length]} text-yellow-300 text-sm sm:text-base"></i>
@@ -1173,7 +1139,6 @@
                     <span class="text-yellow-300 text-[9px] sm:text-xs ml-4">★</span>
                 </span>
             `).join('');
-
             track.innerHTML = group + group;
         }
 
@@ -1182,23 +1147,14 @@
             document.getElementById('bannerTextarea').value = msgs.join('\n');
             document.getElementById('bannerEditorModal').classList.remove('hidden');
         }
-
-        function closeBannerEditor() {
-            document.getElementById('bannerEditorModal').classList.add('hidden');
-        }
-
+        function closeBannerEditor() { document.getElementById('bannerEditorModal').classList.add('hidden'); }
         function saveBannerEditor() {
-            const lines = document.getElementById('bannerTextarea').value
-                .split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            if (lines.length === 0) {
-                alert('Escribí al menos un mensaje para el banner.');
-                return;
-            }
+            const lines = document.getElementById('bannerTextarea').value.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length === 0) { alert('Escribí al menos un mensaje para el banner.'); return; }
             localStorage.setItem('fc_banner_messages', JSON.stringify(lines));
             renderBanner();
             closeBannerEditor();
         }
-
         function resetBannerEditor() {
             localStorage.removeItem('fc_banner_messages');
             document.getElementById('bannerTextarea').value = DEFAULT_BANNER_MESSAGES.join('\n');
@@ -1226,33 +1182,42 @@
             return result;
         }
 
-        function findColIndex(headers, candidates) {
-            for (const cand of candidates) {
-                const idx = headers.findIndex(h => h && h.includes(cand));
-                if (idx > -1) return idx;
-            }
-            return -1;
-        }
-
+        // ====== PARSEO EXACTO DE COLUMNAS DEL GOOGLE SHEET ======
+        // CATEGORIA | SUBCATEGORIA | MARCAS | CODIGO | PRODUCTO | PRECIO | STOCK | IMAGEN
         function parseCSV(text) {
             const lines = text.split(/\r\n|\n|\r/).filter(line => line.trim() !== '');
             if (lines.length < 2) return [];
 
             const headers = parseCSVLine(lines[0]).map(h => normalizeText(h));
 
-            let idxCat = findColIndex(headers, ['categoria', 'categor']);
-            let idxCod = findColIndex(headers, ['codigo', 'cod']);
-            let idxProd = findColIndex(headers, ['producto', 'descripcion', 'detalle', 'articulo']);
-            let idxPrecio = findColIndex(headers, ['precio', 'price', 'valor']);
-            let idxStock = findColIndex(headers, ['stock', 'cantidad', 'unidades']);
-            let idxImg = findColIndex(headers, ['imagen', 'img', 'foto', 'url']);
+            const findExact = (key) => headers.findIndex(h => h === normalizeText(key));
+            let idxCat     = findExact('CATEGORIA');
+            let idxSub     = findExact('SUBCATEGORIA');
+            let idxBrand   = findExact('MARCAS');
+            let idxCod     = findExact('CODIGO');
+            let idxProd    = findExact('PRODUCTO');
+            let idxPrecio  = findExact('PRECIO');
+            let idxStock   = findExact('STOCK');
+            let idxImg     = findExact('IMAGEN');
+
+            // Fallbacks
+            if (idxCat === -1) idxCat = headers.findIndex(h => h.includes('categor'));
+            if (idxSub === -1) idxSub = headers.findIndex(h => h.includes('subcategor'));
+            if (idxBrand === -1) idxBrand = headers.findIndex(h => h.includes('marca'));
+            if (idxCod === -1) idxCod = headers.findIndex(h => h.includes('cod'));
+            if (idxProd === -1) idxProd = headers.findIndex(h => h.includes('producto') || h.includes('descripcion'));
+            if (idxPrecio === -1) idxPrecio = headers.findIndex(h => h.includes('precio'));
+            if (idxStock === -1) idxStock = headers.findIndex(h => h.includes('stock'));
+            if (idxImg === -1) idxImg = headers.findIndex(h => h.includes('imagen'));
 
             if (idxCat === -1) idxCat = 0;
-            if (idxCod === -1) idxCod = 1;
-            if (idxProd === -1) idxProd = 2;
-            if (idxPrecio === -1) idxPrecio = 3;
-            if (idxStock === -1) idxStock = 4;
-            if (idxImg === -1) idxImg = 5;
+            if (idxSub === -1) idxSub = 1;
+            if (idxBrand === -1) idxBrand = 2;
+            if (idxCod === -1) idxCod = 3;
+            if (idxProd === -1) idxProd = 4;
+            if (idxPrecio === -1) idxPrecio = 5;
+            if (idxStock === -1) idxStock = 6;
+            if (idxImg === -1) idxImg = 7;
 
             const products = [];
             for (let i = 1; i < lines.length; i++) {
@@ -1260,6 +1225,8 @@
                 if (!row || row.length === 0) continue;
 
                 const categoria = (row[idxCat] || '').trim();
+                const subcategoria = (row[idxSub] || '').trim();
+                const marca = (row[idxBrand] || '').trim();
                 const codigo = (row[idxCod] || '').trim();
                 const producto = (row[idxProd] || '').trim();
                 const precio = parsePriceValue(row[idxPrecio]);
@@ -1272,9 +1239,12 @@
                     id: i,
                     codigo: codigo || `COD-${i}`,
                     descripcion: producto || `Producto ${i}`,
+                    categoria: categoria || 'General',
+                    category: categoria || 'General',
+                    subcategoria: subcategoria || '',
+                    marca: marca || '',
                     precio: precio > 0 ? precio : 0,
                     stock: isNaN(stock) ? 0 : stock,
-                    category: categoria || 'General',
                     imagen: imagen || FALLBACK_IMG
                 });
             }
@@ -1285,7 +1255,6 @@
         async function syncGoogleSheetData() {
             const syncIcon = document.getElementById('syncIcon');
             const syncText = document.getElementById('syncText');
-            
             if (syncIcon) syncIcon.classList.add('fa-spin');
             if (syncText) syncText.textContent = 'Sincronizando...';
 
@@ -1299,6 +1268,7 @@
                     PRODUCTS = fetchedProducts;
                     if (syncText) syncText.textContent = `${PRODUCTS.length} Productos OK`;
                     console.log(`✅ Base sincronizada: ${PRODUCTS.length} productos`);
+                    populateFilters();
                 } else {
                     if (syncText) syncText.textContent = 'Stock Local Activo';
                 }
@@ -1311,53 +1281,138 @@
             }
         }
 
-        function renderStockBadge(stock) {
-            let colorBg = '', colorText = '', dotBg = '', labelText = '';
+        // ====== POBLAR DESPLEGABLES DE FILTROS (CATEGORÍA / SUBCATEGORÍA / MARCA) ======
+        function populateFilters() {
+            const catSelect = document.getElementById('filterCategory');
+            const subSelect = document.getElementById('filterSubcategory');
+            const brandSelect = document.getElementById('filterBrand');
 
-            if (stock < 3) {
-                colorBg = 'bg-red-500/10 border-red-500/40';
-                colorText = 'text-red-400';
-                dotBg = 'bg-red-500';
-                labelText = stock <= 0 ? 'SIN STOCK' : `ÚLTIMAS ${stock} UN.`;
-            } else if (stock <= 10) {
-                colorBg = 'bg-amber-500/10 border-amber-500/40';
-                colorText = 'text-amber-400';
-                dotBg = 'bg-amber-400';
-                labelText = `STOCK MEDIO (${stock} un.)`;
+            const categories = [...new Set(PRODUCTS.map(p => p.category).filter(Boolean))].sort();
+            const subcategories = [...new Set(PRODUCTS.map(p => p.subcategoria).filter(Boolean))].sort();
+            const brands = [...new Set(PRODUCTS.map(p => p.marca).filter(Boolean))].sort();
+
+            // Guardar valores actuales
+            const curCat = catSelect.value;
+            const curSub = subSelect.value;
+            const curBrand = brandSelect.value;
+
+            catSelect.innerHTML = '<option value="">Todas las Categorías</option>' +
+                categories.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join('');
+            subSelect.innerHTML = '<option value="">Todas las Subcategorías</option>' +
+                subcategories.map(s => `<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join('');
+            brandSelect.innerHTML = '<option value="">Todas las Marcas</option>' +
+                brands.map(b => `<option value="${escapeHTML(b)}">${escapeHTML(b)}</option>`).join('');
+
+            if (curCat) catSelect.value = curCat;
+            if (curSub) subSelect.value = curSub;
+            if (curBrand) brandSelect.value = curBrand;
+        }
+
+        function handleFilterChange() {
+            const cat = document.getElementById('filterCategory').value;
+            const sub = document.getElementById('filterSubcategory').value;
+            const brand = document.getElementById('filterBrand').value;
+
+            // Actualizar subcategorías según categoría seleccionada
+            const subSelect = document.getElementById('filterSubcategory');
+            const brandSelect = document.getElementById('filterBrand');
+
+            let filteredProducts = PRODUCTS;
+            if (cat) filteredProducts = filteredProducts.filter(p => p.category === cat);
+
+            const availSubs = [...new Set(filteredProducts.map(p => p.subcategoria).filter(Boolean))].sort();
+            const curSubVal = subSelect.value;
+            subSelect.innerHTML = '<option value="">Todas las Subcategorías</option>' +
+                availSubs.map(s => `<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join('');
+            if (curSubVal && availSubs.includes(curSubVal)) subSelect.value = curSubVal;
+            else subSelect.value = '';
+
+            if (sub) filteredProducts = filteredProducts.filter(p => p.subcategoria === sub);
+
+            const availBrands = [...new Set(filteredProducts.map(p => p.marca).filter(Boolean))].sort();
+            const curBrandVal = brandSelect.value;
+            brandSelect.innerHTML = '<option value="">Todas las Marcas</option>' +
+                availBrands.map(b => `<option value="${escapeHTML(b)}">${escapeHTML(b)}</option>`).join('');
+            if (curBrandVal && availBrands.includes(curBrandVal)) brandSelect.value = curBrandVal;
+            else brandSelect.value = '';
+
+            // Mostrar resultados filtrados
+            if (cat || sub || brand) {
+                showFilteredProducts(filteredProducts, cat, sub, brand);
+            }
+        }
+
+        function showFilteredProducts(filtered, cat, sub, brand) {
+            const modal = document.getElementById('productsModal');
+            const modalTitle = document.getElementById('modalCategoryTitle');
+            const modalCount = document.getElementById('modalCategoryCount');
+            const grid = document.getElementById('productsGrid');
+
+            let titleParts = [];
+            if (cat) titleParts.push(cat);
+            if (sub) titleParts.push('» ' + sub);
+            if (brand) titleParts.push('Marca: ' + brand);
+            modalTitle.textContent = titleParts.join(' ');
+
+            modalCount.innerHTML = `<i class="fa-solid fa-database mr-1"></i>${filtered.length} PRODUCTO${filtered.length !== 1 ? 'S' : ''} ENCONTRADO${filtered.length !== 1 ? 'S' : ''}`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
+                    <i class="fa-solid fa-box-open text-4xl text-brand-red mb-3 block"></i>
+                    <h4 class="text-lg font-bold text-white mb-1">Sin productos</h4>
+                    <p class="text-xs text-gray-400">No hay productos que coincidan con los filtros seleccionados.</p>
+                </div>`;
             } else {
-                colorBg = 'bg-emerald-500/10 border-emerald-500/40';
-                colorText = 'text-emerald-400';
-                dotBg = 'bg-emerald-500';
-                labelText = `EN STOCK (${stock} un.)`;
+                grid.innerHTML = filtered.map(p => productCardHTML(p, false)).join('');
             }
 
-            return `
-                <div class="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded border text-[10px] font-bold ${colorBg} ${colorText}">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full ${dotBg} opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 ${dotBg}"></span>
-                    </span>
-                    <span>${labelText}</span>
-                </div>
-            `;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function renderStockBadge(stock) {
+            let colorBg = '', colorText = '', dotBg = '', labelText = '';
+            if (stock < 3) {
+                colorBg = 'bg-red-500/10 border-red-500/40'; colorText = 'text-red-400'; dotBg = 'bg-red-500';
+                labelText = stock <= 0 ? 'SIN STOCK' : `ÚLTIMAS ${stock} UN.`;
+            } else if (stock <= 10) {
+                colorBg = 'bg-amber-500/10 border-amber-500/40'; colorText = 'text-amber-400'; dotBg = 'bg-amber-400';
+                labelText = `STOCK MEDIO (${stock} un.)`;
+            } else {
+                colorBg = 'bg-emerald-500/10 border-emerald-500/40'; colorText = 'text-emerald-400'; dotBg = 'bg-emerald-500';
+                labelText = `EN STOCK (${stock} un.)`;
+            }
+            return `<div class="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded border text-[10px] font-bold ${colorBg} ${colorText}">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full ${dotBg} opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 ${dotBg}"></span>
+                </span>
+                <span>${labelText}</span>
+            </div>`;
         }
 
         function productCardHTML(p, closeAfterAdd = false) {
             const addClick = closeAfterAdd
-                ? `addToCart('${p.codigo.replace(/'/g, "\\'")}'); closeProductsModal();`
-                : `addToCart('${p.codigo.replace(/'/g, "\\'")}')`;
+                ? `event.stopPropagation(); addToCart('${p.codigo.replace(/'/g, "\\'")}'); closeProductsModal();`
+                : `event.stopPropagation(); addToCart('${p.codigo.replace(/'/g, "\\'")}')`;
+            const expandClick = `event.stopPropagation(); openExpandedCard('${p.codigo.replace(/'/g, "\\'")}')`;
+            const marcaHTML = p.marca ? `<span class="text-[10px] text-emerald-400 uppercase font-bold tracking-wider"><i class="fa-solid fa-tag mr-1"></i>${escapeHTML(p.marca)}</span>` : '';
+            const subHTML = p.subcategoria ? `<span class="text-[9px] text-gray-500 uppercase">• ${escapeHTML(p.subcategoria)}</span>` : '';
             return `
-                <div class="fx-card bg-brand-card rounded-lg border border-brand-border p-3 flex flex-col justify-between group hover:border-brand-red transition-all shadow-lg">
+                <div class="catalog-card" onclick="${expandClick}">
                     <div>
-                        <div class="w-full h-36 rounded bg-black overflow-hidden mb-2 relative border border-brand-border/40">
-                            <img src="${p.imagen}" alt="${p.descripcion}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                            <span class="absolute top-2 left-2 bg-black/80 text-gray-300 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border border-gray-700">COD: ${p.codigo}</span>
+                        <div class="w-full h-40 rounded bg-black overflow-hidden mb-2 relative border border-brand-border/40">
+                            <img src="${p.imagen}" alt="${escapeHTML(p.descripcion)}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            <span class="absolute top-2 left-2 bg-black/80 text-gray-300 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border border-gray-700">COD: ${escapeHTML(p.codigo)}</span>
+                            <span class="absolute top-2 right-2 bg-brand-red/90 text-white font-mono text-[9px] font-bold px-1.5 py-0.5 rounded">${escapeHTML(p.category || p.categoria || '')}</span>
                         </div>
-
                         <div class="mb-2">${renderStockBadge(p.stock)}</div>
-
-                        <span class="text-[10px] text-brand-red uppercase font-bold">${p.category}</span>
-                        <h4 class="text-xs font-bold text-white line-clamp-2 mt-0.5 leading-snug" title="${p.descripcion}">${p.descripcion}</h4>
+                        <div class="flex items-center justify-between gap-1 mb-1">
+                            ${marcaHTML}
+                            ${subHTML}
+                        </div>
+                        <h4 class="text-xs font-bold text-white line-clamp-2 mt-0.5 leading-snug" title="${escapeHTML(p.descripcion)}">${escapeHTML(p.descripcion)}</h4>
                     </div>
                     <div class="mt-3 pt-2 border-t border-brand-border">
                         <div class="text-[10px] text-gray-400">Precio Contado</div>
@@ -1371,30 +1426,121 @@
             `;
         }
 
+        // ====== VISTA EXPANDIDA DE TARJETA SELECCIONADA (MÁS GRANDE) ======
+        function openExpandedCard(codigo) {
+            const p = PRODUCTS.find(item => item.codigo === codigo);
+            if (!p) return;
+            const content = document.getElementById('expandedCardContent');
+            content.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="relative">
+                        <div class="w-full h-80 md:h-[420px] rounded-lg bg-black overflow-hidden border-2 border-brand-red shadow-2xl">
+                            <img src="${p.imagen}" alt="${escapeHTML(p.descripcion)}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover">
+                        </div>
+                        <div class="absolute top-3 left-3 bg-brand-red text-white font-black text-xs uppercase px-3 py-1 rounded shadow-lg">${escapeHTML(p.category || p.categoria || '')}</div>
+                        <div class="absolute bottom-3 left-3 bg-black/80 text-gray-200 font-mono text-xs font-bold px-2 py-1 rounded border border-gray-700">COD: ${escapeHTML(p.codigo)}</div>
+                    </div>
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <div class="mb-2">${renderStockBadge(p.stock)}</div>
+                            <div class="flex items-center gap-2 mb-2">
+                                ${p.marca ? `<span class="text-xs text-emerald-400 uppercase font-bold tracking-wider bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded"><i class="fa-solid fa-tag mr-1"></i>${escapeHTML(p.marca)}</span>` : ''}
+                                ${p.subcategoria ? `<span class="text-xs text-gray-400 uppercase bg-black/40 border border-brand-border px-2 py-0.5 rounded">${escapeHTML(p.subcategoria)}</span>` : ''}
+                            </div>
+                            <h2 class="font-racing font-black text-2xl md:text-3xl text-white uppercase italic leading-tight mb-4">${escapeHTML(p.descripcion)}</h2>
+                            <div class="grid grid-cols-2 gap-3 text-xs mb-6">
+                                <div class="bg-black/40 border border-brand-border rounded-lg p-3">
+                                    <div class="text-[10px] text-gray-400 uppercase font-bold mb-1"><i class="fa-solid fa-barcode text-brand-red mr-1"></i>CÓDIGO</div>
+                                    <div class="text-white font-bold font-mono">${escapeHTML(p.codigo)}</div>
+                                </div>
+                                <div class="bg-black/40 border border-brand-border rounded-lg p-3">
+                                    <div class="text-[10px] text-gray-400 uppercase font-bold mb-1"><i class="fa-solid fa-boxes-stacked text-brand-red mr-1"></i>STOCK</div>
+                                    <div class="text-white font-bold">${p.stock} unidades</div>
+                                </div>
+                                <div class="bg-black/40 border border-brand-border rounded-lg p-3">
+                                    <div class="text-[10px] text-gray-400 uppercase font-bold mb-1"><i class="fa-solid fa-tag text-brand-red mr-1"></i>MARCA</div>
+                                    <div class="text-white font-bold">${escapeHTML(p.marca || 'Sin marca')}</div>
+                                </div>
+                                <div class="bg-black/40 border border-brand-border rounded-lg p-3">
+                                    <div class="text-[10px] text-gray-400 uppercase font-bold mb-1"><i class="fa-solid fa-list-ul text-brand-red mr-1"></i>SUBCATEGORÍA</div>
+                                    <div class="text-white font-bold">${escapeHTML(p.subcategoria || 'General')}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-t border-brand-border pt-4">
+                            <div class="text-[10px] text-gray-400 uppercase tracking-wider mb-1">Precio Contado</div>
+                            <div class="font-racing font-black text-4xl text-brand-red mb-4 red-glow inline-block px-3 py-1 rounded">${formatPrice(p.precio)}</div>
+                            <div class="flex gap-2">
+                                <button onclick="addToCart('${p.codigo.replace(/'/g, "\\'")}'); closeExpandedCard();" class="flex-grow bg-brand-red hover:bg-brand-redDark text-white font-bold py-3 rounded-lg text-sm uppercase tracking-wider transition-colors flex items-center justify-center space-x-2 red-glow">
+                                    <i class="fa-solid fa-cart-plus"></i>
+                                    <span>Agregar al Carrito</span>
+                                </button>
+                                <a href="https://wa.me/5493543546389?text=${encodeURIComponent('Hola! Consulto por: ' + p.codigo + ' - ' + p.descripcion)}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-3 rounded-lg text-sm transition-colors flex items-center justify-center">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('expandedCardModal').classList.remove('hidden');
+            document.getElementById('expandedCardModal').classList.add('flex');
+        }
+
+        function closeExpandedCard() {
+            document.getElementById('expandedCardModal').classList.add('hidden');
+            document.getElementById('expandedCardModal').classList.remove('flex');
+        }
+
+        // ====== TOGGLE VISTA HORIZONTAL / GRID ======
+        function toggleCatalogLayout() {
+            const grid = document.getElementById('productsGrid');
+            const label = document.getElementById('catalogViewLabel');
+            const icon = document.getElementById('layoutIcon');
+
+            if (CATALOG_VIEW === 'horizontal') {
+                CATALOG_VIEW = 'grid';
+                grid.classList.remove('catalog-scroll-track');
+                grid.classList.add('catalog-grid-view');
+                label.innerHTML = '<i class="fa-solid fa-grip text-brand-red mr-1"></i> Vista grid • Click en tarjeta = Vista ampliada';
+                icon.classList.remove('fa-table-columns');
+                icon.classList.add('fa-arrows-left-right');
+                document.querySelectorAll('.catalog-nav-btn').forEach(b => b.style.display = 'none');
+            } else {
+                CATALOG_VIEW = 'horizontal';
+                grid.classList.remove('catalog-grid-view');
+                grid.classList.add('catalog-scroll-track');
+                label.innerHTML = '<i class="fa-solid fa-arrows-left-right text-brand-red mr-1"></i> Deslizá horizontalmente para explorar • Scroll vertical para continuar';
+                icon.classList.remove('fa-arrows-left-right');
+                icon.classList.add('fa-table-columns');
+                document.querySelectorAll('.catalog-nav-btn').forEach(b => b.style.display = 'flex');
+            }
+        }
+
+        function scrollCatalog(direction) {
+            const track = document.getElementById('productsGrid');
+            track.scrollBy({ left: direction * 340, behavior: 'smooth' });
+        }
+
         function renderFeaturedProducts() {
             const grid = document.getElementById('featuredProductsGrid');
             if (!grid) return;
-
             const itemsToDisplay = PRODUCTS.slice(0, 8);
-
             grid.innerHTML = itemsToDisplay.map(p => `
                 <div class="fx-card bg-brand-card rounded-lg border border-brand-border p-3.5 flex flex-col justify-between group hover:border-brand-red transition-all shadow-lg">
                     <div>
                         <div class="w-full h-40 rounded bg-black overflow-hidden mb-3 relative border border-brand-border/40">
-                            <img src="${p.imagen}" alt="${p.descripcion}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            <img src="${p.imagen}" alt="${escapeHTML(p.descripcion)}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                             <div class="absolute top-2 left-2">
-                                <span class="bg-black/80 text-gray-300 text-[10px] font-mono px-1.5 py-0.5 rounded border border-gray-700">
-                                    COD: ${p.codigo}
-                                </span>
+                                <span class="bg-black/80 text-gray-300 text-[10px] font-mono px-1.5 py-0.5 rounded border border-gray-700">COD: ${escapeHTML(p.codigo)}</span>
                             </div>
+                            ${p.marca ? `<span class="absolute top-2 right-2 bg-brand-red/90 text-white font-mono text-[10px] font-bold px-1.5 py-0.5 rounded">${escapeHTML(p.marca)}</span>` : ''}
                         </div>
-
                         <div class="mb-2">${renderStockBadge(p.stock)}</div>
-
-                        <span class="text-[10px] text-brand-red uppercase font-bold tracking-wider">${p.category}</span>
-                        <h4 class="text-xs font-bold text-white line-clamp-2 mt-0.5 leading-snug">${p.descripcion}</h4>
+                        <span class="text-[10px] text-brand-red uppercase font-bold tracking-wider">${escapeHTML(p.category || p.categoria || '')}</span>
+                        ${p.subcategoria ? `<span class="text-[9px] text-gray-500 ml-1">• ${escapeHTML(p.subcategoria)}</span>` : ''}
+                        <h4 class="text-xs font-bold text-white line-clamp-2 mt-0.5 leading-snug">${escapeHTML(p.descripcion)}</h4>
                     </div>
-
                     <div class="mt-4 pt-3 border-t border-brand-border/60 flex items-center justify-between">
                         <div>
                             <span class="text-[10px] text-gray-400 block">Precio Contado</span>
@@ -1412,22 +1558,12 @@
         function addToCart(codigo) {
             const product = PRODUCTS.find(p => p.codigo === codigo);
             if (!product) return;
-
             const existingIndex = CART.findIndex(item => item.codigo === codigo);
             if (existingIndex > -1) {
-                if (CART[existingIndex].qty < product.stock) {
-                    CART[existingIndex].qty += 1;
-                }
+                if (CART[existingIndex].qty < product.stock) CART[existingIndex].qty += 1;
             } else {
-                CART.push({
-                    codigo: product.codigo,
-                    descripcion: product.descripcion,
-                    precio: product.precio,
-                    qty: 1,
-                    imagen: product.imagen
-                });
+                CART.push({ codigo: product.codigo, descripcion: product.descripcion, precio: product.precio, qty: 1, imagen: product.imagen });
             }
-
             updateCartUI();
             toggleCartDrawer(true);
         }
@@ -1437,7 +1573,6 @@
             updateCartUI();
         }
 
-        // ===== UPDATE CART UI CON DESCUENTO 5% =====
         function updateCartUI() {
             const cartItemsList = document.getElementById('cartItemsList');
             const cartCountBadge = document.getElementById('cartCountBadge');
@@ -1457,7 +1592,6 @@
             if (cartSubtotalPrice) cartSubtotalPrice.textContent = formatPrice(subtotal);
             if (cartDiscountAmount) cartDiscountAmount.textContent = `- ${formatPrice(discount)}`;
             if (cartTotalPrice) cartTotalPrice.textContent = formatPrice(totalFinal);
-            // En el navbar también se muestra el total final con descuento
             if (navCartTotal) navCartTotal.textContent = formatPrice(totalFinal);
 
             if (CART.length === 0) {
@@ -1497,24 +1631,16 @@
             }
         }
 
-        // ===== CHECKOUT CON DESCUENTO 5% =====
         async function handleCheckoutSubmit(e) {
             e.preventDefault();
-
-            if (CART.length === 0) {
-                alert('El carrito está vacío. Agregá productos para continuar.');
-                return;
-            }
+            if (CART.length === 0) { alert('El carrito está vacío.'); return; }
 
             const name = document.getElementById('custName').value.trim();
             const address = document.getElementById('custAddress').value.trim();
             const email = document.getElementById('custEmail').value.trim();
             const payment = document.getElementById('custPayment').value;
 
-            if (!name || !address || !email || !payment) {
-                alert('Por favor completá todos los datos del formulario para generar el recibo.');
-                return;
-            }
+            if (!name || !address || !email || !payment) { alert('Completá todos los datos.'); return; }
 
             const orderNum = Math.floor(1000 + Math.random() * 9000);
             const orderDate = new Date().toLocaleDateString('es-AR');
@@ -1533,15 +1659,19 @@
             document.getElementById('pdfTotalAmount').textContent = formatPrice(totalFinal);
 
             const tableBody = document.getElementById('pdfTableBody');
-            tableBody.innerHTML = CART.map(item => `
+            tableBody.innerHTML = CART.map(item => {
+                const prod = PRODUCTS.find(p => p.codigo === item.codigo);
+                const marca = prod ? prod.marca : '';
+                return `
                 <tr style="border-bottom: 1px solid #eeeeee;">
                     <td style="padding: 6px; font-family: monospace;">${item.codigo}</td>
+                    <td style="padding: 6px;">${marca}</td>
                     <td style="padding: 6px;">${item.descripcion}</td>
                     <td style="padding: 6px; text-align: center;">${item.qty}</td>
                     <td style="padding: 6px; text-align: right;">${formatPrice(item.precio)}</td>
                     <td style="padding: 6px; text-align: right; font-weight: bold;">${formatPrice(item.precio * item.qty)}</td>
-                </tr>
-            `).join('');
+                </tr>`;
+            }).join('');
 
             const pdfElement = document.getElementById('receiptContent');
             document.getElementById('pdfReceiptTemplate').classList.remove('hidden');
@@ -1554,38 +1684,25 @@
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            try {
-                await html2pdf().set(opt).from(pdfElement).save();
-            } catch (err) {
-                console.warn('PDF generation notice:', err);
-            } finally {
-                document.getElementById('pdfReceiptTemplate').classList.add('hidden');
-            }
+            try { await html2pdf().set(opt).from(pdfElement).save(); } catch (err) { console.warn('PDF notice:', err); }
+            finally { document.getElementById('pdfReceiptTemplate').classList.add('hidden'); }
 
-            // ===== MENSAJE WHATSAPP CON DESCUENTO 5% =====
             let message = `🏁 *NUEVO PEDIDO - FC RACING*\n`;
-            message += `*Recibo N°:* ${orderNum}\n`;
-            message += `*Fecha:* ${orderDate}\n\n`;
+            message += `*Recibo N°:* ${orderNum}\n*Fecha:* ${orderDate}\n\n`;
             message += `👤 *DATOS DEL CLIENTE:*\n`;
-            message += `• *Nombre:* ${name}\n`;
-            message += `• *Dirección/Ciudad:* ${address}\n`;
-            message += `• *Correo:* ${email}\n`;
-            message += `• *Medio de Pago:* ${payment}\n\n`;
+            message += `• *Nombre:* ${name}\n• *Dirección/Ciudad:* ${address}\n• *Correo:* ${email}\n• *Medio de Pago:* ${payment}\n\n`;
             message += `📦 *DETALLE DE PRODUCTOS:*\n`;
-
             CART.forEach((item, index) => {
-                message += `${index + 1}. [${item.codigo}] ${item.descripcion} (x${item.qty}) - ${formatPrice(item.precio * item.qty)}\n`;
+                const prod = PRODUCTS.find(p => p.codigo === item.codigo);
+                const marca = prod ? ` [${prod.marca}]` : '';
+                message += `${index + 1}. [${item.codigo}]${marca} ${item.descripcion} (x${item.qty}) - ${formatPrice(item.precio * item.qty)}\n`;
             });
-
             message += `\n💰 *SUBTOTAL:* ${formatPrice(subtotal)}`;
             message += `\n🏷️ *DESCUENTO 5% (Carrito):* - ${formatPrice(discount)}`;
             message += `\n\n✅ *TOTAL FINAL A PAGAR:* *${formatPrice(totalFinal)}*\n\n`;
-            message += `_Generé mi Recibo PDF en la web con el 5% de descuento aplicado. Aguardo confirmación para completar el pago._`;
+            message += `_Generé mi Recibo PDF en la web con el 5% de descuento aplicado._`;
 
-            const encodedMsg = encodeURIComponent(message);
-            const waTarget = `https://wa.me/5493543546389?text=${encodedMsg}`;
-
-            window.open(waTarget, '_blank');
+            window.open(`https://wa.me/5493543546389?text=${encodeURIComponent(message)}`, '_blank');
         }
 
         let currentSlide = 0;
@@ -1595,27 +1712,17 @@
         function setHeroSlide(index) {
             slides.forEach((slide, i) => {
                 if (i === index) {
-                    slide.classList.remove('opacity-0');
-                    slide.classList.add('opacity-100');
-                    if (dots[i]) {
-                        dots[i].classList.add('bg-brand-red');
-                        dots[i].classList.remove('bg-gray-600');
-                    }
+                    slide.classList.remove('opacity-0'); slide.classList.add('opacity-100');
+                    if (dots[i]) { dots[i].classList.add('bg-brand-red'); dots[i].classList.remove('bg-gray-600'); }
                 } else {
-                    slide.classList.remove('opacity-100');
-                    slide.classList.add('opacity-0');
-                    if (dots[i]) {
-                        dots[i].classList.remove('bg-brand-red');
-                        dots[i].classList.add('bg-gray-600');
-                    }
+                    slide.classList.remove('opacity-100'); slide.classList.add('opacity-0');
+                    if (dots[i]) { dots[i].classList.remove('bg-brand-red'); dots[i].classList.add('bg-gray-600'); }
                 }
             });
             currentSlide = index;
         }
-
         function nextHeroSlide() { setHeroSlide((currentSlide + 1) % slides.length); }
         function prevHeroSlide() { setHeroSlide((currentSlide - 1 + slides.length) % slides.length); }
-
         setInterval(nextHeroSlide, 5000);
 
         const mobileDrawer = document.getElementById('mobileDrawer');
@@ -1627,12 +1734,10 @@
             mobileDrawer.classList.remove('-translate-x-full', 'pointer-events-none');
             drawerBackdrop.classList.remove('opacity-0');
         });
-
         function closeDrawer() {
             mobileDrawer.classList.add('-translate-x-full', 'pointer-events-none');
             drawerBackdrop.classList.add('opacity-0');
         }
-
         closeMobileMenu.addEventListener('click', closeDrawer);
         drawerBackdrop.addEventListener('click', closeDrawer);
 
@@ -1643,12 +1748,10 @@
             const productsGrid = document.getElementById('productsGrid');
 
             modalTitle.textContent = categoryName;
-
             const sheetCategory = CATEGORY_MAP[categoryName] || categoryName;
-            
             const filtered = PRODUCTS.filter(p => {
                 if (categoryName === 'TODOS LOS PRODUCTOS') return true;
-                return normalizeText(p.category) === normalizeText(sheetCategory);
+                return normalizeText(p.category || p.categoria || '') === normalizeText(sheetCategory);
             });
 
             if (modalCount) {
@@ -1656,15 +1759,13 @@
             }
 
             if (filtered.length === 0) {
-                productsGrid.innerHTML = `
-                    <div class="col-span-full text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
-                        <i class="fa-solid fa-box-open text-4xl text-brand-red mb-3 block"></i>
-                        <h4 class="text-lg font-bold text-white mb-1">Categoría sin productos</h4>
-                        <p class="text-xs text-gray-400">No hay productos en "${categoryName}" en la base de datos.</p>
-                    </div>
-                `;
+                productsGrid.innerHTML = `<div class="col-span-full text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
+                    <i class="fa-solid fa-box-open text-4xl text-brand-red mb-3 block"></i>
+                    <h4 class="text-lg font-bold text-white mb-1">Categoría sin productos</h4>
+                    <p class="text-xs text-gray-400">No hay productos en "${categoryName}" en la base de datos.</p>
+                </div>`;
             } else {
-                productsGrid.innerHTML = filtered.map(p => productCardHTML(p, true)).join('');
+                productsGrid.innerHTML = filtered.map(p => productCardHTML(p, false)).join('');
             }
 
             modal.classList.remove('hidden');
@@ -1685,21 +1786,23 @@
             e.preventDefault();
             const query = document.getElementById('searchInput').value.trim();
             closeAutocompleteDropdown();
-            if (query) { filterSearchQuery(query); }
+            if (query) filterSearchQuery(query);
         }
 
         function matchProduct(p, query) {
             const q = normalizeText(query);
             if (!q) return false;
-            
             const qClean = q.replace(/[^a-z0-9]/g, '');
             const codeClean = normalizeText(p.codigo).replace(/[^a-z0-9]/g, '');
-
             const matchCode = (qClean.length > 0 && codeClean.includes(qClean)) || normalizeText(p.codigo).includes(q);
             const matchDesc = normalizeText(p.descripcion).includes(q);
-            const matchCat = normalizeText(p.category).includes(q);
-
-            return matchCode || matchDesc || matchCat;
+            const matchCat = normalizeText(p.category || p.categoria || '').includes(q);
+            const matchSub = normalizeText(p.subcategoria || '').includes(q);
+            const matchBrand = normalizeText(p.marca || '').includes(q);
+            // Búsqueda por precio (números)
+            const priceStr = String(p.precio).replace(/\D/g, '');
+            const matchPrice = qClean.length >= 3 && priceStr.includes(qClean);
+            return matchCode || matchDesc || matchCat || matchSub || matchBrand || matchPrice;
         }
 
         function handleAutocompleteInput(val) {
@@ -1708,64 +1811,53 @@
             const query = val.trim();
 
             if (clearBtn) {
-                if (query.length > 0) { clearBtn.classList.remove('hidden'); }
-                else { clearBtn.classList.add('hidden'); }
+                if (query.length > 0) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
             }
 
-            if (query.length < 1) {
-                closeAutocompleteDropdown();
-                return;
-            }
+            if (query.length < 1) { closeAutocompleteDropdown(); return; }
 
             const matches = PRODUCTS.filter(p => matchProduct(p, query));
 
             if (matches.length === 0) {
-                dropdown.innerHTML = `
-                    <div class="p-4 text-center text-xs text-gray-400">
-                        <i class="fa-solid fa-magnifying-glass-minus text-brand-red text-base mb-1 block"></i>
-                        No se encontraron productos para "<span class="text-white font-semibold">${query}</span>"
-                    </div>
-                `;
+                dropdown.innerHTML = `<div class="p-4 text-center text-xs text-gray-400">
+                    <i class="fa-solid fa-magnifying-glass-minus text-brand-red text-base mb-1 block"></i>
+                    No se encontraron productos para "<span class="text-white font-semibold">${escapeHTML(query)}</span>"
+                </div>`;
             } else {
-                const topMatches = matches.slice(0, 5);
+                const topMatches = matches.slice(0, 6);
                 dropdown.innerHTML = `
                     <div class="px-3 py-1.5 bg-black/60 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
-                        <span><i class="fa-solid fa-bolt text-brand-red mr-1"></i> Sugerencias de búsqueda</span>
+                        <span><i class="fa-solid fa-bolt text-brand-red mr-1"></i> Sugerencias (Código • Marca • Producto • Categoría • Precio)</span>
                         <span class="text-emerald-400">${matches.length} coincidencia${matches.length > 1 ? 's' : ''}</span>
                     </div>
                     ${topMatches.map(p => `
                         <div onclick="selectAutocompleteItem('${p.codigo.replace(/'/g, "\\'")}')" class="p-2.5 hover:bg-brand-cardHover cursor-pointer flex items-center justify-between transition-colors group">
                             <div class="flex items-center space-x-3 min-w-0 pr-2">
-                                <img src="${p.imagen}" alt="${p.descripcion}" onerror="this.src='${FALLBACK_IMG}'" class="w-10 h-10 object-cover rounded border border-brand-border shrink-0">
+                                <img src="${p.imagen}" alt="${escapeHTML(p.descripcion)}" onerror="this.src='${FALLBACK_IMG}'" class="w-10 h-10 object-cover rounded border border-brand-border shrink-0">
                                 <div class="min-w-0">
-                                    <div class="flex items-center space-x-2 mb-0.5">
-                                        <span class="bg-brand-red/20 text-brand-red border border-brand-red/30 text-[9px] font-mono font-bold px-1.5 py-0.2 rounded">
-                                            COD: ${p.codigo}
-                                        </span>
-                                        <span class="text-[9px] text-gray-400 uppercase">${p.category}</span>
+                                    <div class="flex items-center space-x-2 mb-0.5 flex-wrap">
+                                        <span class="bg-brand-red/20 text-brand-red border border-brand-red/30 text-[9px] font-mono font-bold px-1.5 py-0.2 rounded">COD: ${escapeHTML(p.codigo)}</span>
+                                        ${p.marca ? `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] font-bold px-1.5 py-0.2 rounded"><i class="fa-solid fa-tag mr-0.5"></i>${escapeHTML(p.marca)}</span>` : ''}
+                                        <span class="text-[9px] text-gray-400 uppercase">${escapeHTML(p.category || p.categoria || '')}</span>
+                                        ${p.subcategoria ? `<span class="text-[9px] text-gray-500">» ${escapeHTML(p.subcategoria)}</span>` : ''}
                                     </div>
-                                    <h5 class="text-xs font-bold text-white group-hover:text-brand-red truncate leading-tight" title="${p.descripcion}">
-                                        <span class="text-emerald-400 text-[10px]">PRODUCTO:</span> ${p.descripcion}
-                                    </h5>
+                                    <h5 class="text-xs font-bold text-white group-hover:text-brand-red truncate leading-tight" title="${escapeHTML(p.descripcion)}">${escapeHTML(p.descripcion)}</h5>
                                 </div>
                             </div>
                             <div class="text-right shrink-0">
                                 <span class="font-racing font-bold text-xs text-white block">${formatPrice(p.precio)}</span>
-                                <span class="text-[9px] font-semibold ${p.stock > 0 ? 'text-emerald-400' : 'text-red-400'}">
-                                    Stock: ${p.stock}
-                                </span>
+                                <span class="text-[9px] font-semibold ${p.stock > 0 ? 'text-emerald-400' : 'text-red-400'}">Stock: ${p.stock}</span>
                             </div>
                         </div>
                     `).join('')}
-                    ${matches.length > 5 ? `
+                    ${matches.length > 6 ? `
                         <button onclick="handleSearch(event)" class="w-full bg-brand-card hover:bg-brand-red hover:text-white text-brand-red text-center py-2 text-xs font-bold uppercase tracking-wider transition-colors border-t border-brand-border flex items-center justify-center space-x-1">
                             <span>Ver los ${matches.length} resultados completos</span>
                             <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                        </button>
-                    ` : ''}
+                        </button>` : ''}
                 `;
             }
-
             dropdown.classList.remove('hidden');
         }
 
@@ -1774,7 +1866,7 @@
             closeAutocompleteDropdown();
             if (product) {
                 document.getElementById('searchInput').value = product.codigo;
-                filterSearchQuery(product.codigo);
+                openExpandedCard(codigo);
             }
         }
 
@@ -1794,15 +1886,14 @@
         document.addEventListener('click', function(e) {
             const dropdown = document.getElementById('autocompleteDropdown');
             const searchInput = document.getElementById('searchInput');
-            if (dropdown && !dropdown.contains(e.target) && e.target !== searchInput) {
-                closeAutocompleteDropdown();
-            }
+            if (dropdown && !dropdown.contains(e.target) && e.target !== searchInput) closeAutocompleteDropdown();
         });
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeAutocompleteDropdown();
                 closeBannerEditor();
+                closeExpandedCard();
             }
         });
 
@@ -1812,24 +1903,19 @@
             const modalCount = document.getElementById('modalCategoryCount');
             const productsGrid = document.getElementById('productsGrid');
 
-            modalTitle.textContent = `RESULTADOS DE BÚSQUEDA: "${q}"`;
-
+            modalTitle.textContent = `RESULTADOS: "${q}"`;
             const filtered = PRODUCTS.filter(p => matchProduct(p, q));
 
-            if (modalCount) {
-                modalCount.innerHTML = `<i class="fa-solid fa-database mr-1"></i>${filtered.length} RESULTADO${filtered.length !== 1 ? 'S' : ''} EN GOOGLE SHEETS`;
-            }
+            if (modalCount) modalCount.innerHTML = `<i class="fa-solid fa-database mr-1"></i>${filtered.length} RESULTADO${filtered.length !== 1 ? 'S' : ''} EN GOOGLE SHEETS`;
 
             if (filtered.length === 0) {
-                productsGrid.innerHTML = `
-                    <div class="col-span-full text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
-                        <i class="fa-solid fa-magnifying-glass-xmark text-4xl text-brand-red mb-3 block"></i>
-                        <h4 class="text-lg font-bold text-white mb-1">Sin coincidencias</h4>
-                        <p class="text-xs text-gray-400">No se encontraron productos que coincidan con "${q}".</p>
-                    </div>
-                `;
+                productsGrid.innerHTML = `<div class="col-span-full text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
+                    <i class="fa-solid fa-magnifying-glass-xmark text-4xl text-brand-red mb-3 block"></i>
+                    <h4 class="text-lg font-bold text-white mb-1">Sin coincidencias</h4>
+                    <p class="text-xs text-gray-400">No se encontraron productos que coincidan con "${escapeHTML(q)}".</p>
+                </div>`;
             } else {
-                productsGrid.innerHTML = filtered.map(p => productCardHTML(p, true)).join('');
+                productsGrid.innerHTML = filtered.map(p => productCardHTML(p, false)).join('');
             }
 
             modal.classList.remove('hidden');
@@ -1841,6 +1927,18 @@
             document.getElementById('categoriesSection').scrollIntoView({ behavior: 'smooth' });
         }
 
+        // ====== SCROLL TO TOP (LOGO BOTÓN) ======
+        function scrollToTop(event) {
+            if (event) event.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scrollToTopBtn');
+            if (window.scrollY > 400) btn.classList.add('visible');
+            else btn.classList.remove('visible');
+        });
+
         function openAdminModal() {
             const modal = document.getElementById('adminModal');
             modal.classList.remove('hidden');
@@ -1848,10 +1946,7 @@
             document.getElementById('adminError').classList.add('hidden');
             setTimeout(() => document.getElementById('adminPassword').focus(), 100);
         }
-
-        function closeAdminModal() {
-            document.getElementById('adminModal').classList.add('hidden');
-        }
+        function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
 
         function verifyAdminPassword() {
             const password = document.getElementById('adminPassword').value.trim();
@@ -1860,13 +1955,11 @@
             if (password === ADMIN_PASSWORD) {
                 closeAdminModal();
                 window.open(ADMIN_SHEET_EDIT_URL, '_blank');
-
                 const bannerBtn = document.getElementById('bannerEditBtn');
                 if (bannerBtn) bannerBtn.classList.remove('hidden');
-                
                 const confirmDiv = document.createElement('div');
                 confirmDiv.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-6 py-3 rounded-lg shadow-2xl z-[200] text-xs font-bold uppercase tracking-wider flex items-center space-x-2';
-                confirmDiv.innerHTML = '<i class="fa-solid fa-unlock"></i><span>Acceso autorizado. Edición de banner y Google Sheets habilitados.</span>';
+                confirmDiv.innerHTML = '<i class="fa-solid fa-unlock"></i><span>Acceso autorizado.</span>';
                 document.body.appendChild(confirmDiv);
                 setTimeout(() => confirmDiv.remove(), 3500);
             } else {
