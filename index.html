@@ -141,10 +141,6 @@
         }
         .stock-pulse { animation: stockBlink 1.2s infinite ease-in-out; }
 
-        /* ============================================ */
-        /* ========= NUEVOS ESTILOS AGREGADOS ========= */
-        /* ============================================ */
-
         /* LOGO CIRCULAR CON REFLEJO Y LUZ CONTINUA */
         @keyframes logoGlow {
             0%, 100% { box-shadow: 0 0 20px rgba(229, 9, 20, 0.8), 0 0 35px rgba(229, 9, 20, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.2); }
@@ -177,7 +173,6 @@
             position: relative;
             z-index: 2;
         }
-        /* Reflejo metálico animado */
         .fc-logo-circle::before {
             content: "";
             position: absolute;
@@ -198,7 +193,6 @@
             mix-blend-mode: overlay;
             opacity: 0.7;
         }
-        /* Reflejo inferior sutil */
         .fc-logo-circle::after {
             content: "";
             position: absolute;
@@ -220,27 +214,30 @@
             }
         }
 
-        /* CONTENEDOR HORIZONTAL SWIPEABLE */
+        /* ============================================================ */
+        /* CARRUSEL HORIZONTAL ESTABLE (SIN RETORNO AUTOMÁTICO)         */
+        /* ============================================================ */
         .swipe-container {
-            display: flex;
-            gap: 1rem;
             overflow-x: auto;
             overflow-y: hidden;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
             padding-bottom: 1rem;
             cursor: grab;
+            user-select: none;
             -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #e50914 #0a0a0c;
         }
-        .swipe-container:active {
-            cursor: grabbing;
-        }
-        .swipe-container::-webkit-scrollbar {
-            height: 6px;
-        }
-        .swipe-container > * {
-            scroll-snap-align: start;
-            flex-shrink: 0;
+        .swipe-container:active { cursor: grabbing; }
+        .swipe-container::-webkit-scrollbar { height: 6px; }
+        .swipe-container::-webkit-scrollbar-thumb { background: #e50914; border-radius: 3px; }
+        .swipe-container::-webkit-scrollbar-track { background: #0a0a0c; }
+
+        /* Modo fila horizontal para tarjetas de navegación (subcategorías/marcas) */
+        .swipe-flex {
+            display: flex;
+            gap: 1rem;
+            width: max-content;
+            min-width: 100%;
         }
 
         /* TARJETA AMPLIADA (MODAL DETALLE) */
@@ -334,21 +331,6 @@
             color: #ff1e27;
             border-color: rgba(229, 9, 20, 0.5);
         }
-
-        /* BOTÓN SCROLL-TO-TOP */
-        .scroll-top-btn {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            z-index: 60;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        .scroll-top-btn.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased">
@@ -389,7 +371,7 @@
             </a>
 
             <div class="flex items-center space-x-2 sm:space-x-3">
-                <!-- ============ LOGO CIRCULAR NUEVO ============ -->
+                <!-- LOGO CIRCULAR (BOTÓN VOLVER ARRIBA) -->
                 <button 
                     onclick="goToTop()" 
                     title="Volver al Inicio"
@@ -402,7 +384,6 @@
                         alt="FC RACING Logo"
                     >
                 </button>
-                <!-- ============ FIN LOGO CIRCULAR ============ -->
 
                 <button onclick="openAdminModal()" title="Modo Administrador" class="bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/40 text-purple-300 hover:text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center space-x-1.5 text-xs">
                     <i class="fa-solid fa-shield-halved text-sm"></i>
@@ -716,6 +697,54 @@
                     </div>
                     <div class="shrink-0 font-racing font-black text-xl italic tracking-wider text-blue-500 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">
                         Mitas
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- SECCIÓN DE VIDEO EXPERIENCIA (VIDEOFC.mp4)                   -->
+        <!-- ============================================================ -->
+        <section class="relative bg-black py-10 sm:py-14 border-b border-brand-border overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(229,9,20,0.12),transparent_65%)] pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-4 relative">
+                <div class="text-center mb-6 sm:mb-8">
+                    <span class="bg-brand-red/20 text-brand-red font-bold text-xs uppercase tracking-widest px-3 py-1 rounded border border-brand-red/30">
+                        <i class="fa-solid fa-film mr-1"></i> EXPERIENCIA OFF ROAD
+                    </span>
+                    <h2 class="font-racing font-black text-2xl sm:text-4xl text-white tracking-wider uppercase italic mt-3 drop-shadow-lg">
+                        FC RACING ACCESORIOS Y REPUESTOS <span class="text-brand-red">TODA UNA EXPERIENCIA</span>
+                    </h2>
+                    <p class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest mt-2">
+                        <i class="fa-solid fa-circle-play text-brand-red mr-1"></i> Viví la pasión del off road en cada detalle
+                    </p>
+                </div>
+
+                <div class="relative rounded-xl overflow-hidden border-2 border-brand-red/60 shadow-2xl red-glow bg-black">
+                    <video 
+                        id="fcVideo" 
+                        src="VIDEOFC.mp4" 
+                        class="w-full h-auto max-h-[75vh] object-cover block" 
+                        muted 
+                        loop 
+                        playsinline 
+                        autoplay 
+                        preload="metadata"
+                    ></video>
+
+                    <!-- Fallback si el archivo de video no existe -->
+                    <div id="videoFallback" class="hidden w-full flex-col items-center justify-center bg-gradient-to-br from-brand-card to-black text-center p-10" style="min-height: 320px;">
+                        <i class="fa-solid fa-film text-5xl text-brand-red mb-4"></i>
+                        <h3 class="font-racing font-bold text-xl text-white uppercase italic">FC RACING</h3>
+                        <p class="text-xs text-gray-400 mt-2">Video no disponible. Colocá el archivo <strong class="text-white">VIDEOFC.mp4</strong> junto al index.html</p>
+                    </div>
+
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-brand-red to-transparent pointer-events-none"></div>
+                    <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-brand-red to-transparent pointer-events-none"></div>
+                    <div class="absolute top-3 left-3 bg-black/70 border border-brand-red/60 text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded flex items-center space-x-1.5 pointer-events-none">
+                        <span class="w-2 h-2 rounded-full bg-brand-red animate-ping"></span>
+                        <span>FC RACING VIDEO</span>
                     </div>
                 </div>
             </div>
@@ -1141,15 +1170,15 @@
                 </button>
             </div>
 
-            <!-- FILTROS DESPLEGABLES -->
+            <!-- FILTROS DESPLEGABLES (NAVEGAN AL SELECCIONAR) -->
             <div id="filtersBar" class="mb-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <select id="filterCategory" onchange="applyFilters()" class="bg-black border border-brand-border rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-red cursor-pointer">
+                <select id="filterCategory" onchange="onCategoryFilterChange()" class="bg-black border border-brand-border rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-red cursor-pointer">
                     <option value="">Todas las Categorías</option>
                 </select>
-                <select id="filterSubcategory" onchange="applyFilters()" class="bg-black border border-brand-border rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-red cursor-pointer">
+                <select id="filterSubcategory" onchange="onSubcategoryFilterChange()" class="bg-black border border-brand-border rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-red cursor-pointer">
                     <option value="">Todas las Subcategorías</option>
                 </select>
-                <select id="filterBrand" onchange="applyFilters()" class="bg-black border border-brand-border rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-red cursor-pointer">
+                <select id="filterBrand" onchange="onBrandFilterChange()" class="bg-black border border-brand-border rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-red cursor-pointer">
                     <option value="">Todas las Marcas</option>
                 </select>
             </div>
@@ -1246,7 +1275,6 @@
         ];
         const BANNER_ICONS = ['fa-solid fa-truck-fast', 'fa-solid fa-tags', 'fa-solid fa-location-dot', 'fa-brands fa-whatsapp', 'fa-solid fa-bullhorn', 'fa-solid fa-bolt'];
 
-        // Mapeo entre las categorías del HTML (botones de home) y las del Google Sheets
         const CATEGORY_MAP = {
             'EQUIPAMIENTO RIDER': 'EQUIPAMIENTO RIDER',
             'CUBIERTAS & RUEDAS': 'CUBIERTAS & RUEDAS',
@@ -1261,7 +1289,7 @@
             { id: 102, codigo: 'FC-102', descripcion: 'Casco Fox V1 Motocross Solid White ECE', category: 'EQUIPAMIENTO RIDER', subcategory: 'CASCOS', marca: 'FOX RACING', precio: 280000, stock: 2, imagen: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=400&q=80' },
             { id: 103, codigo: 'FC-103', descripcion: 'Cubierta Mitas C-19 90/90-21 Super Light', category: 'CUBIERTAS & RUEDAS', subcategory: 'CUBIERTAS', marca: 'MITAS', precio: 110000, stock: 4, imagen: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80' },
             { id: 104, codigo: 'FC-104', descripcion: 'Kit Transmisión Chain & Sprocket Z-Tech 520', category: 'MANTENIMIENTO', subcategory: 'TRANSMISION', marca: 'Z-TECH', precio: 92000, stock: 12, imagen: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=400&q=80' },
-            { id: 105, codigo: 'FC-105', descripcion: 'Manubrio Renthal Fatbar 28mm Red Competition', category: 'ACCESORIOS MOTO', subcategory: 'MANUBRIOS', marca: 'RENT HAL', precio: 125000, stock: 1, imagen: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=400&q=80' },
+            { id: 105, codigo: 'FC-105', descripcion: 'Manubrio Renthal Fatbar 28mm Red Competition', category: 'ACCESORIOS MOTO', subcategory: 'MANUBRIOS', marca: 'RENTHAL', precio: 125000, stock: 1, imagen: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=400&q=80' },
             { id: 106, codigo: 'FC-106', descripcion: 'Kit Plásticos Acerbis CRF 250/450 Red Replica', category: 'PLASTICOS Y KITS', subcategory: 'KITS PLASTICOS', marca: 'ACERBIS', precio: 175000, stock: 6, imagen: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80' },
             { id: 107, codigo: 'FC-107', descripcion: 'Caballete Z-Tech Lift Stand Aluminio Taller', category: 'TALLER & TRANSPORTE', subcategory: 'CABALLETES', marca: 'Z-TECH', precio: 85000, stock: 3, imagen: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80' },
             { id: 108, codigo: 'FC-108', descripcion: 'Aceite Motul 7100 10W40 Sintético 1 Litro', category: 'MANTENIMIENTO', subcategory: 'LUBRICANTES', marca: 'MOTUL', precio: 24000, stock: 15, imagen: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=400&q=80' }
@@ -1270,7 +1298,6 @@
         let PRODUCTS = [...DEFAULT_PRODUCTS];
         let CART = [];
         
-        // Estado de navegación jerárquica: 'home' | 'category' | 'subcategory' | 'brand'
         let browseState = { 
             level: 'home', 
             category: null, 
@@ -1405,7 +1432,6 @@
             return -1;
         }
 
-        // PARSEO CSV ACTUALIZADO: 8 columnas (CATEGORIA, SUBCATEGORIA, MARCAS, CODIGO, PRODUCTO, PRECIO, STOCK, IMAGEN)
         function parseCSV(text) {
             const lines = text.split(/\r\n|\n|\r/).filter(line => line.trim() !== '');
             if (lines.length < 2) return [];
@@ -1413,7 +1439,7 @@
             const headers = parseCSVLine(lines[0]).map(h => normalizeText(h));
 
             let idxCat = findColIndex(headers, ['categoria', 'categor']);
-            let idxSubcat = findColIndex(headers, ['subcategor', 'subcategoría']);
+            let idxSubcat = findColIndex(headers, ['subcategor']);
             let idxMarca = findColIndex(headers, ['marca', 'brand']);
             let idxCod = findColIndex(headers, ['codigo', 'cod']);
             let idxProd = findColIndex(headers, ['producto', 'descripcion', 'detalle', 'articulo']);
@@ -1421,7 +1447,6 @@
             let idxStock = findColIndex(headers, ['stock', 'cantidad', 'unidades']);
             let idxImg = findColIndex(headers, ['imagen', 'img', 'foto', 'url']);
 
-            // Fallback por posición si no se detecta
             if (idxCat === -1) idxCat = 0;
             if (idxSubcat === -1) idxSubcat = 1;
             if (idxMarca === -1) idxMarca = 2;
@@ -1447,13 +1472,6 @@
 
                 if (!codigo && !producto) continue;
 
-                // Procesar imagen: si es un nombre de archivo local, agregar prefijo
-                let finalImagen = imagen;
-                if (imagen && !imagen.startsWith('http') && !imagen.startsWith('data:')) {
-                    // Asumir que está en la misma carpeta que index.html
-                    finalImagen = imagen;
-                }
-
                 products.push({
                     id: i,
                     codigo: codigo || `COD-${i}`,
@@ -1463,7 +1481,7 @@
                     category: categoria || 'General',
                     subcategory: subcategoria || 'General',
                     marca: marca || 'Sin Marca',
-                    imagen: finalImagen || FALLBACK_IMG
+                    imagen: imagen || FALLBACK_IMG
                 });
             }
 
@@ -1531,25 +1549,22 @@
             `;
         }
 
-        function productCardHTML(p, onClickAction = null) {
+        function productCardHTML(p) {
             const safeCodigo = p.codigo.replace(/'/g, "\\'");
-            const clickAttr = onClickAction 
-                ? `onclick="${onClickAction}"` 
-                : `onclick="openProductDetail('${safeCodigo}')"`;
             return `
-                <div class="fx-card bg-brand-card rounded-lg border border-brand-border p-3 flex flex-col justify-between group hover:border-brand-red transition-all shadow-lg cursor-pointer min-w-[220px] sm:min-w-[240px]" ${clickAttr}>
+                <div class="fx-card bg-brand-card rounded-lg border border-brand-border p-3 flex flex-col justify-between group hover:border-brand-red transition-all shadow-lg cursor-pointer min-w-[220px] sm:min-w-[240px]" onclick="openProductDetail('${safeCodigo}')">
                     <div>
                         <div class="w-full h-36 rounded bg-black overflow-hidden mb-2 relative border border-brand-border/40">
                             <img src="${p.imagen}" alt="${p.descripcion}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                             <span class="absolute top-2 left-2 bg-black/80 text-gray-300 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border border-gray-700">COD: ${p.codigo}</span>
-                            <span class="absolute top-2 right-2 bg-brand-red/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded border border-white/20 uppercase">${p.marca || 'S/M'}</span>
+                            <span class="absolute top-2 right-2 bg-brand-red/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded border border-white/20 uppercase">${escapeHTML(p.marca || 'S/M')}</span>
                         </div>
 
                         <div class="mb-2">${renderStockBadge(p.stock)}</div>
 
                         <div class="flex items-center gap-1 mb-1 flex-wrap">
-                            <span class="text-[10px] text-brand-red uppercase font-bold">${p.category}</span>
-                            ${p.subcategory && p.subcategory !== 'General' ? `<span class="text-[9px] text-gray-500">• ${p.subcategory}</span>` : ''}
+                            <span class="text-[10px] text-brand-red uppercase font-bold">${escapeHTML(p.category)}</span>
+                            ${p.subcategory && p.subcategory !== 'General' ? `<span class="text-[9px] text-gray-500">• ${escapeHTML(p.subcategory)}</span>` : ''}
                         </div>
                         <h4 class="text-xs font-bold text-white line-clamp-2 mt-0.5 leading-snug" title="${p.descripcion}">${p.descripcion}</h4>
                     </div>
@@ -1565,7 +1580,6 @@
             `;
         }
 
-        // VISTA AMPLIADA (MODAL DETALLE)
         function openProductDetail(codigo) {
             const p = PRODUCTS.find(pr => pr.codigo === codigo);
             if (!p) return;
@@ -1579,7 +1593,7 @@
                             <button onclick="closeProductDetail()" class="absolute top-3 right-3 bg-black/80 hover:bg-brand-red text-white w-9 h-9 rounded-full flex items-center justify-center transition-colors">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
-                            <span class="absolute top-3 left-3 bg-brand-red text-white text-xs font-bold px-3 py-1 rounded uppercase tracking-wider shadow-lg">${p.marca || 'Sin Marca'}</span>
+                            <span class="absolute top-3 left-3 bg-brand-red text-white text-xs font-bold px-3 py-1 rounded uppercase tracking-wider shadow-lg">${escapeHTML(p.marca || 'Sin Marca')}</span>
                         </div>
                         <div class="p-5 sm:p-6">
                             <div class="flex items-center justify-between mb-2">
@@ -1588,9 +1602,9 @@
                             </div>
                             <h2 class="font-racing font-bold text-xl sm:text-2xl text-white italic uppercase tracking-wider mb-2">${p.descripcion}</h2>
                             <div class="flex items-center gap-2 text-xs text-gray-400 mb-5">
-                                <span class="bg-brand-red/20 text-brand-red border border-brand-red/40 px-2 py-0.5 rounded uppercase font-bold">${p.category}</span>
+                                <span class="bg-brand-red/20 text-brand-red border border-brand-red/40 px-2 py-0.5 rounded uppercase font-bold">${escapeHTML(p.category)}</span>
                                 <i class="fa-solid fa-chevron-right text-[9px]"></i>
-                                <span class="text-gray-300 uppercase font-bold">${p.subcategory || 'General'}</span>
+                                <span class="text-gray-300 uppercase font-bold">${escapeHTML(p.subcategory || 'General')}</span>
                             </div>
                             <div class="bg-black/60 border border-brand-border rounded-lg p-4 mb-4">
                                 <div class="text-[11px] text-gray-400 uppercase tracking-wider">Precio Contado</div>
@@ -1632,12 +1646,12 @@
                                     COD: ${p.codigo}
                                 </span>
                             </div>
-                            <span class="absolute top-2 right-2 bg-brand-red/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">${p.marca || 'S/M'}</span>
+                            <span class="absolute top-2 right-2 bg-brand-red/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">${escapeHTML(p.marca || 'S/M')}</span>
                         </div>
 
                         <div class="mb-2">${renderStockBadge(p.stock)}</div>
 
-                        <span class="text-[10px] text-brand-red uppercase font-bold tracking-wider">${p.category}</span>
+                        <span class="text-[10px] text-brand-red uppercase font-bold tracking-wider">${escapeHTML(p.category)}</span>
                         <h4 class="text-xs font-bold text-white line-clamp-2 mt-0.5 leading-snug">${p.descripcion}</h4>
                     </div>
 
@@ -1878,21 +1892,23 @@
         closeMobileMenu.addEventListener('click', closeDrawer);
         drawerBackdrop.addEventListener('click', closeDrawer);
 
-        // ========= NAVEGACIÓN JERÁRQUICA =========
+        // ============================================================
+        // NAVEGACIÓN JERÁRQUICA (Categoría → Subcategoría → Marca)
+        // ============================================================
         function openCategory(catName) {
             browseState = { level: 'category', category: catName, subcategory: null, brand: null };
-            renderCatalog();
+            renderCatalog(true);
             showProductsModal();
         }
 
         function openSubcategory(catName, subName) {
             browseState = { level: 'subcategory', category: catName, subcategory: subName, brand: null };
-            renderCatalog();
+            renderCatalog(true);
         }
 
         function openBrand(catName, subName, brandName) {
             browseState = { level: 'brand', category: catName, subcategory: subName, brand: brandName };
-            renderCatalog();
+            renderCatalog(true);
         }
 
         function navigateToLevel(level) {
@@ -1903,15 +1919,90 @@
                 browseState.subcategory = null;
                 browseState.brand = null;
                 browseState.level = 'category';
-                renderCatalog();
+                renderCatalog(true);
             } else if (level === 'subcategory') {
                 browseState.brand = null;
                 browseState.level = 'subcategory';
-                renderCatalog();
+                renderCatalog(true);
             }
         }
 
-        function renderCatalog() {
+        // ============================================================
+        // DESPLEGABLES QUE NAVEGAN A LA BÚSQUEDA ESPECÍFICA
+        // ============================================================
+        function onCategoryFilterChange() {
+            const fCat = document.getElementById('filterCategory').value;
+            if (fCat) {
+                browseState = { level: 'category', category: fCat, subcategory: null, brand: null };
+            } else {
+                browseState = { level: 'home', category: null, subcategory: null, brand: null };
+            }
+            renderCatalog(true);
+        }
+
+        function onSubcategoryFilterChange() {
+            const fCat = document.getElementById('filterCategory').value;
+            const fSub = document.getElementById('filterSubcategory').value;
+            if (fCat && fSub) {
+                browseState = { level: 'subcategory', category: fCat, subcategory: fSub, brand: null };
+            } else if (fCat) {
+                browseState = { level: 'category', category: fCat, subcategory: null, brand: null };
+            } else {
+                browseState = { level: 'home', category: null, subcategory: null, brand: null };
+            }
+            renderCatalog(true);
+        }
+
+        function onBrandFilterChange() {
+            const fCat = document.getElementById('filterCategory').value;
+            const fSub = document.getElementById('filterSubcategory').value;
+            const fBr = document.getElementById('filterBrand').value;
+            if (fCat && fSub && fBr) {
+                browseState = { level: 'brand', category: fCat, subcategory: fSub, brand: fBr };
+            } else if (fCat && fSub) {
+                browseState = { level: 'subcategory', category: fCat, subcategory: fSub, brand: null };
+            } else if (fCat) {
+                browseState = { level: 'category', category: fCat, subcategory: null, brand: null };
+            } else {
+                browseState = { level: 'home', category: null, subcategory: null, brand: null };
+            }
+            renderCatalog(true);
+        }
+
+        // Desplegables en cascada: las opciones dependen del nivel superior
+        function populateFilters() {
+            const fCat = document.getElementById('filterCategory');
+            const fSub = document.getElementById('filterSubcategory');
+            const fBr = document.getElementById('filterBrand');
+
+            const allCats = [...new Set(PRODUCTS.map(p => p.category).filter(Boolean))].sort();
+            fCat.innerHTML = '<option value="">Todas las Categorías</option>' + allCats.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join('');
+
+            const subPool = browseState.category ? PRODUCTS.filter(p => normalizeText(p.category) === normalizeText(browseState.category)) : PRODUCTS;
+            const allSubs = [...new Set(subPool.map(p => p.subcategory).filter(Boolean))].sort();
+            fSub.innerHTML = '<option value="">Todas las Subcategorías</option>' + allSubs.map(s => `<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join('');
+
+            const brandPool = browseState.subcategory ? subPool.filter(p => normalizeText(p.subcategory) === normalizeText(browseState.subcategory)) : subPool;
+            const allBrands = [...new Set(brandPool.map(p => p.marca).filter(Boolean))].sort();
+            fBr.innerHTML = '<option value="">Todas las Marcas</option>' + allBrands.map(b => `<option value="${escapeHTML(b)}">${escapeHTML(b)}</option>`).join('');
+
+            fCat.value = browseState.category || '';
+            fSub.value = browseState.subcategory || '';
+            fBr.value = browseState.brand || '';
+        }
+
+        function setGridMode(mode) {
+            const productsGrid = document.getElementById('productsGrid');
+            if (mode === 'flex') {
+                productsGrid.classList.remove('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'w-full');
+                productsGrid.classList.add('swipe-flex');
+            } else {
+                productsGrid.classList.remove('swipe-flex');
+                productsGrid.classList.add('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'w-full');
+            }
+        }
+
+        function renderCatalog(resetScroll = false) {
             const modalTitle = document.getElementById('modalCategoryTitle');
             const modalCount = document.getElementById('modalCategoryCount');
             const productsGrid = document.getElementById('productsGrid');
@@ -1919,7 +2010,7 @@
             const swipeHint = document.getElementById('swipeHint');
             const swipeWrapper = document.getElementById('productsSwipeWrapper');
 
-            // Generar breadcrumb dinámico
+            // Breadcrumb dinámico
             let breadcrumbHTML = `
                 <button onclick="navigateToLevel('home')" class="breadcrumb-btn">
                     <i class="fa-solid fa-house text-[10px]"></i><span>Inicio</span>
@@ -1929,7 +2020,7 @@
                 breadcrumbHTML += `
                     <i class="fa-solid fa-chevron-right text-gray-600 text-[9px]"></i>
                     <button onclick="navigateToLevel('category')" class="breadcrumb-btn ${browseState.level === 'category' ? 'active' : ''}">
-                        <i class="fa-solid fa-folder text-[10px]"></i><span>${browseState.category}</span>
+                        <i class="fa-solid fa-folder text-[10px]"></i><span>${escapeHTML(browseState.category)}</span>
                     </button>
                 `;
             }
@@ -1937,7 +2028,7 @@
                 breadcrumbHTML += `
                     <i class="fa-solid fa-chevron-right text-gray-600 text-[9px]"></i>
                     <button onclick="navigateToLevel('subcategory')" class="breadcrumb-btn ${browseState.level === 'subcategory' ? 'active' : ''}">
-                        <i class="fa-solid fa-folder-open text-[10px]"></i><span>${browseState.subcategory}</span>
+                        <i class="fa-solid fa-folder-open text-[10px]"></i><span>${escapeHTML(browseState.subcategory)}</span>
                     </button>
                 `;
             }
@@ -1945,16 +2036,15 @@
                 breadcrumbHTML += `
                     <i class="fa-solid fa-chevron-right text-gray-600 text-[9px]"></i>
                     <span class="breadcrumb-btn active">
-                        <i class="fa-solid fa-tag text-[10px]"></i><span>${browseState.brand}</span>
+                        <i class="fa-solid fa-tag text-[10px]"></i><span>${escapeHTML(browseState.brand)}</span>
                     </span>
                 `;
             }
             breadcrumbBar.innerHTML = breadcrumbHTML;
 
-            // Actualizar filtros desplegables
             populateFilters();
 
-            // NIVEL CATEGORÍA: mostrar subcategorías como tarjetas clicables
+            // NIVEL CATEGORÍA: tarjetas de subcategorías
             if (browseState.level === 'category') {
                 modalTitle.textContent = browseState.category;
                 const subcats = [...new Set(
@@ -1969,7 +2059,7 @@
 
                 if (subcats.length === 0) {
                     productsGrid.innerHTML = `
-                        <div class="col-span-full text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
+                        <div class="text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border w-full">
                             <i class="fa-solid fa-box-open text-4xl text-brand-red mb-3 block"></i>
                             <h4 class="text-lg font-bold text-white mb-1">Categoría sin subcategorías</h4>
                         </div>
@@ -1986,22 +2076,18 @@
                                 <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-brand-red/20 border-2 border-brand-red/50 flex items-center justify-center text-brand-red text-2xl group-hover:bg-brand-red group-hover:text-white transition-all">
                                     <i class="fa-solid fa-layer-group"></i>
                                 </div>
-                                <h4 class="font-racing font-bold text-base text-white uppercase tracking-wider group-hover:text-brand-red transition-colors">${sub}</h4>
+                                <h4 class="font-racing font-bold text-base text-white uppercase tracking-wider group-hover:text-brand-red transition-colors">${escapeHTML(sub)}</h4>
                                 <p class="text-xs text-gray-400 mt-1">${subCount} producto${subCount !== 1 ? 's' : ''}</p>
                             </div>
                         `;
                     }).join('');
                 }
-
-                // Habilitar swipe horizontal
-                swipeWrapper.classList.remove('hidden');
-                productsGrid.classList.remove('grid-cols-1');
-                productsGrid.classList.add('flex');
-                productsGrid.classList.remove('grid');
+                setGridMode('flex');
+                if (resetScroll) swipeWrapper.scrollLeft = 0;
                 return;
             }
 
-            // NIVEL SUBCATEGORÍA: mostrar marcas como tarjetas clicables
+            // NIVEL SUBCATEGORÍA: tarjetas de marcas
             if (browseState.level === 'subcategory') {
                 modalTitle.textContent = `${browseState.category} › ${browseState.subcategory}`;
                 const brands = [...new Set(
@@ -2022,7 +2108,7 @@
 
                 if (brands.length === 0) {
                     productsGrid.innerHTML = `
-                        <div class="col-span-full text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
+                        <div class="text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border w-full">
                             <i class="fa-solid fa-box-open text-4xl text-brand-red mb-3 block"></i>
                             <h4 class="text-lg font-bold text-white mb-1">Sin marcas disponibles</h4>
                         </div>
@@ -2040,34 +2126,25 @@
                                 <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-brand-red/20 border-2 border-brand-red/50 flex items-center justify-center text-brand-red text-2xl group-hover:bg-brand-red group-hover:text-white transition-all">
                                     <i class="fa-solid fa-certificate"></i>
                                 </div>
-                                <h4 class="font-racing font-bold text-base text-white uppercase tracking-wider group-hover:text-brand-red transition-colors">${brand}</h4>
+                                <h4 class="font-racing font-bold text-base text-white uppercase tracking-wider group-hover:text-brand-red transition-colors">${escapeHTML(brand)}</h4>
                                 <p class="text-xs text-gray-400 mt-1">${brandCount} producto${brandCount !== 1 ? 's' : ''}</p>
                             </div>
                         `;
                     }).join('');
                 }
-                swipeWrapper.classList.remove('hidden');
-                productsGrid.classList.add('flex');
-                productsGrid.classList.remove('grid');
+                setGridMode('flex');
+                if (resetScroll) swipeWrapper.scrollLeft = 0;
                 return;
             }
 
-            // NIVEL MARCA: mostrar productos finales (con filtros desplegables funcionales)
+            // NIVEL MARCA: productos finales
             if (browseState.level === 'brand') {
                 modalTitle.textContent = `${browseState.brand} - Productos`;
-                let filtered = PRODUCTS.filter(p => 
+                const filtered = PRODUCTS.filter(p => 
                     normalizeText(p.category) === normalizeText(browseState.category) && 
                     normalizeText(p.subcategory) === normalizeText(browseState.subcategory) &&
                     normalizeText(p.marca) === normalizeText(browseState.brand)
                 );
-
-                // Aplicar filtros desplegables
-                const fCat = document.getElementById('filterCategory').value;
-                const fSub = document.getElementById('filterSubcategory').value;
-                const fBr = document.getElementById('filterBrand').value;
-                if (fCat) filtered = filtered.filter(p => normalizeText(p.category) === normalizeText(fCat));
-                if (fSub) filtered = filtered.filter(p => normalizeText(p.subcategory) === normalizeText(fSub));
-                if (fBr) filtered = filtered.filter(p => normalizeText(p.marca) === normalizeText(fBr));
 
                 modalCount.innerHTML = `<i class="fa-solid fa-box mr-1"></i>${filtered.length} PRODUCTO${filtered.length !== 1 ? 'S' : ''} DISPONIBLE${filtered.length !== 1 ? 'S' : ''}`;
                 swipeHint.innerHTML = '<i class="fa-solid fa-arrows-left-right mr-1"></i> Deslizá para explorar • Click para ampliar • Botón "Agregar" para comprar';
@@ -2082,49 +2159,23 @@
                 } else {
                     productsGrid.innerHTML = filtered.map(p => productCardHTML(p)).join('');
                 }
-                swipeWrapper.classList.remove('hidden');
-                productsGrid.classList.remove('flex');
-                productsGrid.classList.add('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4');
+                setGridMode('grid');
+                if (resetScroll) swipeWrapper.scrollLeft = 0;
                 return;
             }
 
-            // NIVEL HOME (todos los productos)
+            // NIVEL HOME: todos los productos
             modalTitle.textContent = 'TODOS LOS PRODUCTOS';
-            const filtered = PRODUCTS;
-            modalCount.innerHTML = `<i class="fa-solid fa-database mr-1"></i>${filtered.length} PRODUCTO${filtered.length !== 1 ? 'S' : ''} EN TOTAL`;
+            modalCount.innerHTML = `<i class="fa-solid fa-database mr-1"></i>${PRODUCTS.length} PRODUCTO${PRODUCTS.length !== 1 ? 'S' : ''} EN TOTAL`;
             swipeHint.innerHTML = '<i class="fa-solid fa-arrows-left-right mr-1"></i> Deslizá para explorar el catálogo completo';
-            productsGrid.innerHTML = filtered.map(p => productCardHTML(p)).join('');
-            swipeWrapper.classList.remove('hidden');
-            productsGrid.classList.remove('flex');
-            productsGrid.classList.add('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4');
-        }
-
-        function applyFilters() {
-            renderCatalog();
-        }
-
-        function populateFilters() {
-            const fCat = document.getElementById('filterCategory');
-            const fSub = document.getElementById('filterSubcategory');
-            const fBr = document.getElementById('filterBrand');
-            
-            const allCats = [...new Set(PRODUCTS.map(p => p.category).filter(Boolean))].sort();
-            const allSubs = [...new Set(PRODUCTS.map(p => p.subcategory).filter(Boolean))].sort();
-            const allBrands = [...new Set(PRODUCTS.map(p => p.marca).filter(Boolean))].sort();
-            
-            fCat.innerHTML = '<option value="">Todas las Categorías</option>' + allCats.map(c => `<option value="${c}">${c}</option>`).join('');
-            fSub.innerHTML = '<option value="">Todas las Subcategorías</option>' + allSubs.map(s => `<option value="${s}">${s}</option>`).join('');
-            fBr.innerHTML = '<option value="">Todas las Marcas</option>' + allBrands.map(b => `<option value="${b}">${b}</option>`).join('');
-            
-            // Restaurar valores seleccionados
-            if (browseState.category) fCat.value = browseState.category;
-            if (browseState.subcategory) fSub.value = browseState.subcategory;
-            if (browseState.brand) fBr.value = browseState.brand;
+            productsGrid.innerHTML = PRODUCTS.map(p => productCardHTML(p)).join('');
+            setGridMode('grid');
+            if (resetScroll) swipeWrapper.scrollLeft = 0;
         }
 
         function showAllProductsModal() { 
             browseState = { level: 'home', category: null, subcategory: null, brand: null };
-            renderCatalog();
+            renderCatalog(true);
             showProductsModal();
         }
 
@@ -2162,13 +2213,10 @@
             const matchCat = normalizeText(p.category).includes(q);
             const matchSub = normalizeText(p.subcategory).includes(q);
             const matchBrand = normalizeText(p.marca).includes(q);
-            // Búsqueda por precio aproximado
-            const matchPrice = /(?:precio|\$|plata|costo)/.test(q) && p.precio > 0;
 
-            return matchCode || matchDesc || matchCat || matchSub || matchBrand || matchPrice;
+            return matchCode || matchDesc || matchCat || matchSub || matchBrand;
         }
 
-        // BUSCADOR INTELIGENTE CON AGRUPACIÓN Y AUTOCOMPLETE
         function handleSmartAutocomplete(val) {
             const dropdown = document.getElementById('autocompleteDropdown');
             const clearBtn = document.getElementById('clearSearchBtn');
@@ -2186,7 +2234,6 @@
 
             const qNorm = normalizeText(query);
             
-            // Agrupar sugerencias por tipo
             const catMatches = [...new Set(PRODUCTS.filter(p => normalizeText(p.category).includes(qNorm)).map(p => p.category))].slice(0, 3);
             const subMatches = [...new Set(PRODUCTS.filter(p => normalizeText(p.subcategory).includes(qNorm)).map(p => p.subcategory))].slice(0, 3);
             const brandMatches = [...new Set(PRODUCTS.filter(p => normalizeText(p.marca).includes(qNorm)).map(p => p.marca))].slice(0, 3);
@@ -2223,7 +2270,7 @@
                 }
 
                 if (subMatches.length) {
-                    html += `<div class="ac-group-title"><i class="fa-solid fa-folder-open mr-1"></i> Subcategorías</div>`;
+                    html += `<div class="ac-group-title"><i class="fa-solid fa-layer-group mr-1"></i> Subcategorías</div>`;
                     html += subMatches.map(s => `
                         <div class="ac-suggestion" onclick="selectAutocompleteText('${s.replace(/'/g, "\\'")}')">
                             <div class="flex items-center gap-2">
@@ -2269,7 +2316,7 @@
                                 <img src="${p.imagen}" onerror="this.src='${FALLBACK_IMG}'" class="w-8 h-8 object-cover rounded border border-brand-border shrink-0">
                                 <div class="min-w-0">
                                     <div class="text-white text-sm font-semibold truncate">${highlightMatch(p.descripcion, query)}</div>
-                                    <div class="text-[10px] text-gray-400">${p.category} • ${p.marca}</div>
+                                    <div class="text-[10px] text-gray-400">${escapeHTML(p.category)} • ${escapeHTML(p.marca)}</div>
                                 </div>
                             </div>
                             <span class="font-racing font-bold text-xs text-white shrink-0">${formatPrice(p.precio)}</span>
@@ -2306,12 +2353,9 @@
         }
 
         function selectAutocompleteItem(codigo) {
-            const product = PRODUCTS.find(p => p.codigo === codigo);
             closeAutocompleteDropdown();
-            if (product) {
-                document.getElementById('searchInput').value = '';
-                openProductDetail(codigo);
-            }
+            document.getElementById('searchInput').value = '';
+            openProductDetail(codigo);
         }
 
         function closeAutocompleteDropdown() {
@@ -2352,7 +2396,6 @@
             const swipeHint = document.getElementById('swipeHint');
             const swipeWrapper = document.getElementById('productsSwipeWrapper');
 
-            // Resetear estado
             browseState = { level: 'home', category: null, subcategory: null, brand: null };
             breadcrumbBar.innerHTML = `
                 <button onclick="navigateToLevel('home')" class="breadcrumb-btn">
@@ -2381,9 +2424,8 @@
                 productsGrid.innerHTML = filtered.map(p => productCardHTML(p)).join('');
             }
 
-            productsGrid.classList.remove('flex');
-            productsGrid.classList.add('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4');
-            swipeWrapper.classList.remove('hidden');
+            setGridMode('grid');
+            swipeWrapper.scrollLeft = 0;
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -2404,14 +2446,6 @@
             if (e) e.preventDefault();
             goToTop();
         }
-
-        // SCROLL-TO-TOP VISIBILIDAD
-        window.addEventListener('scroll', () => {
-            const btn = document.getElementById('scrollTopBtn');
-            if (!btn) return;
-            if (window.scrollY > 400) btn.classList.add('visible');
-            else btn.classList.remove('visible');
-        });
 
         function openAdminModal() {
             const modal = document.getElementById('adminModal');
@@ -2448,45 +2482,91 @@
             }
         }
 
-        // DRAG-TO-SCROLL para swipe container (funciona con mouse)
+        // ============================================================
+        // DRAG-TO-SCROLL ESTABLE (se queda donde lo dejás)
+        // ============================================================
         function enableDragToScroll(el) {
             let isDown = false;
-            let startX, scrollLeft;
+            let moved = false;
+            let suppressClick = false;
+            let startX = 0;
+            let startScroll = 0;
 
-            el.addEventListener('mousedown', (e) => {
-                // Solo activar si el click es sobre el contenedor vacío o imágenes no interactivas
-                if (e.target.closest('button') || e.target.closest('a')) return;
+            el.addEventListener('pointerdown', (e) => {
+                if (e.pointerType !== 'mouse') return; // táctil usa swipe nativo
+                if (e.target.closest('button, a, select, input')) return;
                 isDown = true;
-                el.style.cursor = 'grabbing';
-                startX = e.pageX - el.offsetLeft;
-                scrollLeft = el.scrollLeft;
-            });
-            el.addEventListener('mouseleave', () => {
-                isDown = false;
-                el.style.cursor = 'grab';
-            });
-            el.addEventListener('mouseup', () => {
-                isDown = false;
-                el.style.cursor = 'grab';
-            });
-            el.addEventListener('mousemove', (e) => {
-                if (!isDown) return;
-                e.preventDefault();
-                const x = e.pageX - el.offsetLeft;
-                const walk = (x - startX) * 1.5;
-                el.scrollLeft = scrollLeft - walk;
+                moved = false;
+                startX = e.pageX;
+                startScroll = el.scrollLeft;
             });
 
-            // Wheel con Shift para scroll horizontal
+            window.addEventListener('pointermove', (e) => {
+                if (!isDown) return;
+                const dx = e.pageX - startX;
+                if (Math.abs(dx) > 6) moved = true;
+                if (moved) el.scrollLeft = startScroll - dx;
+            });
+
+            window.addEventListener('pointerup', () => {
+                if (!isDown) return;
+                isDown = false;
+                if (moved) {
+                    suppressClick = true;
+                    setTimeout(() => { suppressClick = false; }, 80);
+                }
+                moved = false;
+            });
+
+            // Evita que se abra la tarjeta justo después de arrastrar
+            el.addEventListener('click', (e) => {
+                if (suppressClick) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    suppressClick = false;
+                }
+            }, true);
+
+            // Rueda del mouse: horizontal (trackpad) o Shift+rueda
             el.addEventListener('wheel', (e) => {
-                if (e.shiftKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) {
-                    el.scrollLeft += e.deltaY || e.deltaX;
-                } else {
-                    // Si no hay shift, convertir scroll vertical a horizontal
-                    el.scrollLeft += e.deltaY;
+                const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+                if (horizontal || e.shiftKey) {
+                    if (el.scrollWidth <= el.clientWidth) return;
+                    el.scrollLeft += horizontal ? e.deltaX : e.deltaY;
                     e.preventDefault();
                 }
+                // Rueda vertical normal: deja pasar el scroll de la página
             }, { passive: false });
+        }
+
+        // ============================================================
+        // VIDEO: AUTOPLAY + LOOP AL ENTRAR EN PANTALLA
+        // ============================================================
+        function initExperienceVideo() {
+            const fcVideo = document.getElementById('fcVideo');
+            const fallback = document.getElementById('videoFallback');
+            if (!fcVideo) return;
+
+            fcVideo.addEventListener('error', () => {
+                fcVideo.classList.add('hidden');
+                if (fallback) {
+                    fallback.classList.remove('hidden');
+                    fallback.classList.add('flex');
+                }
+            });
+
+            if ('IntersectionObserver' in window) {
+                const vidObs = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            fcVideo.play().catch(() => {});
+                        } else {
+                            fcVideo.pause();
+                        }
+                    });
+                }, { threshold: 0.25 });
+                vidObs.observe(fcVideo);
+            }
         }
 
         window.onload = function() {
@@ -2494,14 +2574,11 @@
             syncGoogleSheetData();
             setInterval(syncGoogleSheetData, 120000);
 
-            // Activar drag-to-scroll cuando se abra el modal
-            const observer = new MutationObserver(() => {
-                const swipeWrapper = document.getElementById('productsSwipeWrapper');
-                if (swipeWrapper && !swipeWrapper.classList.contains('hidden')) {
-                    enableDragToScroll(swipeWrapper);
-                }
-            });
-            observer.observe(document.getElementById('productsModal'), { attributes: true, attributeFilter: ['class'] });
+            // Drag-to-scroll: se adjunta UNA SOLA VEZ (sin listeners duplicados)
+            const swipeWrapper = document.getElementById('productsSwipeWrapper');
+            if (swipeWrapper) enableDragToScroll(swipeWrapper);
+
+            initExperienceVideo();
         };
     </script>
 </body>
