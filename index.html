@@ -114,7 +114,6 @@
             z-index: 3;
         }
 
-        /* Botón scroll to top flotante */
         #scrollToTopBtn {
             position: fixed;
             bottom: 85px;
@@ -124,10 +123,7 @@
             pointer-events: none;
             transition: opacity .35s ease, transform .35s ease;
         }
-        #scrollToTopBtn.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        #scrollToTopBtn.visible { opacity: 1; pointer-events: auto; }
         #scrollToTopBtn:hover { transform: translateY(-3px) scale(1.08); }
 
         @keyframes pulse-ring {
@@ -141,10 +137,7 @@
             0% { transform: translateX(0%); }
             100% { transform: translateX(-50%); }
         }
-        .animate-banner {
-            animation: bannerScroll 28s linear infinite;
-            will-change: transform;
-        }
+        .animate-banner { animation: bannerScroll 28s linear infinite; will-change: transform; }
         .animate-banner:hover { animation-play-state: paused; }
 
         @keyframes kenBurns {
@@ -200,24 +193,11 @@
             0% { transform: translateX(0%); }
             100% { transform: translateX(-50%); }
         }
-        .animate-marquee {
-            display: flex;
-            width: max-content;
-            animation: marqueeScroll 25s linear infinite;
-        }
+        .animate-marquee { display: flex; width: max-content; animation: marqueeScroll 25s linear infinite; }
         .animate-marquee:hover { animation-play-state: paused; }
 
-        @keyframes stockBlink {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.85); }
-        }
-        .stock-pulse { animation: stockBlink 1.2s infinite ease-in-out; }
-
         /* ====== CARRUSEL HORIZONTAL DE TARJETAS DEL CATÁLOGO ====== */
-        .catalog-scroll-container {
-            position: relative;
-            width: 100%;
-        }
+        .catalog-scroll-container { position: relative; width: 100%; }
         .catalog-scroll-track {
             display: flex;
             overflow-x: auto;
@@ -231,13 +211,8 @@
         .catalog-scroll-track::-webkit-scrollbar { height: 8px; }
         .catalog-scroll-track::-webkit-scrollbar-track { background: #1a1a20; border-radius: 4px; }
         .catalog-scroll-track::-webkit-scrollbar-thumb { background: #e50914; border-radius: 4px; }
-        .catalog-scroll-track > .catalog-card {
-            flex: 0 0 280px;
-            scroll-snap-align: start;
-        }
-        @media (min-width: 640px) {
-            .catalog-scroll-track > .catalog-card { flex: 0 0 310px; }
-        }
+        .catalog-scroll-track > .catalog-card { flex: 0 0 280px; scroll-snap-align: start; }
+        @media (min-width: 640px) { .catalog-scroll-track > .catalog-card { flex: 0 0 310px; } }
         .catalog-nav-btn {
             position: absolute;
             top: 50%;
@@ -257,14 +232,10 @@
             cursor: pointer;
             transition: all .25s ease;
         }
-        .catalog-nav-btn:hover {
-            background: #b80710;
-            transform: translateY(-50%) scale(1.1);
-        }
+        .catalog-nav-btn:hover { background: #b80710; transform: translateY(-50%) scale(1.1); }
         .catalog-nav-btn.prev { left: -6px; }
         .catalog-nav-btn.next { right: -6px; }
 
-        /* Modo vertical: grid normal */
         .catalog-grid-view {
             display: grid;
             grid-template-columns: repeat(1, 1fr);
@@ -306,23 +277,22 @@
             box-shadow: 0 12px 30px -12px rgba(229, 9, 20, 0.45), 0 0 0 1px rgba(229, 9, 20, 0.35);
         }
 
-        /* Vista expandida de tarjeta seleccionada */
+        /* ====== FIX #1: Vista expandida — sin display:flex directo para no pisar hidden ====== */
         .expanded-card-overlay {
             position: fixed;
             inset: 0;
             z-index: 90;
             background: rgba(0,0,0,0.88);
             backdrop-filter: blur(10px);
-            display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
+        }
+        .expanded-card-overlay:not(.hidden) {
+            display: flex;
             animation: fadeIn .3s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes scaleIn {
             from { transform: scale(0.85); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
@@ -342,7 +312,7 @@
         }
         @media (min-width: 640px) { .expanded-card { padding: 2rem; } }
 
-        /* ====== NAVEGACIÓN EN CASCADA (SUBCATEGORÍAS / MARCAS) ====== */
+        /* ====== BREADCRUMB ====== */
         .cascade-breadcrumb {
             display: flex;
             flex-wrap: wrap;
@@ -363,189 +333,219 @@
             transition: color .2s ease;
         }
         .cascade-breadcrumb-item:hover { color: #ff1e27; }
-        .cascade-breadcrumb-item.active { color: #ff1e27; font-weight: 700; }
+        .cascade-breadcrumb-item.active { color: #ff1e27; font-weight: 700; cursor: default; }
         .cascade-breadcrumb-separator { color: #4b5563; }
 
-        .cascade-tile {
-            background: linear-gradient(145deg, #1a1a20, #121215);
-            border: 1px solid #22222a;
-            border-radius: 0.75rem;
-            padding: 1.25rem;
-            cursor: pointer;
-            transition: all .3s ease;
-            position: relative;
-            overflow: hidden;
+        /* ====== BARRA DE FILTROS RÁPIDOS ====== */
+        .quick-filters-wrapper { position: relative; margin-bottom: 1rem; }
+        .quick-filters-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            min-height: 80px;
-        }
-        .cascade-tile::before {
-            content: "";
-            position: absolute;
-            top: 0; left: -80%;
-            width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(229, 9, 20, 0.12), transparent);
-            transform: skewX(-20deg);
-            transition: left .7s ease;
-            pointer-events: none;
-        }
-        .cascade-tile:hover::before { left: 130%; }
-        .cascade-tile:hover {
-            border-color: #e50914;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px -10px rgba(229, 9, 20, 0.45);
-        }
-        .cascade-tile-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: white;
-            flex-shrink: 0;
-        }
-        .cascade-tile-content {
-            flex-grow: 1;
-            margin: 0 1rem;
-            min-width: 0;
-        }
-        .cascade-tile-title {
-            font-family: 'Chakra Petch', 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: 14px;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .cascade-tile-subtitle {
-            font-size: 10px;
-            color: #9ca3af;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-top: 2px;
-        }
-        .cascade-tile-arrow {
-            color: #e50914;
-            font-size: 18px;
-            transition: transform .3s ease;
-            flex-shrink: 0;
-        }
-        .cascade-tile:hover .cascade-tile-arrow {
-            transform: translateX(6px);
-            color: #ff1e27;
-        }
-        .cascade-tile-count {
-            background: #e50914;
-            color: white;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 10px;
-            margin-left: 8px;
-        }
-
-        /* Brand tile con logo circular */
-        .brand-tile {
-            background: linear-gradient(145deg, #1a1a20, #121215);
-            border: 1px solid #22222a;
-            border-radius: 0.75rem;
-            padding: 1rem;
-            cursor: pointer;
-            transition: all .3s ease;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            min-height: 130px;
-        }
-        .brand-tile::before {
-            content: "";
-            position: absolute;
-            top: 0; left: -80%;
-            width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(229, 9, 20, 0.12), transparent);
-            transform: skewX(-20deg);
-            transition: left .7s ease;
-            pointer-events: none;
-        }
-        .brand-tile:hover::before { left: 130%; }
-        .brand-tile:hover {
-            border-color: #e50914;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px -10px rgba(229, 9, 20, 0.45);
-        }
-        .brand-tile-logo {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #e50914, #b80710);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Chakra Petch', 'Rajdhani', sans-serif;
-            font-weight: 900;
-            font-size: 18px;
-            color: white;
             margin-bottom: 0.5rem;
-            border: 2px solid rgba(255,255,255,0.15);
-            box-shadow: 0 0 20px rgba(229, 9, 20, 0.4);
-            overflow: hidden;
         }
-        .brand-tile-name {
+        .quick-filters-title {
             font-family: 'Chakra Petch', 'Rajdhani', sans-serif;
             font-weight: 700;
             font-size: 13px;
-            color: white;
+            color: #ff1e27;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
-            line-height: 1.2;
-        }
-        .brand-tile-count {
-            font-size: 10px;
-            color: #9ca3af;
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-
-        .cascade-section-title {
+            letter-spacing: 0.08em;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0;
-            margin-bottom: 0.5rem;
-            border-bottom: 1px solid #22222a;
+            gap: 0.4rem;
         }
-        .cascade-section-title h3 {
-            font-family: 'Chakra Petch', 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: 18px;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            font-style: italic;
-        }
-        .cascade-section-title .accent {
-            color: #e50914;
-            font-weight: 900;
-        }
-        .cascade-section-count {
+        .quick-filters-counter {
             background: rgba(229, 9, 20, 0.15);
             color: #ff1e27;
             font-size: 10px;
             font-weight: 700;
-            padding: 3px 10px;
+            padding: 2px 8px;
             border-radius: 10px;
             border: 1px solid rgba(229, 9, 20, 0.3);
         }
+        .quick-filters-track {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.5rem;
+            padding: 0.25rem 0.25rem 0.75rem;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        .quick-filters-track::-webkit-scrollbar { height: 5px; }
+        .quick-filters-track::-webkit-scrollbar-track { background: #1a1a20; border-radius: 3px; }
+        .quick-filters-track::-webkit-scrollbar-thumb { background: #e50914; border-radius: 3px; }
+
+        .filter-chip-sub {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: linear-gradient(145deg, #1a1a20, #121215);
+            border: 1px solid #22222a;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all .25s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: max-content;
+        }
+        .filter-chip-sub::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -80%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(229, 9, 20, 0.12), transparent);
+            transform: skewX(-20deg);
+            transition: left .7s ease;
+            pointer-events: none;
+        }
+        .filter-chip-sub:hover::before { left: 130%; }
+        .filter-chip-sub:hover {
+            border-color: #e50914;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -8px rgba(229, 9, 20, 0.45);
+        }
+        .filter-chip-sub.active {
+            background: linear-gradient(145deg, #e50914, #b80710);
+            border-color: #ff1e27;
+            box-shadow: 0 8px 20px -8px rgba(229, 9, 20, 0.6), 0 0 0 2px rgba(229, 9, 20, 0.25);
+        }
+        .filter-chip-sub.active:hover { transform: translateY(-2px) scale(1.02); }
+        .filter-chip-sub-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            background: rgba(229, 9, 20, 0.25);
+            border: 1px solid rgba(229, 9, 20, 0.4);
+            flex-shrink: 0;
+        }
+        .filter-chip-sub.active .filter-chip-sub-icon {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.35);
+        }
+        .filter-chip-sub-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1.1;
+        }
+        .filter-chip-sub-name {
+            font-family: 'Chakra Petch', 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+        .filter-chip-sub-count {
+            font-size: 9px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-top: 2px;
+        }
+        .filter-chip-sub.active .filter-chip-sub-count { color: rgba(255,255,255,0.85); }
+
+        .filter-chip-brand {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.85rem;
+            background: linear-gradient(145deg, #1a1a20, #121215);
+            border: 1px solid #22222a;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all .25s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: max-content;
+        }
+        .filter-chip-brand::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -80%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(229, 9, 20, 0.12), transparent);
+            transform: skewX(-20deg);
+            transition: left .7s ease;
+            pointer-events: none;
+        }
+        .filter-chip-brand:hover::before { left: 130%; }
+        .filter-chip-brand:hover {
+            border-color: #e50914;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -8px rgba(229, 9, 20, 0.45);
+        }
+        .filter-chip-brand.active {
+            background: linear-gradient(145deg, #e50914, #b80710);
+            border-color: #ff1e27;
+            box-shadow: 0 8px 20px -8px rgba(229, 9, 20, 0.6), 0 0 0 2px rgba(229, 9, 20, 0.25);
+        }
+        .filter-chip-brand-logo {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Chakra Petch', 'Rajdhani', sans-serif;
+            font-weight: 900;
+            font-size: 10px;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
+        }
+        .filter-chip-brand-name {
+            font-family: 'Chakra Petch', 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 11px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+        .filter-chip-brand-count {
+            font-size: 9px;
+            font-weight: 700;
+            color: #9ca3af;
+            background: rgba(255,255,255,0.08);
+            padding: 1px 6px;
+            border-radius: 8px;
+        }
+        .filter-chip-brand.active .filter-chip-brand-count {
+            background: rgba(255,255,255,0.25);
+            color: white;
+        }
+
+        .quick-filters-scroll-btn {
+            position: absolute;
+            top: 2rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(10,10,12,0.95);
+            border: 1px solid #e50914;
+            color: #e50914;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all .25s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .quick-filters-scroll-btn:hover { background: #e50914; color: white; }
+        .quick-filters-scroll-btn.left { left: 0; }
+        .quick-filters-scroll-btn.right { right: 0; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased">
@@ -585,19 +585,9 @@
                     </span>
                 </a>
 
-                <!-- LOGO FC CIRCULAR CON REFLEJO + LUZ CONTINUA + SCROLL TO TOP -->
-                <div 
-                    onclick="scrollToTop(event)" 
-                    class="logo-fc-wrapper shrink-0" 
-                    title="Volver al inicio"
-                >
+                <div onclick="scrollToTop(event)" class="logo-fc-wrapper shrink-0" title="Volver al inicio">
                     <div class="logo-fc-shine"></div>
-                    <img 
-                        src="LOGO FC.png" 
-                        onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                        alt="FC Racing Logo" 
-                        class="logo-fc-img"
-                    >
+                    <img src="LOGO FC.png" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';" alt="FC Racing Logo" class="logo-fc-img">
                     <div style="display:none; position:relative; z-index:2;" class="w-full h-full rounded-full bg-gradient-to-br from-brand-red to-black items-center justify-center">
                         <span class="font-racing font-black text-white text-lg">FC</span>
                     </div>
@@ -613,9 +603,7 @@
                 <button onclick="toggleCartDrawer()" class="relative flex items-center bg-brand-card hover:bg-brand-red/20 border border-brand-border hover:border-brand-red px-2 sm:px-3 py-1.5 rounded-lg text-gray-200 transition-all">
                     <div class="relative mr-2">
                         <i class="fa-solid fa-cart-shopping text-lg sm:text-xl text-brand-red"></i>
-                        <span id="cartCountBadge" class="absolute -top-2 -right-2 bg-brand-red text-white text-[10px] font-black rounded-full h-4 w-4 flex items-center justify-center border border-brand-dark">
-                            0
-                        </span>
+                        <span id="cartCountBadge" class="absolute -top-2 -right-2 bg-brand-red text-white text-[10px] font-black rounded-full h-4 w-4 flex items-center justify-center border border-brand-dark">0</span>
                     </div>
                     <div class="flex flex-col text-left">
                         <span class="text-[10px] font-bold text-gray-400 uppercase leading-none">Tu Carrito</span>
@@ -625,44 +613,19 @@
             </div>
         </div>
 
-        <!-- SEARCH BAR MEJORADO -->
+        <!-- SEARCH BAR -->
         <div class="max-w-7xl mx-auto px-4 pb-3">
             <div class="w-full relative mb-2">
                 <form onsubmit="handleSearch(event)" class="w-full flex items-center rounded-lg overflow-hidden border border-brand-border bg-black/60 focus-within:border-brand-red transition-colors">
-                    <div class="pl-3 text-gray-400">
-                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
-                    </div>
-                    <input 
-                        type="text" 
-                        id="searchInput"
-                        placeholder="Buscar por categoría, subcategoría, código, marca, producto, precio o palabras clave..." 
-                        class="w-full bg-transparent px-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none"
-                        oninput="handleAutocompleteInput(this.value)"
-                        onfocus="handleAutocompleteInput(this.value)"
-                        autocomplete="off"
-                    >
-                    <button 
-                        type="button" 
-                        id="clearSearchBtn"
-                        onclick="clearSearchInput()" 
-                        class="hidden pr-2 text-gray-500 hover:text-white transition-colors text-xs"
-                        aria-label="Limpiar búsqueda"
-                    >
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                    <button 
-                        type="submit" 
-                        class="bg-brand-red hover:bg-brand-redDark text-white px-5 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider transition-colors flex items-center justify-center shrink-0"
-                    >
-                        Buscar
-                    </button>
+                    <div class="pl-3 text-gray-400"><i class="fa-solid fa-magnifying-glass text-sm"></i></div>
+                    <input type="text" id="searchInput" placeholder="Buscar por categoría, subcategoría, código, marca, producto, precio o palabras clave..." class="w-full bg-transparent px-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none" oninput="handleAutocompleteInput(this.value)" onfocus="handleAutocompleteInput(this.value)" autocomplete="off">
+                    <button type="button" id="clearSearchBtn" onclick="clearSearchInput()" class="hidden pr-2 text-gray-500 hover:text-white transition-colors text-xs" aria-label="Limpiar búsqueda"><i class="fa-solid fa-xmark"></i></button>
+                    <button type="submit" class="bg-brand-red hover:bg-brand-redDark text-white px-5 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider transition-colors flex items-center justify-center shrink-0">Buscar</button>
                 </form>
-
-                <div id="autocompleteDropdown" class="hidden absolute top-full left-0 right-0 mt-1.5 bg-brand-dark/95 backdrop-blur-md border border-brand-border rounded-lg shadow-2xl z-50 overflow-hidden max-h-96 overflow-y-auto divide-y divide-brand-border/60">
-                </div>
+                <div id="autocompleteDropdown" class="hidden absolute top-full left-0 right-0 mt-1.5 bg-brand-dark/95 backdrop-blur-md border border-brand-border rounded-lg shadow-2xl z-50 overflow-hidden max-h-96 overflow-y-auto divide-y divide-brand-border/60"></div>
             </div>
 
-            <!-- FILTROS POR DESPLEGABLES: CATEGORÍA / SUBCATEGORÍA / MARCA -->
+            <!-- FILTROS DESPLEGABLES -->
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 items-center">
                 <select id="filterCategory" onchange="handleFilterChange()" class="bg-black/70 border border-brand-border text-white text-[11px] sm:text-xs font-semibold uppercase rounded-lg px-2.5 py-2 focus:outline-none focus:border-brand-red cursor-pointer w-full">
                     <option value="">Todas las Categorías</option>
@@ -698,12 +661,11 @@
         </div>
     </header>
 
-    <!-- MAIN CONTENT AREA -->
+    <!-- MAIN CONTENT -->
     <main class="flex-grow">
 
         <section class="relative bg-black overflow-hidden border-b border-brand-border">
             <div id="heroSlider" class="relative w-full h-[280px] sm:h-[400px] lg:h-[480px]">
-                
                 <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-100 flex items-center">
                     <img src="RALLY DAKAR.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=1400&q=80';" alt="Rally Dakar Off Road" class="absolute inset-0 w-full h-full object-cover object-center opacity-70">
                     <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
@@ -756,7 +718,6 @@
             </div>
 
             <div class="flex flex-col space-y-3.5 w-full" id="categoriesGrid">
-
                 <div onclick="filterByCategory('Equipamiento Rider')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
                     <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
                         <div class="w-24 sm:w-36 h-20 sm:h-22 shrink-0 rounded bg-black overflow-hidden relative border border-brand-border/60">
@@ -767,9 +728,7 @@
                             <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">Cascos • Antiparras • Protecciones • Botas • Guantes • Pecheras Off Road</p>
                         </div>
                     </div>
-                    <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
+                    <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0"><i class="fa-solid fa-chevron-right"></i></div>
                 </div>
 
                 <div onclick="filterByCategory('Cubiertas & Ruedas')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
@@ -782,9 +741,7 @@
                             <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">Cubiertas Enduro & MX • Llantas • Cámaras Reforzadas • Mousse • Niple & Rayos</p>
                         </div>
                     </div>
-                    <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
+                    <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0"><i class="fa-solid fa-chevron-right"></i></div>
                 </div>
 
                 <div onclick="filterByCategory('Mantenimiento')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
@@ -797,9 +754,7 @@
                             <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">Transmisión • Pastillas de Freno • Filtros de Aire & Aceite • Lubricantes • Bujías</p>
                         </div>
                     </div>
-                    <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
+                    <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0"><i class="fa-solid fa-chevron-right"></i></div>
                 </div>
 
                 <div onclick="filterByCategory('Accesorios Moto')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
@@ -812,9 +767,7 @@
                             <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">Manubrios • Comandos • Cubre Puños • Levas Rebatibles • Equipaje & Bolsos</p>
                         </div>
                     </div>
-                    <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
+                    <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0"><i class="fa-solid fa-chevron-right"></i></div>
                 </div>
 
                 <div onclick="filterByCategory('Plásticos')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
@@ -827,9 +780,7 @@
                             <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">Kits Completos • Guardabarros • Cachas Radiador • Cubre Carter • Cubre Disco & Cuadro</p>
                         </div>
                     </div>
-                    <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
+                    <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0"><i class="fa-solid fa-chevron-right"></i></div>
                 </div>
 
                 <div onclick="filterByCategory('Taller & Transporte')" class="cat-card cursor-pointer bg-brand-card rounded-lg border border-brand-border hover:border-brand-red flex items-center justify-between group relative overflow-hidden h-24 sm:h-28 w-full p-2.5 sm:p-3 shadow-lg">
@@ -842,11 +793,8 @@
                             <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-snug line-clamp-2">Caballetes Elevadores • Zunchos de Amarre • Bidones Homologados • Herramientas</p>
                         </div>
                     </div>
-                    <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
+                    <div class="cat-arrow text-brand-red text-lg sm:text-2xl transition-transform px-3 shrink-0"><i class="fa-solid fa-chevron-right"></i></div>
                 </div>
-
             </div>
         </section>
 
@@ -861,7 +809,6 @@
                     <span>Actualizado con Google Sheets</span>
                 </div>
             </div>
-
             <div id="featuredProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         </section>
 
@@ -869,7 +816,6 @@
             <div class="relative w-full overflow-hidden">
                 <div class="absolute top-0 bottom-0 left-0 w-12 sm:w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none"></div>
                 <div class="absolute top-0 bottom-0 right-0 w-12 sm:w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none"></div>
-
                 <div class="animate-marquee flex items-center space-x-6 sm:space-x-10 py-1">
                     <div class="shrink-0 font-racing font-black text-xl italic tracking-tighter text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded"><span class="text-brand-red">Z</span>TECH</div>
                     <div class="shrink-0 font-racing font-black text-xl tracking-widest text-gray-200 border border-brand-border/60 bg-brand-card px-4 py-1.5 rounded">ACERBIS</div>
@@ -891,12 +837,10 @@
         <section class="max-w-7xl mx-auto px-4 py-10">
             <div class="bg-gradient-to-br from-brand-card via-[#16161c] to-black rounded-xl border border-brand-border p-6 sm:p-8 shadow-2xl relative overflow-hidden">
                 <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-brand-red/10 rounded-full blur-3xl pointer-events-none"></div>
-
                 <div class="text-center sm:text-left mb-8 border-b border-brand-border pb-4">
                     <span class="bg-brand-red/20 text-brand-red font-bold text-xs uppercase tracking-widest px-3 py-1 rounded border border-brand-red/30"><i class="fa-solid fa-location-dot mr-1"></i> NUESTRO LOCAL & ATENCIÓN</span>
                     <h2 class="font-racing font-black text-2xl sm:text-4xl text-white tracking-wider uppercase italic mt-2">VISÍTANOS O CONTACTA DIRECTO NUESTRA UBICACIÓN</h2>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-black/60 rounded-lg p-5 border border-brand-border flex flex-col justify-between hover:border-brand-red/60 transition-all">
                         <div>
@@ -906,7 +850,6 @@
                         </div>
                         <div class="mt-4 pt-3 border-t border-brand-border/40 text-xs text-gray-400">Atención presencial y retiro de pedidos.</div>
                     </div>
-
                     <div class="bg-black/60 rounded-lg p-5 border border-brand-border flex flex-col justify-between hover:border-brand-red/60 transition-all">
                         <div>
                             <div class="w-12 h-12 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 text-xl mb-4"><i class="fa-solid fa-map-location-dot"></i></div>
@@ -918,7 +861,6 @@
                             <span>ABRIR EN GOOGLE MAPS</span>
                         </a>
                     </div>
-
                     <div class="bg-black/60 rounded-lg p-5 border border-brand-border flex flex-col justify-between hover:border-brand-red/60 transition-all">
                         <div>
                             <div class="w-12 h-12 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl mb-4"><i class="fa-brands fa-whatsapp"></i></div>
@@ -937,7 +879,6 @@
                 </div>
             </div>
         </section>
-
     </main>
 
     <footer class="bg-brand-dark border-t border-brand-border text-gray-400 text-xs py-8 px-4">
@@ -949,7 +890,6 @@
                 </div>
                 <p class="text-gray-400 text-xs leading-relaxed">Especialistas en repuestos, accesorios y equipamiento off-road para Enduro, Motocross y Trail.</p>
             </div>
-
             <div>
                 <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">Navegación</h5>
                 <ul class="space-y-2">
@@ -959,7 +899,6 @@
                     <li><a href="#" onclick="filterByCategory('Mantenimiento')" class="hover:text-brand-red transition-colors">Repuestos y Mantenimiento</a></li>
                 </ul>
             </div>
-
             <div>
                 <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">Ubicación y Contacto</h5>
                 <ul class="space-y-2">
@@ -968,7 +907,6 @@
                     <li class="flex items-center space-x-2"><i class="fa-regular fa-envelope text-brand-red"></i><span>contacto@fcracing.com.ar</span></li>
                 </ul>
             </div>
-
             <div>
                 <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">Medios de Pago</h5>
                 <ul class="space-y-1.5 text-gray-300 text-xs mb-3">
@@ -979,13 +917,12 @@
                 <p class="text-[11px] text-gray-500">Sincronizado vía Google Sheets API.</p>
             </div>
         </div>
-
         <div class="max-w-7xl mx-auto pt-4 border-t border-brand-border/40 text-center text-[11px] text-gray-500">
             © 2026 FC RACING - Todos los derechos reservados.
         </div>
     </footer>
 
-    <!-- FLOATING WHATSAPP BUTTON -->
+    <!-- FLOATING WHATSAPP -->
     <a href="https://wa.me/5493543546389?text=Hola!%20Vengo%20desde%20la%20web%20FC%20RACING%20y%20quisiera%20consultar%20por%20un%20producto" target="_blank" rel="noopener noreferrer" class="fixed bottom-5 right-5 z-50 bg-green-600 hover:bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl whatsapp-pulse transition-transform hover:scale-110" aria-label="Contactar por WhatsApp">
         <i class="fa-brands fa-whatsapp text-3xl"></i>
     </a>
@@ -999,7 +936,7 @@
         </div>
     </button>
 
-    <!-- ADMIN PASSWORD MODAL -->
+    <!-- ADMIN MODAL -->
     <div id="adminModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
         <div class="bg-brand-dark border border-brand-border rounded-xl shadow-2xl p-6 max-w-md w-full mx-4">
             <div class="flex items-center justify-between mb-5 border-b border-brand-border pb-3">
@@ -1009,39 +946,34 @@
                 </div>
                 <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white text-xl p-1"><i class="fa-solid fa-xmark"></i></button>
             </div>
-
             <div class="space-y-4">
                 <div>
                     <label class="block text-gray-300 font-semibold text-xs mb-2"><i class="fa-solid fa-key text-purple-400 mr-1"></i>Ingresá la clave de administrador:</label>
                     <input type="password" id="adminPassword" placeholder="Clave secreta..." onkeydown="if(event.key === 'Enter') verifyAdminPassword()" class="w-full bg-black border border-brand-border rounded px-3 py-2.5 text-white focus:outline-none focus:border-purple-500 text-sm" autocomplete="off">
                     <p id="adminError" class="text-red-400 text-xs mt-1.5 hidden"><i class="fa-solid fa-triangle-exclamation"></i> Clave incorrecta. Intentá nuevamente.</p>
                 </div>
-
                 <div class="flex space-x-2">
                     <button onclick="verifyAdminPassword()" class="flex-grow bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded text-xs uppercase tracking-wider transition-colors flex items-center justify-center space-x-2"><i class="fa-solid fa-unlock"></i><span>INGRESAR</span></button>
                     <button onclick="closeAdminModal()" class="bg-brand-card hover:bg-brand-cardHover text-gray-300 border border-brand-border font-bold py-2.5 px-4 rounded text-xs uppercase tracking-wider transition-colors">Cancelar</button>
                 </div>
-
                 <div class="bg-black/40 border border-brand-border/60 rounded p-3 text-[10px] text-gray-400 text-center"><i class="fa-solid fa-info-circle text-purple-400 mr-1"></i>Solo personal autorizado puede acceder a la edición de la base de datos y del banner.</div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL EDITOR DE BANNER (SOLO ADMIN) -->
+    <!-- BANNER EDITOR MODAL -->
     <div id="bannerEditorModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
         <div class="bg-brand-dark border border-brand-border rounded-xl shadow-2xl p-6 max-w-lg w-full mx-4">
             <div class="flex items-center justify-between mb-5 border-b border-brand-border pb-3">
                 <div class="flex items-center space-x-2"><i class="fa-solid fa-pen-to-square text-brand-red text-xl"></i><h3 class="font-racing font-bold text-lg text-white uppercase italic tracking-wider">Editar Banner Superior</h3></div>
                 <button onclick="closeBannerEditor()" class="text-gray-400 hover:text-white text-xl p-1"><i class="fa-solid fa-xmark"></i></button>
             </div>
-
             <div class="space-y-4">
                 <div>
                     <label class="block text-gray-300 font-semibold text-xs mb-2"><i class="fa-solid fa-bullhorn text-brand-red mr-1"></i>Escribí un mensaje por línea:</label>
                     <textarea id="bannerTextarea" rows="5" class="w-full bg-black border border-brand-border rounded px-3 py-2.5 text-white focus:outline-none focus:border-brand-red text-xs leading-relaxed"></textarea>
                     <p class="text-[10px] text-gray-500 mt-1.5">Cada línea se mostrará como un aviso independiente en el banner animado superior.</p>
                 </div>
-
                 <div class="flex space-x-2">
                     <button onclick="saveBannerEditor()" class="flex-grow bg-brand-red hover:bg-brand-redDark text-white font-bold py-2.5 rounded text-xs uppercase tracking-wider transition-colors flex items-center justify-center space-x-2"><i class="fa-solid fa-floppy-disk"></i><span>GUARDAR CAMBIOS</span></button>
                     <button onclick="resetBannerEditor()" class="bg-brand-card hover:bg-brand-cardHover text-gray-300 border border-brand-border font-bold py-2.5 px-3 rounded text-xs uppercase tracking-wider transition-colors" title="Restaurar mensajes originales"><i class="fa-solid fa-rotate-left"></i></button>
@@ -1051,6 +983,7 @@
         </div>
     </div>
 
+    <!-- MOBILE DRAWER -->
     <div id="mobileDrawer" class="fixed inset-0 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out pointer-events-none">
         <div id="drawerBackdrop" class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300"></div>
         <div class="relative w-4/5 max-w-sm bg-brand-dark h-full shadow-2xl border-r border-brand-border p-5 flex flex-col justify-between pointer-events-auto overflow-y-auto">
@@ -1059,7 +992,6 @@
                     <div class="flex items-center space-x-1"><span class="text-brand-red text-xl font-black italic">//</span><span class="font-racing text-xl font-black italic tracking-wider text-white">FC <span class="text-brand-red">RACING</span></span></div>
                     <button id="closeMobileMenu" class="text-gray-400 hover:text-white text-xl p-1"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-
                 <nav class="space-y-3 font-racing font-bold text-sm tracking-wider uppercase">
                     <a href="#" onclick="closeDrawer()" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40"><i class="fa-solid fa-house text-brand-red mr-2"></i> Inicio</a>
                     <a href="#categoriesSection" onclick="closeDrawer()" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40"><i class="fa-solid fa-list-ul text-brand-red mr-2"></i> Ver Categorías</a>
@@ -1068,37 +1000,32 @@
                     <a href="#" onclick="filterByCategory('Mantenimiento'); closeDrawer();" class="block text-white hover:text-brand-red py-2 border-b border-brand-border/40"><i class="fa-solid fa-gears text-brand-red mr-2"></i> Repuestos & Mantenimiento</a>
                 </nav>
             </div>
-
             <div class="pt-4 border-t border-brand-border space-y-3 text-xs">
                 <a href="https://wa.me/5493543546389" target="_blank" class="w-full bg-green-600 text-white font-bold py-2.5 rounded flex items-center justify-center space-x-2"><i class="fa-brands fa-whatsapp text-base"></i><span>Contactar: 3543546389</span></a>
             </div>
         </div>
     </div>
 
+    <!-- CART DRAWER -->
     <div id="cartDrawer" class="fixed inset-0 z-50 transform translate-x-full transition-transform duration-300 ease-in-out pointer-events-none">
         <div id="cartBackdrop" onclick="toggleCartDrawer()" class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300"></div>
-        
         <div class="relative ml-auto w-full max-w-lg bg-brand-dark h-full shadow-2xl border-l border-brand-border p-4 sm:p-6 flex flex-col justify-between pointer-events-auto overflow-y-auto">
             <div>
                 <div class="flex items-center justify-between pb-3 border-b border-brand-border mb-4">
                     <div class="flex items-center space-x-2"><i class="fa-solid fa-cart-shopping text-brand-red text-xl"></i><h3 class="font-racing font-bold text-xl text-white uppercase italic tracking-wider">Tu Carrito DE COMPRAS (<span id="cartTotalItems">0</span>)</h3></div>
                     <button onclick="toggleCartDrawer()" class="text-gray-400 hover:text-white text-xl p-1"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-
                 <div id="cartItemsList" class="space-y-3 max-h-[35vh] overflow-y-auto pr-1 mb-4">
                     <p class="text-center text-gray-500 text-xs py-8">Tu carrito está vacío. Agregá productos para generar tu pedido.</p>
                 </div>
-
                 <div class="bg-black/60 p-3 rounded-lg border border-brand-border mb-2 flex justify-between items-center">
                     <span class="text-gray-400 uppercase font-bold text-xs">Total del Pedido:</span>
                     <span id="cartSubtotalPrice" class="font-racing font-bold text-base text-gray-300 line-through">$ 0</span>
                 </div>
-
                 <div class="bg-emerald-900/30 p-2.5 rounded-lg border border-emerald-500/50 mb-2 flex justify-between items-center">
                     <span class="text-emerald-400 uppercase font-bold text-xs flex items-center space-x-1.5"><i class="fa-solid fa-tag"></i><span>Descuento Carrito (5%):</span></span>
                     <span id="cartDiscountAmount" class="font-racing font-bold text-sm text-emerald-400">- $ 0</span>
                 </div>
-
                 <div class="bg-gradient-to-r from-brand-redDark/40 to-brand-red/40 p-4 rounded-lg border-2 border-brand-red mb-5 flex justify-between items-center shadow-lg">
                     <div class="flex flex-col">
                         <span class="text-white uppercase font-black text-xs tracking-wider">Total Final a Pagar:</span>
@@ -1106,29 +1033,24 @@
                     </div>
                     <span id="cartTotalPrice" class="font-racing font-black text-2xl text-white red-glow">$ 0</span>
                 </div>
-
                 <div class="bg-brand-card p-4 rounded-lg border border-brand-border space-y-3">
                     <div class="border-b border-brand-border pb-2 flex items-center justify-between">
                         <h4 class="font-racing font-bold text-sm text-white uppercase tracking-wider text-brand-red"><i class="fa-solid fa-file-invoice mr-1.5"></i> Datos para generar tu Recibo de Venta</h4>
                         <span class="text-[10px] text-gray-400 font-normal">Paso final</span>
                     </div>
-
                     <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)" class="space-y-3 text-xs">
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Nombre y Apellido <span class="text-brand-red">*</span></label>
                             <input type="text" id="custName" required placeholder="Ej: Juan Pérez" class="w-full bg-black border border-brand-border rounded px-3 py-2 text-white focus:outline-none focus:border-brand-red">
                         </div>
-
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Ciudad y Dirección <span class="text-brand-red">*</span></label>
                             <input type="text" id="custAddress" required placeholder="Ej: Córdoba Cap., Av. San Martín 450" class="w-full bg-black border border-brand-border rounded px-3 py-2 text-white focus:outline-none focus:border-brand-red">
                         </div>
-
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Correo Electrónico <span class="text-brand-red">*</span></label>
                             <input type="email" id="custEmail" required placeholder="ejemplo@correo.com" class="w-full bg-black border border-brand-border rounded px-3 py-2 text-white focus:outline-none focus:border-brand-red">
                         </div>
-
                         <div>
                             <label class="block text-gray-300 font-semibold mb-1">Método de Pago <span class="text-brand-red">*</span></label>
                             <select id="custPayment" required class="w-full bg-black border border-brand-border rounded px-3 py-2 text-white focus:outline-none focus:border-brand-red cursor-pointer">
@@ -1138,7 +1060,6 @@
                                 <option value="PAGO EFECTIVO">PAGO EFECTIVO</option>
                             </select>
                         </div>
-
                         <button type="submit" id="submitOrderBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg flex items-center justify-center space-x-2 uppercase tracking-wider text-xs shadow-lg transition-colors mt-2">
                             <i class="fa-brands fa-whatsapp text-lg"></i>
                             <span>ENVIAR PEDIDO Y GENERAR RECIBO PDF</span>
@@ -1146,21 +1067,20 @@
                     </form>
                 </div>
             </div>
-
             <div class="pt-3 text-center text-[10px] text-gray-500">
                 Al enviar, se descargará automáticamente tu Recibo de Venta PDF con el <strong class="text-emerald-400">5% de descuento aplicado</strong> y se abrirá WhatsApp con el Asesor (3543546389).
             </div>
         </div>
     </div>
 
-    <!-- MODAL CATÁLOGO CON NAVEGACIÓN EN CASCADA -->
+    <!-- MODAL CATÁLOGO CON FILTROS RÁPIDOS -->
     <div id="productsModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex-col overflow-y-auto">
         <div class="max-w-7xl mx-auto w-full px-4 py-6">
-            <div class="flex items-center justify-between pb-4 border-b border-brand-border mb-2 sticky top-0 bg-black/95 backdrop-blur-md -mx-4 px-4 z-10">
+            <div class="flex items-center justify-between pb-3 border-b border-brand-border mb-2 sticky top-0 bg-black/95 backdrop-blur-md -mx-4 px-4 z-10">
                 <div class="flex-grow min-w-0 pr-3">
                     <span class="text-brand-red font-bold text-xs uppercase tracking-widest">// CATÁLOGO GENERAL FC RACING</span>
-                    <h2 id="modalCategoryTitle" class="font-racing font-bold text-xl sm:text-3xl text-white uppercase italic truncate">TODOS LOS PRODUCTOS</h2>
-                    <p id="modalCategoryCount" class="text-[11px] text-emerald-400 font-semibold mt-1 truncate"><i class="fa-solid fa-database mr-1"></i>Sincronizado con Google Sheets</p>
+                    <h2 id="modalCategoryTitle" class="font-racing font-bold text-xl sm:text-2xl text-white uppercase italic truncate">TODOS LOS PRODUCTOS</h2>
+                    <p id="modalCategoryCount" class="text-[11px] text-emerald-400 font-semibold mt-0.5 truncate"><i class="fa-solid fa-database mr-1"></i>Sincronizado con Google Sheets</p>
                 </div>
                 <div class="flex items-center space-x-2 shrink-0">
                     <button onclick="toggleCatalogLayout()" id="catalogLayoutToggle" title="Cambiar vista" class="bg-brand-card hover:bg-brand-red/20 border border-brand-border hover:border-brand-red text-white w-9 h-9 rounded-lg flex items-center justify-center transition-all">
@@ -1170,14 +1090,10 @@
                 </div>
             </div>
 
-            <!-- BREADCRUMB DE NAVEGACIÓN EN CASCADA -->
             <div id="catalogBreadcrumb" class="cascade-breadcrumb"></div>
+            <div id="quickFiltersContainer" class="quick-filters-wrapper"></div>
 
-            <!-- CONTENEDOR DINÁMICO (SUBCATEGORÍAS / MARCAS / PRODUCTOS) -->
-            <div id="catalogDynamicContent" class="mb-4"></div>
-
-            <!-- CONTENEDOR DE TARJETAS DE PRODUCTOS -->
-            <div class="catalog-scroll-container" id="catalogScrollContainer" style="display: none;">
+            <div class="catalog-scroll-container" id="catalogScrollContainer">
                 <button onclick="scrollCatalog(-1)" class="catalog-nav-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div id="productsGrid" class="catalog-scroll-track"></div>
                 <button onclick="scrollCatalog(1)" class="catalog-nav-btn next"><i class="fa-solid fa-chevron-right"></i></button>
@@ -1185,7 +1101,7 @@
         </div>
     </div>
 
-    <!-- MODAL VISTA EXPANDIDA DE TARJETA -->
+    <!-- MODAL VISTA EXPANDIDA -->
     <div id="expandedCardModal" class="hidden expanded-card-overlay" onclick="if(event.target === this) closeExpandedCard()">
         <div class="expanded-card">
             <button onclick="closeExpandedCard()" class="absolute top-3 right-3 bg-black/70 hover:bg-brand-red text-white w-9 h-9 rounded-full flex items-center justify-center transition-colors z-10 border border-brand-border">
@@ -1195,6 +1111,7 @@
         </div>
     </div>
 
+    <!-- PDF RECEIPT TEMPLATE -->
     <div id="pdfReceiptTemplate" class="hidden">
         <div id="receiptContent" style="padding: 30px; background-color: #ffffff; color: #111111; font-family: Arial, sans-serif; max-width: 700px; margin: auto;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e50914; padding-bottom: 15px; margin-bottom: 20px;">
@@ -1209,7 +1126,6 @@
                     <p style="font-size: 11px; margin: 2px 0 0 0; color: #555555;" id="pdfOrderDate">Fecha: 01/01/2026</p>
                 </div>
             </div>
-
             <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 12px; margin-bottom: 20px; font-size: 12px;">
                 <h4 style="margin: 0 0 8px 0; color: #e50914; font-size: 13px; text-transform: uppercase;">DATOS DEL CLIENTE</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
@@ -1219,7 +1135,6 @@
                     <div><strong>Correo:</strong> <span id="pdfCustEmail"></span></div>
                 </div>
             </div>
-
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px;">
                 <thead>
                     <tr style="background-color: #111111; color: #ffffff; text-align: left;">
@@ -1233,13 +1148,11 @@
                 </thead>
                 <tbody id="pdfTableBody"></tbody>
             </table>
-
             <div style="text-align: right; margin-bottom: 30px; font-size: 12px;">
                 <div style="margin-bottom: 6px;"><span style="font-weight: bold; margin-right: 15px; color: #555555;">SUBTOTAL:</span><span id="pdfSubtotal" style="text-decoration: line-through; color: #888888;">$ 0</span></div>
                 <div style="margin-bottom: 10px; color: #059669; font-weight: bold;"><span style="margin-right: 15px;">DESCUENTO 5% (Carrito):</span><span id="pdfDiscount">- $ 0</span></div>
                 <div style="border-top: 2px solid #e50914; padding-top: 10px;"><span style="font-size: 14px; font-weight: bold; margin-right: 15px;">TOTAL FINAL A PAGAR:</span><span style="font-size: 22px; font-weight: 900; color: #e50914;" id="pdfTotalAmount">$ 0</span></div>
             </div>
-
             <div style="border-top: 1px solid #dddddd; padding-top: 12px; font-size: 10px; color: #777777; text-align: center;">
                 Gracias por tu compra en FC RACING. Conservá este recibo para cualquier cambio o gestión de garantía.<br>
                 <strong style="color: #059669;">✓ Descuento del 5% aplicado automáticamente por compra mediante carrito.</strong><br>
@@ -1283,14 +1196,15 @@
 
         let PRODUCTS = [...DEFAULT_PRODUCTS];
         let CART = [];
-        let CATALOG_VIEW = 'horizontal'; // 'horizontal' | 'grid'
+        let CATALOG_VIEW = 'horizontal';
 
-        // ESTADO DE NAVEGACIÓN EN CASCADA
+        // ====== FIX #5: Estado con validación de nivel ======
         let CATALOG_STATE = {
-            level: 'subcategories', // 'subcategories' | 'brands' | 'products' | 'all'
+            level: 'all',          // 'all' | 'category' | 'subcategory'
             category: '',
             subcategory: '',
-            brand: ''
+            activeSubcategory: '',
+            activeBrand: ''
         };
 
         function escapeHTML(str) {
@@ -1327,44 +1241,25 @@
 
         const FALLBACK_IMG = 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80';
 
-        // ====== ICONOS PARA CADA SUBCATEGÍA ======
         const SUBCATEGORY_ICONS = {
-            'MANUBRIOS': 'fa-solid fa-dharmachakra',
-            'PUÑOS': 'fa-solid fa-hand',
-            'CUBRE PUÑOS': 'fa-solid fa-shield-halved',
-            'CASCO': 'fa-solid fa-hard-hat',
-            'GAFAS': 'fa-solid fa-glasses',
-            'CODERA': 'fa-solid fa-shield',
-            'RODILLERA': 'fa-solid fa-shield-cat',
-            'CUELLO': 'fa-solid fa-user-shield',
-            'REMERAS': 'fa-solid fa-shirt',
-            'CUBIERTAS': 'fa-solid fa-circle-notch',
-            'LLANTAS': 'fa-solid fa-compact-disc',
-            'TRANSMISION': 'fa-solid fa-link',
-            'LUBRICANTES': 'fa-solid fa-oil-can',
-            'FILTROS': 'fa-solid fa-filter',
-            'CABALLETE': 'fa-solid fa-arrows-up-down',
-            'KITS': 'fa-solid fa-boxes-stacked',
-            'PLASTICOS': 'fa-solid fa-cube',
-            'PASTILLA FRENO': 'fa-solid fa-compact-disc',
-            'SOPORTE EMBRAGUE': 'fa-solid fa-gears',
-            'SOPORTE ALFORJAS': 'fa-solid fa-briefcase',
-            'PORTA BAUL': 'fa-solid fa-suitcase',
-            'ASIENTO': 'fa-solid fa-couch',
-            'FUNDA ASIENTO': 'fa-solid fa-couch',
-            'RESPALDAR': 'fa-solid fa-box',
-            'AROMAT': 'fa-solid fa-spray-can-sparkles',
-            'CORDON LLAVERO': 'fa-solid fa-key',
-            'CALCOMANIAS/STICKERS': 'fa-solid fa-palette',
-            'SISTEMA DE LIBERACION': 'fa-solid fa-unlock',
-            'CONTROL REMOTO': 'fa-solid fa-gamepad',
-            'CAMARAS SONY': 'fa-solid fa-video',
-            'CONTROL DE PRESION': 'fa-solid fa-gauge-high',
-            'SOPORTE BARRAL': 'fa-solid fa-bars',
-            'CINTURON DE AYUDA': 'fa-solid fa-ring',
-            'MUÑEQUERA': 'fa-solid fa-hand-back-fist',
-            'COBERTOR FILTRO': 'fa-solid fa-filter-circle-xmark',
-            'default': 'fa-solid fa-tag'
+            'MANUBRIOS': 'fa-solid fa-dharmachakra', 'PUÑOS': 'fa-solid fa-hand',
+            'CUBRE PUÑOS': 'fa-solid fa-shield-halved', 'CASCO': 'fa-solid fa-hard-hat',
+            'GAFAS': 'fa-solid fa-glasses', 'CODERA': 'fa-solid fa-shield',
+            'RODILLERA': 'fa-solid fa-shield-cat', 'CUELLO': 'fa-solid fa-user-shield',
+            'REMERAS': 'fa-solid fa-shirt', 'CUBIERTAS': 'fa-solid fa-circle-notch',
+            'LLANTAS': 'fa-solid fa-compact-disc', 'TRANSMISION': 'fa-solid fa-link',
+            'LUBRICANTES': 'fa-solid fa-oil-can', 'FILTROS': 'fa-solid fa-filter',
+            'CABALLETE': 'fa-solid fa-arrows-up-down', 'KITS': 'fa-solid fa-boxes-stacked',
+            'PLASTICOS': 'fa-solid fa-cube', 'PASTILLA FRENO': 'fa-solid fa-compact-disc',
+            'SOPORTE EMBRAGUE': 'fa-solid fa-gears', 'SOPORTE ALFORJAS': 'fa-solid fa-briefcase',
+            'PORTA BAUL': 'fa-solid fa-suitcase', 'ASIENTO': 'fa-solid fa-couch',
+            'FUNDA ASIENTO': 'fa-solid fa-couch', 'RESPALDAR': 'fa-solid fa-box',
+            'AROMAT': 'fa-solid fa-spray-can-sparkles', 'CORDON LLAVERO': 'fa-solid fa-key',
+            'CALCOMANIAS/STICKERS': 'fa-solid fa-palette', 'SISTEMA DE LIBERACION': 'fa-solid fa-unlock',
+            'CONTROL REMOTO': 'fa-solid fa-gamepad', 'CAMARAS SONY': 'fa-solid fa-video',
+            'CONTROL DE PRESION': 'fa-solid fa-gauge-high', 'SOPORTE BARRAL': 'fa-solid fa-bars',
+            'CINTURON DE AYUDA': 'fa-solid fa-ring', 'MUÑEQUERA': 'fa-solid fa-hand-back-fist',
+            'COBERTOR FILTRO': 'fa-solid fa-filter-circle-xmark', 'default': 'fa-solid fa-tag'
         };
 
         function getSubcategoryIcon(subName) {
@@ -1375,16 +1270,11 @@
         function getBrandColor(brandName) {
             const hash = (brandName || '').split('').reduce((a, c) => a + c.charCodeAt(0), 0);
             const colors = [
-                'from-red-600 to-red-900',
-                'from-blue-600 to-blue-900',
-                'from-emerald-600 to-emerald-900',
-                'from-orange-600 to-orange-900',
-                'from-purple-600 to-purple-900',
-                'from-yellow-600 to-yellow-900',
-                'from-pink-600 to-pink-900',
-                'from-cyan-600 to-cyan-900',
-                'from-amber-600 to-amber-900',
-                'from-lime-600 to-lime-900'
+                'from-red-600 to-red-900', 'from-blue-600 to-blue-900',
+                'from-emerald-600 to-emerald-900', 'from-orange-600 to-orange-900',
+                'from-purple-600 to-purple-900', 'from-yellow-600 to-yellow-900',
+                'from-pink-600 to-pink-900', 'from-cyan-600 to-cyan-900',
+                'from-amber-600 to-amber-900', 'from-lime-600 to-lime-900'
             ];
             return colors[hash % colors.length];
         }
@@ -1392,10 +1282,7 @@
         function getBannerMessages() {
             try {
                 const saved = localStorage.getItem('fc_banner_messages');
-                if (saved) {
-                    const arr = JSON.parse(saved);
-                    if (Array.isArray(arr) && arr.length > 0) return arr;
-                }
+                if (saved) { const arr = JSON.parse(saved); if (Array.isArray(arr) && arr.length > 0) return arr; }
             } catch (e) {}
             return [...DEFAULT_BANNER_MESSAGES];
         }
@@ -1415,14 +1302,13 @@
         }
 
         function openBannerEditor() {
-            const msgs = getBannerMessages();
-            document.getElementById('bannerTextarea').value = msgs.join('\n');
+            document.getElementById('bannerTextarea').value = getBannerMessages().join('\n');
             document.getElementById('bannerEditorModal').classList.remove('hidden');
         }
         function closeBannerEditor() { document.getElementById('bannerEditorModal').classList.add('hidden'); }
         function saveBannerEditor() {
             const lines = document.getElementById('bannerTextarea').value.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            if (lines.length === 0) { alert('Escribí al menos un mensaje para el banner.'); return; }
+            if (lines.length === 0) { alert('Escribí al menos un mensaje.'); return; }
             localStorage.setItem('fc_banner_messages', JSON.stringify(lines));
             renderBanner();
             closeBannerEditor();
@@ -1435,15 +1321,12 @@
 
         function parseCSVLine(line) {
             const result = [];
-            let cur = '';
-            let inQuotes = false;
+            let cur = '', inQuotes = false;
             for (let i = 0; i < line.length; i++) {
                 const ch = line[i];
                 if (inQuotes) {
-                    if (ch === '"') {
-                        if (line[i + 1] === '"') { cur += '"'; i++; }
-                        else inQuotes = false;
-                    } else cur += ch;
+                    if (ch === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else inQuotes = false; }
+                    else cur += ch;
                 } else {
                     if (ch === '"') inQuotes = true;
                     else if (ch === ',') { result.push(cur); cur = ''; }
@@ -1457,18 +1340,12 @@
         function parseCSV(text) {
             const lines = text.split(/\r\n|\n|\r/).filter(line => line.trim() !== '');
             if (lines.length < 2) return [];
-
             const headers = parseCSVLine(lines[0]).map(h => normalizeText(h));
-
             const findExact = (key) => headers.findIndex(h => h === normalizeText(key));
-            let idxCat     = findExact('CATEGORIA');
-            let idxSub     = findExact('SUBCATEGORIA');
-            let idxBrand   = findExact('MARCAS');
-            let idxCod     = findExact('CODIGO');
-            let idxProd    = findExact('PRODUCTO');
-            let idxPrecio  = findExact('PRECIO');
-            let idxStock   = findExact('STOCK');
-            let idxImg     = findExact('IMAGEN');
+            let idxCat = findExact('CATEGORIA'), idxSub = findExact('SUBCATEGORIA'),
+                idxBrand = findExact('MARCAS'), idxCod = findExact('CODIGO'),
+                idxProd = findExact('PRODUCTO'), idxPrecio = findExact('PRECIO'),
+                idxStock = findExact('STOCK'), idxImg = findExact('IMAGEN');
 
             if (idxCat === -1) idxCat = headers.findIndex(h => h.includes('categor'));
             if (idxSub === -1) idxSub = headers.findIndex(h => h.includes('subcategor'));
@@ -1479,20 +1356,15 @@
             if (idxStock === -1) idxStock = headers.findIndex(h => h.includes('stock'));
             if (idxImg === -1) idxImg = headers.findIndex(h => h.includes('imagen'));
 
-            if (idxCat === -1) idxCat = 0;
-            if (idxSub === -1) idxSub = 1;
-            if (idxBrand === -1) idxBrand = 2;
-            if (idxCod === -1) idxCod = 3;
-            if (idxProd === -1) idxProd = 4;
-            if (idxPrecio === -1) idxPrecio = 5;
-            if (idxStock === -1) idxStock = 6;
-            if (idxImg === -1) idxImg = 7;
+            if (idxCat === -1) idxCat = 0; if (idxSub === -1) idxSub = 1;
+            if (idxBrand === -1) idxBrand = 2; if (idxCod === -1) idxCod = 3;
+            if (idxProd === -1) idxProd = 4; if (idxPrecio === -1) idxPrecio = 5;
+            if (idxStock === -1) idxStock = 6; if (idxImg === -1) idxImg = 7;
 
             const products = [];
             for (let i = 1; i < lines.length; i++) {
                 const row = parseCSVLine(lines[i]);
                 if (!row || row.length === 0) continue;
-
                 const categoria = (row[idxCat] || '').trim();
                 const subcategoria = (row[idxSub] || '').trim();
                 const marca = (row[idxBrand] || '').trim();
@@ -1501,23 +1373,15 @@
                 const precio = parsePriceValue(row[idxPrecio]);
                 const stock = parseInt(String(row[idxStock] || '0').replace(/[^0-9-]/g, ''), 10);
                 const imagen = (row[idxImg] || '').trim();
-
                 if (!codigo && !producto) continue;
-
                 products.push({
-                    id: i,
-                    codigo: codigo || `COD-${i}`,
-                    descripcion: producto || `Producto ${i}`,
-                    categoria: categoria || 'General',
-                    category: categoria || 'General',
-                    subcategoria: subcategoria || '',
-                    marca: marca || '',
-                    precio: precio > 0 ? precio : 0,
-                    stock: isNaN(stock) ? 0 : stock,
+                    id: i, codigo: codigo || `COD-${i}`, descripcion: producto || `Producto ${i}`,
+                    categoria: categoria || 'General', category: categoria || 'General',
+                    subcategoria: subcategoria || '', marca: marca || '',
+                    precio: precio > 0 ? precio : 0, stock: isNaN(stock) ? 0 : stock,
                     imagen: imagen || FALLBACK_IMG
                 });
             }
-
             return products;
         }
 
@@ -1526,21 +1390,16 @@
             const syncText = document.getElementById('syncText');
             if (syncIcon) syncIcon.classList.add('fa-spin');
             if (syncText) syncText.textContent = 'Sincronizando...';
-
             try {
                 const response = await fetch(SHEET_CSV_URL + '&t=' + Date.now());
                 if (!response.ok) throw new Error('Network error');
                 const csvData = await response.text();
                 const fetchedProducts = parseCSV(csvData);
-
                 if (fetchedProducts && fetchedProducts.length > 0) {
                     PRODUCTS = fetchedProducts;
                     if (syncText) syncText.textContent = `${PRODUCTS.length} Productos OK`;
-                    console.log(`✅ Base sincronizada: ${PRODUCTS.length} productos`);
                     populateFilters();
-                } else {
-                    if (syncText) syncText.textContent = 'Stock Local Activo';
-                }
+                } else { if (syncText) syncText.textContent = 'Stock Local Activo'; }
             } catch (err) {
                 console.warn('Sync failed:', err);
                 if (syncText) syncText.textContent = 'Stock Offline OK';
@@ -1554,27 +1413,22 @@
             const catSelect = document.getElementById('filterCategory');
             const subSelect = document.getElementById('filterSubcategory');
             const brandSelect = document.getElementById('filterBrand');
+            if (!catSelect || !subSelect || !brandSelect) return;
 
             const categories = [...new Set(PRODUCTS.map(p => p.category).filter(Boolean))].sort();
             const subcategories = [...new Set(PRODUCTS.map(p => p.subcategoria).filter(Boolean))].sort();
             const brands = [...new Set(PRODUCTS.map(p => p.marca).filter(Boolean))].sort();
+            const curCat = catSelect.value, curSub = subSelect.value, curBrand = brandSelect.value;
 
-            const curCat = catSelect.value;
-            const curSub = subSelect.value;
-            const curBrand = brandSelect.value;
-
-            catSelect.innerHTML = '<option value="">Todas las Categorías</option>' +
-                categories.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join('');
-            subSelect.innerHTML = '<option value="">Todas las Subcategorías</option>' +
-                subcategories.map(s => `<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join('');
-            brandSelect.innerHTML = '<option value="">Todas las Marcas</option>' +
-                brands.map(b => `<option value="${escapeHTML(b)}">${escapeHTML(b)}</option>`).join('');
-
+            catSelect.innerHTML = '<option value="">Todas las Categorías</option>' + categories.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join('');
+            subSelect.innerHTML = '<option value="">Todas las Subcategorías</option>' + subcategories.map(s => `<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join('');
+            brandSelect.innerHTML = '<option value="">Todas las Marcas</option>' + brands.map(b => `<option value="${escapeHTML(b)}">${escapeHTML(b)}</option>`).join('');
             if (curCat) catSelect.value = curCat;
             if (curSub) subSelect.value = curSub;
             if (curBrand) brandSelect.value = curBrand;
         }
 
+        // ====== FIX #4: handleFilterChange mejorado para caso sub && !cat ======
         function handleFilterChange() {
             const cat = document.getElementById('filterCategory').value;
             const sub = document.getElementById('filterSubcategory').value;
@@ -1583,36 +1437,36 @@
             const subSelect = document.getElementById('filterSubcategory');
             const brandSelect = document.getElementById('filterBrand');
 
-            let filteredProducts = PRODUCTS;
-            if (cat) filteredProducts = filteredProducts.filter(p => p.category === cat);
+            let filtered = PRODUCTS;
+            if (cat) filtered = filtered.filter(p => p.category === cat);
 
-            const availSubs = [...new Set(filteredProducts.map(p => p.subcategoria).filter(Boolean))].sort();
+            const availSubs = [...new Set(filtered.map(p => p.subcategoria).filter(Boolean))].sort();
             const curSubVal = subSelect.value;
-            subSelect.innerHTML = '<option value="">Todas las Subcategorías</option>' +
-                availSubs.map(s => `<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join('');
+            subSelect.innerHTML = '<option value="">Todas las Subcategorías</option>' + availSubs.map(s => `<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join('');
             if (curSubVal && availSubs.includes(curSubVal)) subSelect.value = curSubVal;
             else subSelect.value = '';
 
-            if (sub) filteredProducts = filteredProducts.filter(p => p.subcategoria === sub);
+            if (sub) filtered = filtered.filter(p => p.subcategoria === sub);
 
-            const availBrands = [...new Set(filteredProducts.map(p => p.marca).filter(Boolean))].sort();
+            const availBrands = [...new Set(filtered.map(p => p.marca).filter(Boolean))].sort();
             const curBrandVal = brandSelect.value;
-            brandSelect.innerHTML = '<option value="">Todas las Marcas</option>' +
-                availBrands.map(b => `<option value="${escapeHTML(b)}">${escapeHTML(b)}</option>`).join('');
+            brandSelect.innerHTML = '<option value="">Todas las Marcas</option>' + availBrands.map(b => `<option value="${escapeHTML(b)}">${escapeHTML(b)}</option>`).join('');
             if (curBrandVal && availBrands.includes(curBrandVal)) brandSelect.value = curBrandVal;
             else brandSelect.value = '';
 
-            if (cat || sub || brand) {
-                // Si se elige un filtro, ir directamente al nivel adecuado
-                if (brand) {
-                    CATALOG_STATE = { level: 'products', category: cat, subcategory: sub, brand: brand };
-                } else if (sub) {
-                    CATALOG_STATE = { level: 'products', category: cat, subcategory: sub, brand: '' };
-                } else {
-                    CATALOG_STATE = { level: 'subcategories', category: cat, subcategory: '', brand: '' };
-                }
-                renderCatalogState();
+            if (brand && sub && cat) {
+                CATALOG_STATE = { level: 'subcategory', category: cat, subcategory: sub, activeSubcategory: '', activeBrand: brand };
+            } else if (sub && cat) {
+                CATALOG_STATE = { level: 'subcategory', category: cat, subcategory: sub, activeSubcategory: '', activeBrand: '' };
+            } else if (sub && !cat) {
+                // FIX: subcategoría sin categoría → buscar en todos los productos
+                CATALOG_STATE = { level: 'all', category: '', subcategory: sub, activeSubcategory: '', activeBrand: '' };
+            } else if (cat) {
+                CATALOG_STATE = { level: 'category', category: cat, subcategory: '', activeSubcategory: '', activeBrand: '' };
+            } else {
+                CATALOG_STATE = { level: 'all', category: '', subcategory: '', activeSubcategory: '', activeBrand: '' };
             }
+            renderCatalogView();
         }
 
         function renderStockBadge(stock) {
@@ -1650,10 +1504,7 @@
                             <span class="absolute top-2 right-2 bg-brand-red/90 text-white font-mono text-[9px] font-bold px-1.5 py-0.5 rounded">${escapeHTML(p.category || p.categoria || '')}</span>
                         </div>
                         <div class="mb-2">${renderStockBadge(p.stock)}</div>
-                        <div class="flex items-center justify-between gap-1 mb-1 flex-wrap">
-                            ${marcaHTML}
-                            ${subHTML}
-                        </div>
+                        <div class="flex items-center justify-between gap-1 mb-1 flex-wrap">${marcaHTML}${subHTML}</div>
                         <h4 class="text-xs font-bold text-white line-clamp-2 mt-0.5 leading-snug" title="${escapeHTML(p.descripcion)}">${escapeHTML(p.descripcion)}</h4>
                     </div>
                     <div class="mt-3 pt-2 border-t border-brand-border">
@@ -1668,288 +1519,218 @@
             `;
         }
 
-        // ====== NAVEGACIÓN EN CASCADA: RENDERIZADO DE ESTADOS ======
-        function renderCatalogState() {
+        // ====== FIX #3: Función dedicada para abrir/cerrar modal de productos ======
+        function openProductsModal() {
             const modal = document.getElementById('productsModal');
-            const breadcrumb = document.getElementById('catalogBreadcrumb');
-            const dynamic = document.getElementById('catalogDynamicContent');
-            const scrollContainer = document.getElementById('catalogScrollContainer');
-            const grid = document.getElementById('productsGrid');
-            const title = document.getElementById('modalCategoryTitle');
-            const count = document.getElementById('modalCategoryCount');
-
-            // Breadcrumb dinámico
-            let breadcrumbHTML = '<span class="cascade-breadcrumb-item" onclick="resetCatalogToAll()"><i class="fa-solid fa-house text-[9px]"></i> Inicio</span>';
-
-            if (CATALOG_STATE.category) {
-                breadcrumbHTML += '<span class="cascade-breadcrumb-separator">›</span>';
-                if (CATALOG_STATE.level === 'subcategories') {
-                    breadcrumbHTML += `<span class="cascade-breadcrumb-item active">${escapeHTML(CATALOG_STATE.category)}</span>`;
-                } else {
-                    breadcrumbHTML += `<span class="cascade-breadcrumb-item" onclick="goBackToCategory()">${escapeHTML(CATALOG_STATE.category)}</span>`;
-                }
-            }
-
-            if (CATALOG_STATE.subcategory) {
-                breadcrumbHTML += '<span class="cascade-breadcrumb-separator">›</span>';
-                if (CATALOG_STATE.level === 'brands') {
-                    breadcrumbHTML += `<span class="cascade-breadcrumb-item active">${escapeHTML(CATALOG_STATE.subcategory)}</span>`;
-                } else {
-                    breadcrumbHTML += `<span class="cascade-breadcrumb-item" onclick="goBackToSubcategory()">${escapeHTML(CATALOG_STATE.subcategory)}</span>`;
-                }
-            }
-
-            if (CATALOG_STATE.brand) {
-                breadcrumbHTML += '<span class="cascade-breadcrumb-separator">›</span>';
-                breadcrumbHTML += `<span class="cascade-breadcrumb-item active">${escapeHTML(CATALOG_STATE.brand)}</span>`;
-            }
-
-            breadcrumb.innerHTML = breadcrumbHTML;
-
-            // Render según nivel
-            if (CATALOG_STATE.level === 'subcategories') {
-                renderSubcategoriesLevel(dynamic);
-                scrollContainer.style.display = 'none';
-                title.textContent = CATALOG_STATE.category || 'TODOS LOS PRODUCTOS';
-                count.innerHTML = '<i class="fa-solid fa-layer-group mr-1"></i>Seleccioná una subcategoría para continuar';
-            }
-            else if (CATALOG_STATE.level === 'brands') {
-                renderBrandsLevel(dynamic);
-                scrollContainer.style.display = 'none';
-                title.textContent = CATALOG_STATE.subcategory;
-                count.innerHTML = '<i class="fa-solid fa-tags mr-1"></i>Seleccioná una marca para ver productos';
-            }
-            else if (CATALOG_STATE.level === 'products' || CATALOG_STATE.level === 'all') {
-                renderProductsLevel(grid, title, count);
-                dynamic.innerHTML = '';
-                scrollContainer.style.display = 'block';
-            }
-
+            if (!modal) return;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             document.body.style.overflow = 'hidden';
         }
 
-        function renderSubcategoriesLevel(container) {
-            const cat = CATALOG_STATE.category;
-            const prodsInCat = PRODUCTS.filter(p => normalizeText(p.category || p.categoria || '') === normalizeText(cat));
-            
-            const subMap = {};
-            prodsInCat.forEach(p => {
-                const sub = p.subcategoria || 'Otros';
-                if (!subMap[sub]) subMap[sub] = { name: sub, count: 0, products: [] };
-                subMap[sub].count++;
-                subMap[sub].products.push(p);
-            });
-
-            const subs = Object.values(subMap).sort((a, b) => b.count - a.count);
-
-            if (subs.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 bg-brand-card rounded-lg border border-brand-border">
-                        <i class="fa-solid fa-box-open text-4xl text-brand-red mb-3 block"></i>
-                        <h4 class="text-lg font-bold text-white mb-1">Sin subcategorías</h4>
-                        <p class="text-xs text-gray-400">Esta categoría no tiene subcategorías definidas.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            let html = `
-                <div class="cascade-section-title">
-                    <i class="fa-solid fa-layer-group text-brand-red"></i>
-                    <h3>SUBCATEGORÍAS <span class="accent">DISPONIBLES</span></h3>
-                    <span class="cascade-section-count">${subs.length}</span>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">
-            `;
-
-            subs.forEach(sub => {
-                const icon = getSubcategoryIcon(sub.name);
-                html += `
-                    <div class="cascade-tile" onclick="selectSubcategory('${sub.name.replace(/'/g, "\\'")}')">
-                        <div class="cascade-tile-icon bg-gradient-to-br from-brand-red to-brand-redDark">
-                            <i class="${icon}"></i>
-                        </div>
-                        <div class="cascade-tile-content">
-                            <div class="cascade-tile-title">${escapeHTML(sub.name)}</div>
-                            <div class="cascade-tile-subtitle">${sub.count} producto${sub.count !== 1 ? 's' : ''} disponible${sub.count !== 1 ? 's' : ''}</div>
-                        </div>
-                        <div class="cascade-tile-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-                    </div>
-                `;
-            });
-
-            html += '</div>';
-
-            // Botón para ver todos los productos directamente
-            html += `
-                <div class="mt-4 pt-3 border-t border-brand-border">
-                    <button onclick="showAllProductsInCategory()" class="w-full bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-red text-white py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center space-x-2">
-                        <i class="fa-solid fa-list"></i>
-                        <span>Ver todos los ${prodsInCat.length} productos de ${escapeHTML(cat)}</span>
-                    </button>
-                </div>
-            `;
-
-            container.innerHTML = html;
+        function closeProductsModal() {
+            const modal = document.getElementById('productsModal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
         }
 
-        function renderBrandsLevel(container) {
-            const cat = CATALOG_STATE.category;
-            const sub = CATALOG_STATE.subcategory;
-            
-            const prodsInSub = PRODUCTS.filter(p => {
-                const catMatch = !cat || normalizeText(p.category || p.categoria || '') === normalizeText(cat);
-                const subMatch = !sub || normalizeText(p.subcategoria || '') === normalizeText(sub);
-                return catMatch && subMatch;
-            });
-
-            const brandMap = {};
-            prodsInSub.forEach(p => {
-                const brand = p.marca || 'Sin Marca';
-                if (!brandMap[brand]) brandMap[brand] = { name: brand, count: 0 };
-                brandMap[brand].count++;
-            });
-
-            const brands = Object.values(brandMap).sort((a, b) => b.count - a.count);
-
-            if (brands.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 bg-brand-card rounded-lg border border-brand-border">
-                        <i class="fa-solid fa-box-open text-4xl text-brand-red mb-3 block"></i>
-                        <h4 class="text-lg font-bold text-white mb-1">Sin marcas</h4>
-                        <p class="text-xs text-gray-400">Esta subcategoría no tiene marcas definidas.</p>
-                    </div>
-                `;
-                return;
+        // ====== RENDER PRINCIPAL DEL CATÁLOGO ======
+        function renderCatalogView() {
+            // FIX #5: Validar nivel
+            if (!['all', 'category', 'subcategory'].includes(CATALOG_STATE.level)) {
+                CATALOG_STATE.level = 'all';
             }
 
-            let html = `
-                <div class="cascade-section-title">
-                    <i class="fa-solid fa-tags text-brand-red"></i>
-                    <h3>MARCAS <span class="accent">DISPONIBLES</span></h3>
-                    <span class="cascade-section-count">${brands.length}</span>
-                </div>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mt-3">
-            `;
+            const breadcrumb = document.getElementById('catalogBreadcrumb');
+            const filtersContainer = document.getElementById('quickFiltersContainer');
+            const grid = document.getElementById('productsGrid');
+            const title = document.getElementById('modalCategoryTitle');
+            const count = document.getElementById('modalCategoryCount');
 
-            brands.forEach(brand => {
-                const colorGrad = getBrandColor(brand.name);
-                const initials = brand.name.substring(0, 2).toUpperCase();
-                html += `
-                    <div class="brand-tile" onclick="selectBrand('${brand.name.replace(/'/g, "\\'")}')">
-                        <div class="brand-tile-logo bg-gradient-to-br ${colorGrad}">
-                            <span>${escapeHTML(initials)}</span>
+            if (!breadcrumb || !filtersContainer || !grid || !title || !count) return;
+
+            // Breadcrumb
+            let breadcrumbHTML = '<span class="cascade-breadcrumb-item" onclick="resetCatalogToAll()"><i class="fa-solid fa-house text-[9px]"></i> Inicio</span>';
+            if (CATALOG_STATE.level === 'category' || CATALOG_STATE.level === 'subcategory') {
+                breadcrumbHTML += '<span class="cascade-breadcrumb-separator">›</span>';
+                const catActive = CATALOG_STATE.level === 'category';
+                breadcrumbHTML += `<span class="cascade-breadcrumb-item ${catActive ? 'active' : ''}" ${catActive ? '' : 'onclick="goBackToCategory()"'}>${escapeHTML(CATALOG_STATE.category)}</span>`;
+            }
+            if (CATALOG_STATE.level === 'subcategory') {
+                breadcrumbHTML += '<span class="cascade-breadcrumb-separator">›</span>';
+                breadcrumbHTML += `<span class="cascade-breadcrumb-item active">${escapeHTML(CATALOG_STATE.subcategory)}</span>`;
+            }
+            breadcrumb.innerHTML = breadcrumbHTML;
+
+            // Base products
+            let baseProducts = PRODUCTS;
+            if (CATALOG_STATE.category) {
+                baseProducts = baseProducts.filter(p => normalizeText(p.category || p.categoria || '') === normalizeText(CATALOG_STATE.category));
+            }
+            if (CATALOG_STATE.subcategory) {
+                baseProducts = baseProducts.filter(p => normalizeText(p.subcategoria || '') === normalizeText(CATALOG_STATE.subcategory));
+            }
+
+            let filtersHTML = '';
+            let displayedProducts = baseProducts;
+
+            if (CATALOG_STATE.level === 'all') {
+                filtersHTML = `
+                    <div class="quick-filters-header">
+                        <div class="quick-filters-title"><i class="fa-solid fa-layer-group"></i> CATÁLOGO COMPLETO</div>
+                        <span class="quick-filters-counter">${baseProducts.length} productos</span>
+                    </div>
+                `;
+                title.textContent = 'TODOS LOS PRODUCTOS';
+                count.innerHTML = `<i class="fa-solid fa-database mr-1"></i>${baseProducts.length} producto${baseProducts.length !== 1 ? 's' : ''} en total`;
+            }
+            else if (CATALOG_STATE.level === 'category') {
+                const subMap = {};
+                baseProducts.forEach(p => {
+                    const sub = p.subcategoria || 'Otros';
+                    if (!subMap[sub]) subMap[sub] = 0;
+                    subMap[sub]++;
+                });
+                const subs = Object.entries(subMap).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
+
+                if (CATALOG_STATE.activeSubcategory) {
+                    displayedProducts = baseProducts.filter(p => normalizeText(p.subcategoria || '') === normalizeText(CATALOG_STATE.activeSubcategory));
+                }
+
+                filtersHTML = `
+                    <div class="quick-filters-header">
+                        <div class="quick-filters-title"><i class="fa-solid fa-layer-group"></i> SUBCATEGORÍAS DE ${escapeHTML(CATALOG_STATE.category)}</div>
+                        <span class="quick-filters-counter">${subs.length + 1} filtros</span>
+                    </div>
+                    <button class="quick-filters-scroll-btn left" onclick="scrollQuickFilters(-1)"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+                    <button class="quick-filters-scroll-btn right" onclick="scrollQuickFilters(1)"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+                    <div class="quick-filters-track" id="quickFiltersTrack">
+                        <div class="filter-chip-sub ${CATALOG_STATE.activeSubcategory === '' ? 'active' : ''}" onclick="filterByQuickSubcategory('')">
+                            <div class="filter-chip-sub-icon"><i class="fa-solid fa-infinity"></i></div>
+                            <div class="filter-chip-sub-content">
+                                <div class="filter-chip-sub-name">TODAS</div>
+                                <div class="filter-chip-sub-count">${baseProducts.length} productos</div>
+                            </div>
                         </div>
-                        <div class="brand-tile-name">${escapeHTML(brand.name)}</div>
-                        <div class="brand-tile-count">${brand.count} producto${brand.count !== 1 ? 's' : ''}</div>
+                        ${subs.map(s => `
+                            <div class="filter-chip-sub ${CATALOG_STATE.activeSubcategory === s.name ? 'active' : ''}" onclick="filterByQuickSubcategory('${s.name.replace(/'/g, "\\'")}')">
+                                <div class="filter-chip-sub-icon"><i class="${getSubcategoryIcon(s.name)}"></i></div>
+                                <div class="filter-chip-sub-content">
+                                    <div class="filter-chip-sub-name">${escapeHTML(s.name)}</div>
+                                    <div class="filter-chip-sub-count">${s.count} producto${s.count !== 1 ? 's' : ''}</div>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 `;
-            });
-
-            html += '</div>';
-
-            // Botón para ver todos los productos directamente
-            html += `
-                <div class="mt-4 pt-3 border-t border-brand-border">
-                    <button onclick="showAllProductsInSubcategory()" class="w-full bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-red text-white py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center space-x-2">
-                        <i class="fa-solid fa-list"></i>
-                        <span>Ver todos los ${prodsInSub.length} productos de ${escapeHTML(sub)}</span>
-                    </button>
-                </div>
-            `;
-
-            container.innerHTML = html;
-        }
-
-        function renderProductsLevel(grid, title, count) {
-            let filtered = PRODUCTS;
-            let titleText = 'TODOS LOS PRODUCTOS';
-
-            if (CATALOG_STATE.brand) {
-                filtered = filtered.filter(p => 
-                    (!CATALOG_STATE.category || normalizeText(p.category || p.categoria || '') === normalizeText(CATALOG_STATE.category)) &&
-                    (!CATALOG_STATE.subcategory || normalizeText(p.subcategoria || '') === normalizeText(CATALOG_STATE.subcategory)) &&
-                    normalizeText(p.marca || '') === normalizeText(CATALOG_STATE.brand)
-                );
-                titleText = `${CATALOG_STATE.brand} - ${CATALOG_STATE.subcategory || ''}`.trim();
+                title.textContent = CATALOG_STATE.category;
+                count.innerHTML = `<i class="fa-solid fa-database mr-1"></i>${displayedProducts.length} producto${displayedProducts.length !== 1 ? 's' : ''} mostrado${displayedProducts.length !== 1 ? 's' : ''}`;
             }
-            else if (CATALOG_STATE.subcategory) {
-                filtered = filtered.filter(p => 
-                    (!CATALOG_STATE.category || normalizeText(p.category || p.categoria || '') === normalizeText(CATALOG_STATE.category)) &&
-                    normalizeText(p.subcategoria || '') === normalizeText(CATALOG_STATE.subcategory)
-                );
-                titleText = CATALOG_STATE.subcategory;
-            }
-            else if (CATALOG_STATE.category) {
-                filtered = filtered.filter(p => normalizeText(p.category || p.categoria || '') === normalizeText(CATALOG_STATE.category));
-                titleText = CATALOG_STATE.category;
+            else if (CATALOG_STATE.level === 'subcategory') {
+                const brandMap = {};
+                baseProducts.forEach(p => {
+                    const b = p.marca || 'Sin Marca';
+                    if (!brandMap[b]) brandMap[b] = 0;
+                    brandMap[b]++;
+                });
+                const brands = Object.entries(brandMap).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
+
+                if (CATALOG_STATE.activeBrand) {
+                    displayedProducts = baseProducts.filter(p => normalizeText(p.marca || '') === normalizeText(CATALOG_STATE.activeBrand));
+                }
+
+                filtersHTML = `
+                    <div class="quick-filters-header">
+                        <div class="quick-filters-title"><i class="fa-solid fa-tags"></i> MARCAS EN ${escapeHTML(CATALOG_STATE.subcategory)}</div>
+                        <span class="quick-filters-counter">${brands.length + 1} filtros</span>
+                    </div>
+                    <button class="quick-filters-scroll-btn left" onclick="scrollQuickFilters(-1)"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+                    <button class="quick-filters-scroll-btn right" onclick="scrollQuickFilters(1)"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+                    <div class="quick-filters-track" id="quickFiltersTrack">
+                        <div class="filter-chip-brand ${CATALOG_STATE.activeBrand === '' ? 'active' : ''}" onclick="filterByQuickBrand('')">
+                            <div class="filter-chip-brand-logo bg-gradient-to-br from-brand-red to-brand-redDark"><i class="fa-solid fa-infinity text-[10px]"></i></div>
+                            <div class="filter-chip-brand-name">TODAS</div>
+                            <div class="filter-chip-brand-count">${baseProducts.length}</div>
+                        </div>
+                        ${brands.map(b => `
+                            <div class="filter-chip-brand ${CATALOG_STATE.activeBrand === b.name ? 'active' : ''}" onclick="filterByQuickBrand('${b.name.replace(/'/g, "\\'")}')">
+                                <div class="filter-chip-brand-logo bg-gradient-to-br ${getBrandColor(b.name)}">${escapeHTML(b.name.substring(0, 2).toUpperCase())}</div>
+                                <div class="filter-chip-brand-name">${escapeHTML(b.name)}</div>
+                                <div class="filter-chip-brand-count">${b.count}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                title.textContent = CATALOG_STATE.subcategory;
+                count.innerHTML = `<i class="fa-solid fa-database mr-1"></i>${displayedProducts.length} producto${displayedProducts.length !== 1 ? 's' : ''} mostrado${displayedProducts.length !== 1 ? 's' : ''}`;
             }
 
-            title.textContent = titleText;
-            count.innerHTML = `<i class="fa-solid fa-database mr-1"></i>${filtered.length} producto${filtered.length !== 1 ? 's' : ''} encontrado${filtered.length !== 1 ? 's' : ''}`;
+            filtersContainer.innerHTML = filtersHTML;
 
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
+            // Render products
+            if (displayedProducts.length === 0) {
+                grid.innerHTML = `<div style="flex: 0 0 100%; min-width: 100%;" class="text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
                     <i class="fa-solid fa-box-open text-4xl text-brand-red mb-3 block"></i>
                     <h4 class="text-lg font-bold text-white mb-1">Sin productos</h4>
-                    <p class="text-xs text-gray-400">No hay productos que coincidan con los filtros.</p>
+                    <p class="text-xs text-gray-400">No hay productos que coincidan con los filtros seleccionados.</p>
                 </div>`;
             } else {
-                grid.innerHTML = filtered.map(p => productCardHTML(p)).join('');
+                grid.innerHTML = displayedProducts.map(p => productCardHTML(p)).join('');
             }
+
+            applyCatalogLayout();
+            openProductsModal();
         }
 
-        // ====== ACCIONES DE NAVEGACIÓN EN CASCADA ======
-        function selectSubcategory(subName) {
-            CATALOG_STATE.subcategory = subName;
-            CATALOG_STATE.level = 'brands';
-            renderCatalogState();
+        function filterByQuickSubcategory(subName) {
+            CATALOG_STATE.activeSubcategory = subName;
+            CATALOG_STATE.activeBrand = '';
+            renderCatalogView();
         }
 
-        function selectBrand(brandName) {
-            CATALOG_STATE.brand = brandName;
-            CATALOG_STATE.level = 'products';
-            renderCatalogState();
+        function filterByQuickBrand(brandName) {
+            CATALOG_STATE.activeBrand = brandName;
+            renderCatalogView();
+        }
+
+        // ====== FIX #7: Validación de existencia del track ======
+        function scrollQuickFilters(direction) {
+            const track = document.getElementById('quickFiltersTrack');
+            if (track) track.scrollBy({ left: direction * 280, behavior: 'smooth' });
         }
 
         function goBackToCategory() {
-            CATALOG_STATE.level = 'subcategories';
+            CATALOG_STATE.level = 'category';
             CATALOG_STATE.subcategory = '';
-            CATALOG_STATE.brand = '';
-            renderCatalogState();
-        }
-
-        function goBackToSubcategory() {
-            CATALOG_STATE.level = 'brands';
-            CATALOG_STATE.brand = '';
-            renderCatalogState();
+            CATALOG_STATE.activeBrand = '';
+            CATALOG_STATE.activeSubcategory = '';
+            renderCatalogView();
         }
 
         function resetCatalogToAll() {
-            CATALOG_STATE = { level: 'all', category: '', subcategory: '', brand: '' };
-            renderCatalogState();
+            CATALOG_STATE = { level: 'all', category: '', subcategory: '', activeSubcategory: '', activeBrand: '' };
+            renderCatalogView();
         }
 
-        function showAllProductsInCategory() {
-            CATALOG_STATE.level = 'products';
-            CATALOG_STATE.subcategory = '';
-            CATALOG_STATE.brand = '';
-            renderCatalogState();
+        function filterByCategory(categoryName) {
+            if (categoryName === 'TODOS LOS PRODUCTOS') {
+                CATALOG_STATE = { level: 'all', category: '', subcategory: '', activeSubcategory: '', activeBrand: '' };
+            } else {
+                const sheetCategory = CATEGORY_MAP[categoryName] || categoryName;
+                CATALOG_STATE = { level: 'category', category: sheetCategory, subcategory: '', activeSubcategory: '', activeBrand: '' };
+            }
+            renderCatalogView();
         }
 
-        function showAllProductsInSubcategory() {
-            CATALOG_STATE.level = 'products';
-            CATALOG_STATE.brand = '';
-            renderCatalogState();
-        }
+        function showAllProductsModal() { filterByCategory('TODOS LOS PRODUCTOS'); }
 
-        // ====== VISTA EXPANDIDA DE TARJETA ======
         function openExpandedCard(codigo) {
             const p = PRODUCTS.find(item => item.codigo === codigo);
             if (!p) return;
             const content = document.getElementById('expandedCardContent');
+            if (!content) return;
             content.innerHTML = `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="relative">
@@ -2002,28 +1783,33 @@
                     </div>
                 </div>
             `;
+            // FIX #1: Usar remove('hidden') — el CSS ahora usa :not(.hidden) para display:flex
             document.getElementById('expandedCardModal').classList.remove('hidden');
-            document.getElementById('expandedCardModal').classList.add('flex');
         }
 
         function closeExpandedCard() {
             document.getElementById('expandedCardModal').classList.add('hidden');
-            document.getElementById('expandedCardModal').classList.remove('flex');
         }
 
+        // ====== FIX #6: Validar existencia del grid antes de aplicar layout ======
         function toggleCatalogLayout() {
+            if (CATALOG_VIEW === 'horizontal') CATALOG_VIEW = 'grid';
+            else CATALOG_VIEW = 'horizontal';
+            applyCatalogLayout();
+        }
+
+        function applyCatalogLayout() {
             const grid = document.getElementById('productsGrid');
             const icon = document.getElementById('layoutIcon');
+            if (!grid || !icon) return;
 
-            if (CATALOG_VIEW === 'horizontal') {
-                CATALOG_VIEW = 'grid';
+            if (CATALOG_VIEW === 'grid') {
                 grid.classList.remove('catalog-scroll-track');
                 grid.classList.add('catalog-grid-view');
                 icon.classList.remove('fa-table-columns');
                 icon.classList.add('fa-arrows-left-right');
                 document.querySelectorAll('.catalog-nav-btn').forEach(b => b.style.display = 'none');
             } else {
-                CATALOG_VIEW = 'horizontal';
                 grid.classList.remove('catalog-grid-view');
                 grid.classList.add('catalog-scroll-track');
                 icon.classList.remove('fa-arrows-left-right');
@@ -2034,7 +1820,7 @@
 
         function scrollCatalog(direction) {
             const track = document.getElementById('productsGrid');
-            track.scrollBy({ left: direction * 340, behavior: 'smooth' });
+            if (track) track.scrollBy({ left: direction * 340, behavior: 'smooth' });
         }
 
         function renderFeaturedProducts() {
@@ -2110,33 +1896,36 @@
             if (navCartTotal) navCartTotal.textContent = formatPrice(totalFinal);
 
             if (CART.length === 0) {
-                cartItemsList.innerHTML = '<p class="text-center text-gray-500 text-xs py-8">Tu carrito está vacío. Agregá productos para generar tu pedido.</p>';
+                if (cartItemsList) cartItemsList.innerHTML = '<p class="text-center text-gray-500 text-xs py-8">Tu carrito está vacío. Agregá productos para generar tu pedido.</p>';
                 return;
             }
 
-            cartItemsList.innerHTML = CART.map(item => `
-                <div class="bg-brand-card p-3 rounded-lg border border-brand-border flex items-center space-x-3">
-                    <img src="${item.imagen}" onerror="this.src='${FALLBACK_IMG}'" class="w-12 h-12 object-cover rounded border border-brand-border shrink-0">
-                    <div class="flex-grow min-w-0">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] text-gray-400 font-mono">COD: ${item.codigo}</span>
-                            <span class="text-xs font-bold text-brand-red">${formatPrice(item.precio * item.qty)}</span>
+            if (cartItemsList) {
+                cartItemsList.innerHTML = CART.map(item => `
+                    <div class="bg-brand-card p-3 rounded-lg border border-brand-border flex items-center space-x-3">
+                        <img src="${item.imagen}" onerror="this.src='${FALLBACK_IMG}'" class="w-12 h-12 object-cover rounded border border-brand-border shrink-0">
+                        <div class="flex-grow min-w-0">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] text-gray-400 font-mono">COD: ${item.codigo}</span>
+                                <span class="text-xs font-bold text-brand-red">${formatPrice(item.precio * item.qty)}</span>
+                            </div>
+                            <h5 class="text-xs font-bold text-white truncate mt-0.5">${item.descripcion}</h5>
+                            <div class="flex items-center space-x-2 mt-1">
+                                <span class="text-[10px] text-gray-400">Cant: ${item.qty}</span>
+                            </div>
                         </div>
-                        <h5 class="text-xs font-bold text-white truncate mt-0.5">${item.descripcion}</h5>
-                        <div class="flex items-center space-x-2 mt-1">
-                            <span class="text-[10px] text-gray-400">Cant: ${item.qty}</span>
-                        </div>
+                        <button onclick="removeFromCart('${item.codigo.replace(/'/g, "\\'")}')" class="text-gray-500 hover:text-brand-red text-sm p-1 transition-colors">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
                     </div>
-                    <button onclick="removeFromCart('${item.codigo.replace(/'/g, "\\'")}')" class="text-gray-500 hover:text-brand-red text-sm p-1 transition-colors">
-                        <i class="fa-regular fa-trash-can"></i>
-                    </button>
-                </div>
-            `).join('');
+                `).join('');
+            }
         }
 
         function toggleCartDrawer(forceOpen = false) {
             const cartDrawer = document.getElementById('cartDrawer');
             const cartBackdrop = document.getElementById('cartBackdrop');
+            if (!cartDrawer || !cartBackdrop) return;
             if (forceOpen || cartDrawer.classList.contains('translate-x-full')) {
                 cartDrawer.classList.remove('translate-x-full', 'pointer-events-none');
                 cartBackdrop.classList.remove('opacity-0');
@@ -2149,12 +1938,10 @@
         async function handleCheckoutSubmit(e) {
             e.preventDefault();
             if (CART.length === 0) { alert('El carrito está vacío.'); return; }
-
             const name = document.getElementById('custName').value.trim();
             const address = document.getElementById('custAddress').value.trim();
             const email = document.getElementById('custEmail').value.trim();
             const payment = document.getElementById('custPayment').value;
-
             if (!name || !address || !email || !payment) { alert('Completá todos los datos.'); return; }
 
             const orderNum = Math.floor(1000 + Math.random() * 9000);
@@ -2174,33 +1961,36 @@
             document.getElementById('pdfTotalAmount').textContent = formatPrice(totalFinal);
 
             const tableBody = document.getElementById('pdfTableBody');
-            tableBody.innerHTML = CART.map(item => {
-                const prod = PRODUCTS.find(p => p.codigo === item.codigo);
-                const marca = prod ? prod.marca : '';
-                return `
-                <tr style="border-bottom: 1px solid #eeeeee;">
-                    <td style="padding: 6px; font-family: monospace;">${item.codigo}</td>
-                    <td style="padding: 6px;">${marca}</td>
-                    <td style="padding: 6px;">${item.descripcion}</td>
-                    <td style="padding: 6px; text-align: center;">${item.qty}</td>
-                    <td style="padding: 6px; text-align: right;">${formatPrice(item.precio)}</td>
-                    <td style="padding: 6px; text-align: right; font-weight: bold;">${formatPrice(item.precio * item.qty)}</td>
-                </tr>`;
-            }).join('');
+            if (tableBody) {
+                tableBody.innerHTML = CART.map(item => {
+                    const prod = PRODUCTS.find(p => p.codigo === item.codigo);
+                    const marca = prod ? prod.marca : '';
+                    return `
+                    <tr style="border-bottom: 1px solid #eeeeee;">
+                        <td style="padding: 6px; font-family: monospace;">${item.codigo}</td>
+                        <td style="padding: 6px;">${marca}</td>
+                        <td style="padding: 6px;">${item.descripcion}</td>
+                        <td style="padding: 6px; text-align: center;">${item.qty}</td>
+                        <td style="padding: 6px; text-align: right;">${formatPrice(item.precio)}</td>
+                        <td style="padding: 6px; text-align: right; font-weight: bold;">${formatPrice(item.precio * item.qty)}</td>
+                    </tr>`;
+                }).join('');
+            }
 
             const pdfElement = document.getElementById('receiptContent');
-            document.getElementById('pdfReceiptTemplate').classList.remove('hidden');
+            const pdfTemplate = document.getElementById('pdfReceiptTemplate');
+            if (pdfTemplate) pdfTemplate.classList.remove('hidden');
 
             const opt = {
-                margin: 10,
-                filename: `Recibo_FC_Racing_${orderNum}.pdf`,
+                margin: 10, filename: `Recibo_FC_Racing_${orderNum}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            try { await html2pdf().set(opt).from(pdfElement).save(); } catch (err) { console.warn('PDF notice:', err); }
-            finally { document.getElementById('pdfReceiptTemplate').classList.add('hidden'); }
+            try { if (pdfElement) await html2pdf().set(opt).from(pdfElement).save(); }
+            catch (err) { console.warn('PDF notice:', err); }
+            finally { if (pdfTemplate) pdfTemplate.classList.add('hidden'); }
 
             let message = `🏁 *NUEVO PEDIDO - FC RACING*\n`;
             message += `*Recibo N°:* ${orderNum}\n*Fecha:* ${orderDate}\n\n`;
@@ -2225,6 +2015,7 @@
         const dots = document.querySelectorAll('.hero-dot');
 
         function setHeroSlide(index) {
+            if (!slides.length) return;
             slides.forEach((slide, i) => {
                 if (i === index) {
                     slide.classList.remove('opacity-0'); slide.classList.add('opacity-100');
@@ -2236,8 +2027,8 @@
             });
             currentSlide = index;
         }
-        function nextHeroSlide() { setHeroSlide((currentSlide + 1) % slides.length); }
-        function prevHeroSlide() { setHeroSlide((currentSlide - 1 + slides.length) % slides.length); }
+        function nextHeroSlide() { if (slides.length) setHeroSlide((currentSlide + 1) % slides.length); }
+        function prevHeroSlide() { if (slides.length) setHeroSlide((currentSlide - 1 + slides.length) % slides.length); }
         setInterval(nextHeroSlide, 5000);
 
         const mobileDrawer = document.getElementById('mobileDrawer');
@@ -2245,43 +2036,18 @@
         const openMobileMenu = document.getElementById('openMobileMenu');
         const closeMobileMenu = document.getElementById('closeMobileMenu');
 
-        openMobileMenu.addEventListener('click', () => {
-            mobileDrawer.classList.remove('-translate-x-full', 'pointer-events-none');
-            drawerBackdrop.classList.remove('opacity-0');
-        });
+        if (openMobileMenu) {
+            openMobileMenu.addEventListener('click', () => {
+                if (mobileDrawer) mobileDrawer.classList.remove('-translate-x-full', 'pointer-events-none');
+                if (drawerBackdrop) drawerBackdrop.classList.remove('opacity-0');
+            });
+        }
         function closeDrawer() {
-            mobileDrawer.classList.add('-translate-x-full', 'pointer-events-none');
-            drawerBackdrop.classList.add('opacity-0');
+            if (mobileDrawer) mobileDrawer.classList.add('-translate-x-full', 'pointer-events-none');
+            if (drawerBackdrop) drawerBackdrop.classList.add('opacity-0');
         }
-        closeMobileMenu.addEventListener('click', closeDrawer);
-        drawerBackdrop.addEventListener('click', closeDrawer);
-
-        // ====== ENTRADA A CATEGORÍA DESDE PÁGINA PRINCIPAL → MUESTRA SUBCATEGORÍAS ======
-        function filterByCategory(categoryName) {
-            if (categoryName === 'TODOS LOS PRODUCTOS') {
-                CATALOG_STATE = { level: 'all', category: '', subcategory: '', brand: '' };
-            } else {
-                const sheetCategory = CATEGORY_MAP[categoryName] || categoryName;
-                CATALOG_STATE = { 
-                    level: 'subcategories', 
-                    category: sheetCategory, 
-                    subcategory: '', 
-                    brand: '' 
-                };
-            }
-            renderCatalogState();
-        }
-
-        function showAllProductsModal() { 
-            filterByCategory('TODOS LOS PRODUCTOS'); 
-        }
-
-        function closeProductsModal() {
-            const modal = document.getElementById('productsModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.style.overflow = 'auto';
-        }
+        if (closeMobileMenu) closeMobileMenu.addEventListener('click', closeDrawer);
+        if (drawerBackdrop) drawerBackdrop.addEventListener('click', closeDrawer);
 
         function handleSearch(e) {
             e.preventDefault();
@@ -2309,15 +2075,14 @@
             const dropdown = document.getElementById('autocompleteDropdown');
             const clearBtn = document.getElementById('clearSearchBtn');
             const query = val.trim();
-
             if (clearBtn) {
                 if (query.length > 0) clearBtn.classList.remove('hidden');
                 else clearBtn.classList.add('hidden');
             }
-
             if (query.length < 1) { closeAutocompleteDropdown(); return; }
 
             const matches = PRODUCTS.filter(p => matchProduct(p, query));
+            if (!dropdown) return;
 
             if (matches.length === 0) {
                 dropdown.innerHTML = `<div class="p-4 text-center text-xs text-gray-400">
@@ -2328,7 +2093,7 @@
                 const topMatches = matches.slice(0, 6);
                 dropdown.innerHTML = `
                     <div class="px-3 py-1.5 bg-black/60 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
-                        <span><i class="fa-solid fa-bolt text-brand-red mr-1"></i> Sugerencias (Código • Marca • Producto • Categoría • Precio)</span>
+                        <span><i class="fa-solid fa-bolt text-brand-red mr-1"></i> Sugerencias</span>
                         <span class="text-emerald-400">${matches.length} coincidencia${matches.length > 1 ? 's' : ''}</span>
                     </div>
                     ${topMatches.map(p => `
@@ -2365,7 +2130,8 @@
             const product = PRODUCTS.find(p => p.codigo === codigo);
             closeAutocompleteDropdown();
             if (product) {
-                document.getElementById('searchInput').value = product.codigo;
+                const input = document.getElementById('searchInput');
+                if (input) input.value = product.codigo;
                 openExpandedCard(codigo);
             }
         }
@@ -2386,7 +2152,7 @@
         document.addEventListener('click', function(e) {
             const dropdown = document.getElementById('autocompleteDropdown');
             const searchInput = document.getElementById('searchInput');
-            if (dropdown && !dropdown.contains(e.target) && e.target !== searchInput) closeAutocompleteDropdown();
+            if (dropdown && searchInput && !dropdown.contains(e.target) && e.target !== searchInput) closeAutocompleteDropdown();
         });
 
         document.addEventListener('keydown', function(e) {
@@ -2397,23 +2163,19 @@
             }
         });
 
+        // ====== FIX #2: Eliminado searchQuery del estado ======
         function filterSearchQuery(q) {
             const filtered = PRODUCTS.filter(p => matchProduct(p, q));
-            CATALOG_STATE = { 
-                level: 'products', 
-                category: '', 
-                subcategory: '', 
-                brand: '',
-                searchQuery: q
-            };
+            CATALOG_STATE = { level: 'all', category: '', subcategory: '', activeSubcategory: '', activeBrand: '' };
 
             const modal = document.getElementById('productsModal');
             const title = document.getElementById('modalCategoryTitle');
             const count = document.getElementById('modalCategoryCount');
             const grid = document.getElementById('productsGrid');
             const breadcrumb = document.getElementById('catalogBreadcrumb');
-            const dynamic = document.getElementById('catalogDynamicContent');
-            const scrollContainer = document.getElementById('catalogScrollContainer');
+            const filtersContainer = document.getElementById('quickFiltersContainer');
+
+            if (!modal || !title || !count || !grid || !breadcrumb || !filtersContainer) return;
 
             breadcrumb.innerHTML = `<span class="cascade-breadcrumb-item" onclick="resetCatalogToAll()"><i class="fa-solid fa-house text-[9px]"></i> Inicio</span>
                 <span class="cascade-breadcrumb-separator">›</span>
@@ -2422,10 +2184,15 @@
             title.textContent = `RESULTADOS: "${q}"`;
             count.innerHTML = `<i class="fa-solid fa-database mr-1"></i>${filtered.length} resultado${filtered.length !== 1 ? 's' : ''}`;
 
-            dynamic.innerHTML = '';
+            filtersContainer.innerHTML = `
+                <div class="quick-filters-header">
+                    <div class="quick-filters-title"><i class="fa-solid fa-magnifying-glass"></i> BÚSQUEDA GLOBAL</div>
+                    <span class="quick-filters-counter">${filtered.length} productos</span>
+                </div>
+            `;
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
+                grid.innerHTML = `<div style="flex: 0 0 100%; min-width: 100%;" class="text-center text-gray-400 py-12 bg-brand-card rounded-lg border border-brand-border">
                     <i class="fa-solid fa-magnifying-glass-xmark text-4xl text-brand-red mb-3 block"></i>
                     <h4 class="text-lg font-bold text-white mb-1">Sin coincidencias</h4>
                     <p class="text-xs text-gray-400">No se encontraron productos que coincidan con "${escapeHTML(q)}".</p>
@@ -2434,14 +2201,13 @@
                 grid.innerHTML = filtered.map(p => productCardHTML(p)).join('');
             }
 
-            scrollContainer.style.display = 'block';
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
+            applyCatalogLayout();
+            openProductsModal();
         }
 
         function scrollToCategories() {
-            document.getElementById('categoriesSection').scrollIntoView({ behavior: 'smooth' });
+            const section = document.getElementById('categoriesSection');
+            if (section) section.scrollIntoView({ behavior: 'smooth' });
         }
 
         function scrollToTop(event) {
@@ -2451,23 +2217,32 @@
 
         window.addEventListener('scroll', () => {
             const btn = document.getElementById('scrollToTopBtn');
+            if (!btn) return;
             if (window.scrollY > 400) btn.classList.add('visible');
             else btn.classList.remove('visible');
         });
 
         function openAdminModal() {
             const modal = document.getElementById('adminModal');
+            if (!modal) return;
             modal.classList.remove('hidden');
-            document.getElementById('adminPassword').value = '';
-            document.getElementById('adminError').classList.add('hidden');
-            setTimeout(() => document.getElementById('adminPassword').focus(), 100);
+            const pwInput = document.getElementById('adminPassword');
+            const errorMsg = document.getElementById('adminError');
+            if (pwInput) pwInput.value = '';
+            if (errorMsg) errorMsg.classList.add('hidden');
+            setTimeout(() => { if (pwInput) pwInput.focus(); }, 100);
         }
-        function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
+        function closeAdminModal() {
+            const modal = document.getElementById('adminModal');
+            if (modal) modal.classList.add('hidden');
+        }
 
         function verifyAdminPassword() {
-            const password = document.getElementById('adminPassword').value.trim();
+            const pwInput = document.getElementById('adminPassword');
             const errorMsg = document.getElementById('adminError');
+            if (!pwInput || !errorMsg) return;
 
+            const password = pwInput.value.trim();
             if (password === ADMIN_PASSWORD) {
                 closeAdminModal();
                 window.open(ADMIN_SHEET_EDIT_URL, '_blank');
@@ -2480,8 +2255,8 @@
                 setTimeout(() => confirmDiv.remove(), 3500);
             } else {
                 errorMsg.classList.remove('hidden');
-                document.getElementById('adminPassword').value = '';
-                document.getElementById('adminPassword').focus();
+                pwInput.value = '';
+                pwInput.focus();
             }
         }
 
