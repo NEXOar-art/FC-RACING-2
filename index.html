@@ -364,16 +364,21 @@ class="hidden absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/40 hover:b
 <i class="fa-solid fa-bars text-2xl"></i>
 </button>
 
-<!-- [CAMBIO 3] LOGO CIRCULAR MOVIDO A LA IZQUIERDA DEL TÍTULO -->
-<a href="#" onclick="goHome(event)" class="flex items-center select-none group">
-<button onclick="goToTop()" title="Volver al Inicio" aria-label="Volver al Inicio" class="fc-logo-circle mr-2 sm:mr-3">
+<!-- [CAMBIO 3] LOGO CIRCULAR A LA IZQUIERDA DEL TÍTULO -->
+<div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
+<button
+onclick="goToTop()"
+title="Volver al Inicio"
+aria-label="Volver al Inicio"
+class="fc-logo-circle"
+>
 <img
 src="LOGO FC.png"
 onerror="this.onerror=null; this.src='https://via.placeholder.com/60/e50914/ffffff?text=FC';"
 alt="FC RACING Logo"
 >
 </button>
-<div class="flex flex-col items-start">
+<a href="#" onclick="goHome(event)" class="flex flex-col items-start select-none group">
 <div class="flex items-center space-x-1">
 <span class="text-brand-red text-2xl font-black italic tracking-tighter">//</span>
 <span class="font-racing text-2xl sm:text-3xl font-black italic tracking-wider text-white group-hover:text-gray-100">
@@ -383,12 +388,11 @@ FC <span class="text-brand-red">RACING</span>
 <span class="text-[9px] sm:text-[10px] font-bold tracking-widest text-gray-400 uppercase -mt-1 pl-4">
 ACCESORIOS & REPUESTOS OFF ROAD
 </span>
-</div>
 </a>
+</div>
 <!-- [FIN CAMBIO 3] -->
 
 <div class="flex items-center space-x-2 sm:space-x-3">
-<!-- LOGO CIRCULAR ELIMINADO DE AQUÍ (se movió arriba) -->
 <button onclick="openAdminModal()" title="Modo Administrador" class="bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/40 text-purple-300 hover:text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center space-x-1.5 text-xs">
 <i class="fa-solid fa-shield-halved text-sm"></i>
 <span class="hidden sm:inline font-bold">ADMIN</span>
@@ -440,7 +444,7 @@ Buscar
 </button>
 </form>
 
-<!-- [CAMBIO 1] DROPDOWN DE AUTOCOMPLETADO CON FONDO GRIS SÓLIDO -->
+<!-- [CAMBIO 1] DROPDOWN CON FONDO GRIS SÓLIDO -->
 <div id="autocompleteDropdown" class="hidden absolute top-full left-0 right-0 mt-1.5 bg-gray-800 border border-brand-border rounded-lg shadow-2xl z-50 overflow-hidden max-h-[70vh] overflow-y-auto divide-y divide-brand-border/60">
 </div>
 <!-- [FIN CAMBIO 1] -->
@@ -849,9 +853,9 @@ Sincronizado vía Google Sheets API.
 © 2026 FC RACING - Todos los derechos reservados.
 </div>
 
-<!-- [CAMBIO 2] FIRMA DEL DISEÑADOR EN LA PARTE INFERIOR -->
+<!-- [CAMBIO 2] FIRMA DEL DISEÑADOR -->
 <div class="max-w-7xl mx-auto pt-3 pb-2 text-center text-[10px] text-gray-600">
-Diseño y desarrollo web por 
+Diseño y desarrollo web por
 <a href="https://nexoar-art.github.io/NEXO-art/" target="_blank" rel="noopener noreferrer" class="text-brand-red hover:text-white transition-colors font-semibold tracking-wider">
 <i class="fa-solid fa-palette mr-1"></i>NEXO-ART
 </a>
@@ -1151,62 +1155,73 @@ Usá las flechas o deslizá para explorar • Click en la tarjeta para ampliar
 </div>
 <!-- PRODUCT DETAIL OVERLAY (VISTA AMPLIADA) -->
 <div id="productDetailOverlay" class="hidden"></div>
+
+<!-- ============================================================ -->
+<!-- [CAMBIO 4] PLANTILLA PDF: DISEÑO FACTURA COMO LA IMAGEN      -->
+<!-- ============================================================ -->
 <div id="pdfReceiptTemplate" class="hidden">
-<div id="receiptContent" style="padding: 30px; background-color: #ffffff; color: #111111; font-family: Arial, sans-serif; max-width: 700px; margin: auto;">
-<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e50914; padding-bottom: 15px; margin-bottom: 20px;">
+<div id="receiptContent" style="padding: 0; background-color: #f7f7f7; color: #111111; font-family: Arial, sans-serif; max-width: 700px; margin: auto;">
+<!-- ENCABEZADO NEGRO -->
+<div style="background-color: #16191d; padding: 35px 40px; display: flex; justify-content: space-between; align-items: center;">
 <div>
-<h1 style="font-size: 26px; font-weight: 900; margin: 0; color: #e50914; font-style: italic;">FC RACING</h1>
-<p style="font-size: 11px; margin: 2px 0 0 0; color: #555555; text-transform: uppercase;">ACCESORIOS & REPUESTOS OFF ROAD</p>
-<p style="font-size: 10px; margin: 2px 0 0 0; color: #777777;">Ernesto Negrete 27 Esq. Alfredo Palacios | Tel: 3543546389</p>
+<h1 style="font-size: 30px; font-weight: 900; margin: 0; color: #f4511e; letter-spacing: 1px;">FC RACING</h1>
+<p style="font-size: 13px; margin: 8px 0 0 0; color: #ffffff; font-weight: bold;">High Performance Off-Road Store</p>
 </div>
-<div style="text-align: right;">
-<h3 style="font-size: 16px; margin: 0; text-transform: uppercase; color: #111111;">RECIBO DE VENTA</h3>
-<p style="font-size: 11px; margin: 4px 0 0 0; color: #555555;" id="pdfOrderNum">N° #: 1000</p>
-<p style="font-size: 11px; margin: 2px 0 0 0; color: #555555;" id="pdfOrderDate">Fecha: 01/01/2026</p>
+<div style="text-align: right; color: #ffffff;">
+<p style="font-size: 13px; margin: 0; font-weight: bold;" id="pdfOrderDate">Fecha: 01/01/2026</p>
+<p style="font-size: 13px; margin: 12px 0 0 0; font-weight: bold; letter-spacing: 0.5px;">RECIBO OFICIAL DE COMPRA <span id="pdfOrderNum"></span></p>
 </div>
 </div>
-<div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 12px; margin-bottom: 20px; font-size: 12px;">
-<h4 style="margin: 0 0 8px 0; color: #e50914; font-size: 13px; text-transform: uppercase;">DATOS DEL CLIENTE</h4>
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-<div><strong>Cliente:</strong> <span id="pdfCustName"></span></div>
-<div><strong>Método de Pago:</strong> <span id="pdfCustPayment"></span></div>
-<div><strong>Dirección / Ciudad:</strong> <span id="pdfCustAddress"></span></div>
-<div><strong>Correo:</strong> <span id="pdfCustEmail"></span></div>
+<!-- CUERPO -->
+<div style="padding: 35px 40px;">
+<!-- DATOS DEL CLIENTE & ENVÍO -->
+<div style="background-color: #efefef; padding: 22px 26px; margin-bottom: 32px; font-size: 13px; color: #111111;">
+<h4 style="margin: 0 0 16px 0; color: #111111; font-size: 15px; font-weight: bold;">DATOS DEL CLIENTE &amp; ENVÍO:</h4>
+<table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+<tr>
+<td style="padding: 0 0 10px 0; text-align: left; vertical-align: top; width: 55%;">Cliente: <span id="pdfCustName"></span></td>
+<td style="padding: 0 0 10px 0; text-align: right; vertical-align: top;">Método de Pago: <span id="pdfCustPayment"></span></td>
+</tr>
+<tr>
+<td style="padding: 0 0 10px 0; text-align: left;" colspan="2">Dirección / Destino: <span id="pdfCustAddress"></span></td>
+</tr>
+<tr>
+<td style="padding: 0; text-align: left;" colspan="2">E-mail: <span id="pdfCustEmail"></span></td>
+</tr>
+</table>
 </div>
-</div>
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px;">
+<!-- TABLA DE PRODUCTOS (ENCABEZADO NARANJA) -->
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
 <thead>
-<tr style="background-color: #111111; color: #ffffff; text-align: left;">
-<th style="padding: 8px; border: 1px solid #111111;">CÓDIGO</th>
-<th style="padding: 8px; border: 1px solid #111111;">DESCRIPCIÓN</th>
-<th style="padding: 8px; border: 1px solid #111111; text-align: center;">CANT</th>
-<th style="padding: 8px; border: 1px solid #111111; text-align: right;">PRECIO U.</th>
-<th style="padding: 8px; border: 1px solid #111111; text-align: right;">SUBTOTAL</th>
+<tr style="background-color: #f4511e; color: #111111; text-align: left;">
+<th style="padding: 10px 12px; width: 10%; font-weight: bold;">Cant</th>
+<th style="padding: 10px 12px; font-weight: bold;">Descripción del Producto</th>
+<th style="padding: 10px 12px; text-align: right; width: 20%; font-weight: bold;">Precio Unit.</th>
+<th style="padding: 10px 12px; text-align: right; width: 18%; font-weight: bold;">Subtotal</th>
 </tr>
 </thead>
 <tbody id="pdfTableBody"></tbody>
 </table>
-<div style="text-align: right; margin-bottom: 30px; font-size: 12px;">
-<div style="margin-bottom: 6px;">
-<span style="font-weight: bold; margin-right: 15px; color: #555555;">SUBTOTAL:</span>
-<span id="pdfSubtotal" style="text-decoration: line-through; color: #888888;">$ 0</span>
+<div style="border-top: 2px solid #cccccc; margin: 0 0 26px 0;"></div>
+<!-- TOTALES -->
+<div style="text-align: right; font-size: 12px; color: #777777; margin-bottom: 8px;">
+Subtotal: <span id="pdfSubtotal" style="text-decoration: line-through;">$ 0</span>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<span style="color: #059669; font-weight: bold;">Descuento 5% (Carrito): <span id="pdfDiscount">- $ 0</span></span>
 </div>
-<div style="margin-bottom: 10px; color: #059669; font-weight: bold;">
-<span style="margin-right: 15px;">DESCUENTO 5% (Carrito):</span>
-<span id="pdfDiscount">- $ 0</span>
+<div style="text-align: right; margin-bottom: 45px;">
+<span style="font-size: 19px; font-weight: 900; color: #d32f2f;" id="pdfTotalAmount">TOTAL FINAL COMPRA: $ 0</span>
 </div>
-<div style="border-top: 2px solid #e50914; padding-top: 10px;">
-<span style="font-size: 14px; font-weight: bold; margin-right: 15px;">TOTAL FINAL A PAGAR:</span>
-<span style="font-size: 22px; font-weight: 900; color: #e50914;" id="pdfTotalAmount">$ 0</span>
-</div>
-</div>
-<div style="border-top: 1px solid #dddddd; padding-top: 12px; font-size: 10px; color: #777777; text-align: center;">
-Gracias por tu compra en FC RACING. Conservá este recibo para cualquier cambio o gestión de garantía.<br>
-<strong style="color: #059669;">✓ Descuento del 5% aplicado automáticamente por compra mediante carrito.</strong><br>
-Contacto de Ventas: WhatsApp 3543546389
+<!-- PIE -->
+<div style="font-size: 11px; color: #888888;">
+<p style="margin: 0 0 6px 0;">Gracias por elegir FC RACING. Conserva este comprobante para seguimiento de tu envío.</p>
+<p style="margin: 0;">Atención WhatsApp Directa: 3543546389 | Google Maps: https://maps.app.goo.gl/n6a3xVZXCsswcCPf8</p>
 </div>
 </div>
 </div>
+</div>
+<!-- [FIN CAMBIO 4] -->
+
 <script>
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1U24EVKy05DUCElXnJ-9yW7VTT8DAwB_3Nu2VZXqOKYI/gviz/tq?tqx=out:csv';
 const ADMIN_SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/1U24EVKy05DUCElXnJ-9yW7VTT8DAwB_3Nu2VZXqOKYI/edit';
@@ -1280,6 +1295,11 @@ return isNaN(v) ? 0 : v;
 function formatPrice(value) {
 const n = Number(value) || 0;
 return '$ ' + n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+// [CAMBIO 5] FORMATO DE PRECIO ESTILO RECIBO (como la imagen: $40.000)
+function formatReceiptPrice(value) {
+const n = Number(value) || 0;
+return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 }
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=400&q=80';
 function getBannerMessages() {
@@ -1565,7 +1585,7 @@ COD: ${p.codigo}
 <span class="text-[10px] text-gray-400 block">Precio Contado</span>
 <span class="font-racing font-black text-lg text-white">${formatPrice(p.precio)}</span>
 </div>
-<button onclick="event.stopPropagation(); addToCart('${escapeAttr(p.codigo)}')" class="bg-brand-red hover:bg-brand-redDark text-white px-3 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-colors flex items-center space-x-1 red-glow">
+<button onclick="event.stopPropagation(); addToCart('${escapeAttr(p.codigo)}')" class="bg-brand-red hover:bg-brand-redDark text-white px-3 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center space-x-1 red-glow">
 <i class="fa-solid fa-cart-plus"></i>
 <span>Agregar</span>
 </button>
@@ -1649,6 +1669,10 @@ cartDrawer.classList.add('translate-x-full', 'pointer-events-none');
 cartBackdrop.classList.add('opacity-0');
 }
 }
+// =========================================================
+// [CAMBIO 6] CHECKOUT: PDF FACTURA (IMAGEN) + WHATSAPP CON
+//            EL MISMO DISEÑO/ESTILO DEL RECIBO
+// =========================================================
 async function handleCheckoutSubmit(e) {
 e.preventDefault();
 if (CART.length === 0) {
@@ -1664,27 +1688,28 @@ alert('Por favor completá todos los datos del formulario para generar el recibo
 return;
 }
 const orderNum = Math.floor(1000 + Math.random() * 9000);
-const orderDate = new Date().toLocaleDateString('es-AR');
+const now = new Date();
+const orderDate = `${now.toLocaleDateString('es-AR')} ${now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
 const subtotal = CART.reduce((sum, item) => sum + (item.precio * item.qty), 0);
 const discount = subtotal * 0.05;
 const totalFinal = subtotal - discount;
-document.getElementById('pdfOrderNum').textContent = `N° #: ${orderNum}`;
+// ---- Relleno de la plantilla PDF (diseño factura) ----
+document.getElementById('pdfOrderNum').textContent = `N° ${orderNum}`;
 document.getElementById('pdfOrderDate').textContent = `Fecha: ${orderDate}`;
 document.getElementById('pdfCustName').textContent = name;
 document.getElementById('pdfCustAddress').textContent = address;
 document.getElementById('pdfCustEmail').textContent = email;
 document.getElementById('pdfCustPayment').textContent = payment;
-document.getElementById('pdfSubtotal').textContent = formatPrice(subtotal);
-document.getElementById('pdfDiscount').textContent = `- ${formatPrice(discount)}`;
-document.getElementById('pdfTotalAmount').textContent = formatPrice(totalFinal);
+document.getElementById('pdfSubtotal').textContent = formatReceiptPrice(subtotal);
+document.getElementById('pdfDiscount').textContent = `- ${formatReceiptPrice(discount)}`;
+document.getElementById('pdfTotalAmount').textContent = `TOTAL FINAL COMPRA: ${formatReceiptPrice(totalFinal)}`;
 const tableBody = document.getElementById('pdfTableBody');
 tableBody.innerHTML = CART.map(item => `
-<tr style="border-bottom: 1px solid #eeeeee;">
-<td style="padding: 6px; font-family: monospace;">${item.codigo}</td>
-<td style="padding: 6px;">${escapeHTML(item.descripcion)}</td>
-<td style="padding: 6px; text-align: center;">${item.qty}</td>
-<td style="padding: 6px; text-align: right;">${formatPrice(item.precio)}</td>
-<td style="padding: 6px; text-align: right; font-weight: bold;">${formatPrice(item.precio * item.qty)}</td>
+<tr>
+<td style="padding: 10px 12px; color: #333333;">${item.qty}x</td>
+<td style="padding: 10px 12px; color: #333333;">${escapeHTML(item.descripcion)}<br><span style="font-size: 10px; color: #999999; font-family: monospace;">COD: ${escapeHTML(item.codigo)}</span></td>
+<td style="padding: 10px 12px; text-align: right; color: #333333;">${formatReceiptPrice(item.precio)}</td>
+<td style="padding: 10px 12px; text-align: right; color: #333333; font-weight: bold;">${formatReceiptPrice(item.precio * item.qty)}</td>
 </tr>
 `).join('');
 const pdfElement = document.getElementById('receiptContent');
@@ -1693,7 +1718,7 @@ const opt = {
 margin: 10,
 filename: `Recibo_FC_Racing_${orderNum}.pdf`,
 image: { type: 'jpeg', quality: 0.98 },
-html2canvas: { scale: 2 },
+html2canvas: { scale: 2, useCORS: true },
 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
 };
 try {
@@ -1703,22 +1728,29 @@ console.warn('PDF generation notice:', err);
 } finally {
 document.getElementById('pdfReceiptTemplate').classList.add('hidden');
 }
-let message = `🏁 *NUEVO PEDIDO - FC RACING*\n`;
-message += `*Recibo N°:* ${orderNum}\n`;
-message += `*Fecha:* ${orderDate}\n`;
-message += `👤 *DATOS DEL CLIENTE:*\n`;
-message += `• *Nombre:* ${name}\n`;
-message += `• *Dirección/Ciudad:* ${address}\n`;
-message += `• *Correo:* ${email}\n`;
-message += `• *Medio de Pago:* ${payment}\n`;
-message += `📦 *DETALLE DE PRODUCTOS:*\n`;
-CART.forEach((item, index) => {
-message += `${index + 1}. [${item.codigo}] ${item.descripcion} (x${item.qty}) - ${formatPrice(item.precio * item.qty)}\n`;
+// ---- MENSAJE DE WHATSAPP CON EL MISMO DISEÑO/ESTILO DEL RECIBO ----
+const sepLine = '▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬';
+let message = `🏁 *FC RACING*\n`;
+message += `_High Performance Off-Road Store_\n`;
+message += `${sepLine}\n`;
+message += `📅 Fecha: ${orderDate}\n`;
+message += `🧾 *RECIBO OFICIAL DE COMPRA N° ${orderNum}*\n`;
+message += `${sepLine}\n\n`;
+message += `*DATOS DEL CLIENTE & ENVÍO:*\n`;
+message += `👤 Cliente: ${name}\n`;
+message += `📍 Dirección / Destino: ${address}\n`;
+message += `📧 E-mail: ${email}\n`;
+message += `💳 Método de Pago: ${payment}\n\n`;
+message += `${sepLine}\n`;
+message += `*Cant*  |  *Descripción del Producto*  |  *Precio Unit.*  |  *Subtotal*\n`;
+CART.forEach((item) => {
+message += `${item.qty}x  |  ${item.descripcion} (COD: ${item.codigo})  |  ${formatReceiptPrice(item.precio)}  |  ${formatReceiptPrice(item.precio * item.qty)}\n`;
 });
-message += `\n💰 *SUBTOTAL:* ${formatPrice(subtotal)}`;
-message += `\n🏷️ *DESCUENTO 5% (Carrito):* - ${formatPrice(discount)}`;
-message += `\n✅ *TOTAL FINAL A PAGAR:* *${formatPrice(totalFinal)}*\n`;
-message += `_Generé mi Recibo PDF en la web con el 5% de descuento aplicado. Aguardo confirmación para completar el pago._`;
+message += `${sepLine}\n\n`;
+message += `~Subtotal: ${formatReceiptPrice(subtotal)}~  •  Descuento 5% (Carrito): -${formatReceiptPrice(discount)}\n`;
+message += `*TOTAL FINAL COMPRA: ${formatReceiptPrice(totalFinal)}*\n\n`;
+message += `Gracias por elegir FC RACING. Conserva este comprobante para seguimiento de tu envío.\n`;
+message += `Atención WhatsApp Directa: 3543546389 | Google Maps: https://maps.app.goo.gl/n6a3xVZXCsswcCPf8`;
 const encodedMsg = encodeURIComponent(message);
 const waTarget = `https://wa.me/5493543546389?text=${encodedMsg}`;
 window.open(waTarget, '_blank');
