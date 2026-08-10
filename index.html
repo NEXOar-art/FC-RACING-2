@@ -1157,10 +1157,12 @@ Usá las flechas o deslizá para explorar • Click en la tarjeta para ampliar
 <div id="productDetailOverlay" class="hidden"></div>
 
 <!-- ============================================================ -->
-<!-- [CAMBIO 4] PLANTILLA PDF: DISEÑO FACTURA COMO LA IMAGEN      -->
+<!-- [CAMBIO 4] PLANTILLA PDF: DISEÑO FACTURA PROFESIONAL         -->
+<!-- (Renderizada SIEMPRE fuera de pantalla para garantizar       -->
+<!--  que html2pdf/html2canvas la capture y descargue sin fallar) -->
 <!-- ============================================================ -->
-<div id="pdfReceiptTemplate" class="hidden">
-<div id="receiptContent" style="padding: 0; background-color: #f7f7f7; color: #111111; font-family: Arial, sans-serif; max-width: 700px; margin: auto;">
+<div id="pdfReceiptTemplate" style="position: absolute; left: -10000px; top: 0; width: 720px; pointer-events: none; user-select: none;" aria-hidden="true">
+<div id="receiptContent" style="width: 700px; background-color: #f7f7f7; color: #111111; font-family: Arial, sans-serif;">
 <!-- ENCABEZADO NEGRO -->
 <div style="background-color: #16191d; padding: 35px 40px; display: flex; justify-content: space-between; align-items: center;">
 <div>
@@ -1670,8 +1672,11 @@ cartBackdrop.classList.add('opacity-0');
 }
 }
 // =========================================================
-// [CAMBIO 6] CHECKOUT: PDF FACTURA (IMAGEN) + WHATSAPP CON
-//            EL MISMO DISEÑO/ESTILO DEL RECIBO
+// [CAMBIO 6] CHECKOUT COMPLETO:
+//  1) WhatsApp se abre DENTRO del gesto de click (evita el
+//     bloqueador de pop-ups) con el diseño de recibo de la imagen.
+//  2) El PDF (misma factura) se descarga AUTOMÁTICAMENTE después,
+//     con la plantilla siempre renderizada fuera de pantalla.
 // =========================================================
 async function handleCheckoutSubmit(e) {
 e.preventDefault();
@@ -1712,22 +1717,6 @@ tableBody.innerHTML = CART.map(item => `
 <td style="padding: 10px 12px; text-align: right; color: #333333; font-weight: bold;">${formatReceiptPrice(item.precio * item.qty)}</td>
 </tr>
 `).join('');
-const pdfElement = document.getElementById('receiptContent');
-document.getElementById('pdfReceiptTemplate').classList.remove('hidden');
-const opt = {
-margin: 10,
-filename: `Recibo_FC_Racing_${orderNum}.pdf`,
-image: { type: 'jpeg', quality: 0.98 },
-html2canvas: { scale: 2, useCORS: true },
-jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-};
-try {
-await html2pdf().set(opt).from(pdfElement).save();
-} catch (err) {
-console.warn('PDF generation notice:', err);
-} finally {
-document.getElementById('pdfReceiptTemplate').classList.add('hidden');
-}
 // ---- MENSAJE DE WHATSAPP CON EL MISMO DISEÑO/ESTILO DEL RECIBO ----
 const sepLine = '▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬';
 let message = `🏁 *FC RACING*\n`;
@@ -1751,9 +1740,25 @@ message += `~Subtotal: ${formatReceiptPrice(subtotal)}~  •  Descuento 5% (Carr
 message += `*TOTAL FINAL COMPRA: ${formatReceiptPrice(totalFinal)}*\n\n`;
 message += `Gracias por elegir FC RACING. Conserva este comprobante para seguimiento de tu envío.\n`;
 message += `Atención WhatsApp Directa: 3543546389 | Google Maps: https://maps.app.goo.gl/n6a3xVZXCsswcCPf8`;
+// ---- 1) WHATSAPP PRIMERO (sincronizado con el click => no lo bloquea el navegador) ----
 const encodedMsg = encodeURIComponent(message);
 const waTarget = `https://wa.me/5493543546389?text=${encodedMsg}`;
 window.open(waTarget, '_blank');
+// ---- 2) DESCARGA AUTOMÁTICA DEL PDF (plantilla siempre renderizada off-screen) ----
+const pdfElement = document.getElementById('receiptContent');
+const opt = {
+margin: 10,
+filename: `Recibo_FC_Racing_${orderNum}.pdf`,
+image: { type: 'jpeg', quality: 0.98 },
+html2canvas: { scale: 2, useCORS: true, backgroundColor: '#f7f7f7' },
+jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+};
+try {
+await html2pdf().set(opt).from(pdfElement).save();
+} catch (err) {
+console.warn('PDF generation notice:', err);
+alert('⚠️ Tu pedido ya fue enviado por WhatsApp, pero no se pudo descargar el PDF automáticamente. Verificá tu conexión o el bloqueador de pop-ups.');
+}
 }
 let currentSlide = 0;
 const slides = document.querySelectorAll('.hero-slide');
