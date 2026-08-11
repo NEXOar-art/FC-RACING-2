@@ -9,7 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,700;1,700&family=Inter:wght@300;400;500;600;700&family=Rajdhani:ital,wght@0,600;0,700;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- [CAMBIO 8] PDF ANULADO: ahora se usa html2canvas para la CAPTURA PNG del recibo -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 tailwind.config = {
 darkMode: 'class',
@@ -1089,13 +1090,13 @@ Tu Carrito DE COMPRAS (<span id="cartTotalItems">0</span>)
 </div>
 <button type="submit" id="submitOrderBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg flex items-center justify-center space-x-2 uppercase tracking-wider text-xs shadow-lg transition-colors mt-2">
 <i class="fa-brands fa-whatsapp text-lg"></i>
-<span>ENVIAR PEDIDO Y GENERAR RECIBO PDF</span>
+<span>ENVIAR PEDIDO Y DESCARGAR RECIBO</span>
 </button>
 </form>
 </div>
 </div>
 <div class="pt-3 text-center text-[10px] text-gray-500">
-Al enviar, se descargará automáticamente tu Recibo de Venta PDF con el <strong class="text-emerald-400">5% de descuento aplicado</strong> y se abrirá WhatsApp con el Asesor (3543546389).
+Al enviar, se descargará automáticamente la <strong class="text-emerald-400">CAPTURA (imagen PNG)</strong> de tu Recibo de Venta con el <strong class="text-emerald-400">5% de descuento aplicado</strong> y se abrirá WhatsApp con el Asesor (3543546389).
 </div>
 </div>
 </div>
@@ -1157,8 +1158,8 @@ Usá las flechas o deslizá para explorar • Click en la tarjeta para ampliar
 <div id="productDetailOverlay" class="hidden"></div>
 
 <!-- ============================================================ -->
-<!-- [CAMBIO 4] PLANTILLA PDF FACTURA: FUERA DE PANTALLA PERO     -->
-<!-- SIEMPRE RENDERIZADA (garantiza la descarga automática)       -->
+<!-- [CAMBIO 9] PLANTILLA RECIBO (SIN PIE "GRACIAS/MAPS"):        -->
+<!-- FUERA DE PANTALLA PERO RENDERIZADA PARA LA CAPTURA PNG       -->
 <!-- ============================================================ -->
 <div id="pdfReceiptTemplate" aria-hidden="true" style="position: fixed; left: -10000px; top: 0; width: 720px; z-index: -50; pointer-events: none;">
 <div id="receiptContent" style="padding: 0; background-color: #f7f7f7; color: #111111; font-family: Arial, sans-serif; max-width: 700px; margin: auto;">
@@ -1210,18 +1211,14 @@ Subtotal: <span id="pdfSubtotal" style="text-decoration: line-through;">$ 0</spa
 &nbsp;&nbsp;|&nbsp;&nbsp;
 <span style="color: #059669; font-weight: bold;">Descuento 5% (Carrito): <span id="pdfDiscount">- $ 0</span></span>
 </div>
-<div style="text-align: right; margin-bottom: 45px;">
+<div style="text-align: right; margin-bottom: 20px;">
 <span style="font-size: 19px; font-weight: 900; color: #d32f2f;" id="pdfTotalAmount">TOTAL FINAL COMPRA: $ 0</span>
 </div>
-<!-- PIE -->
-<div style="font-size: 11px; color: #888888;">
-<p style="margin: 0 0 6px 0;">Gracias por elegir FC RACING. Conserva este comprobante para seguimiento de tu envío.</p>
-<p style="margin: 0;">Atención WhatsApp Directa: 3543546389 | Google Maps: https://maps.app.goo.gl/n6a3xVZXCsswcCPf8</p>
+<!-- [CAMBIO 9] SE ELIMINÓ EL PIE "Gracias por elegir... / Atención WhatsApp... Google Maps..." -->
 </div>
 </div>
 </div>
-</div>
-<!-- [FIN CAMBIO 4] -->
+<!-- [FIN CAMBIO 9] -->
 
 <script>
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1U24EVKy05DUCElXnJ-9yW7VTT8DAwB_3Nu2VZXqOKYI/gviz/tq?tqx=out:csv';
@@ -1671,8 +1668,8 @@ cartBackdrop.classList.add('opacity-0');
 }
 }
 // =========================================================
-// [CAMBIO 6] CHECKOUT: WHATSAPP CON DISEÑO DE RECIBO +
-//            PDF FACTURA CON DESCARGA AUTOMÁTICA GARANTIZADA
+// [CAMBIO 7] WHATSAPP CON DISEÑO MEJORADO +
+// [CAMBIO 8] CAPTURA PNG DEL RECIBO (REEMPLAZA AL PDF)
 // =========================================================
 async function handleCheckoutSubmit(e) {
 e.preventDefault();
@@ -1694,7 +1691,7 @@ const orderDate = `${now.toLocaleDateString('es-AR')} ${now.toLocaleTimeString('
 const subtotal = CART.reduce((sum, item) => sum + (item.precio * item.qty), 0);
 const discount = subtotal * 0.05;
 const totalFinal = subtotal - discount;
-// ---- 1) Relleno de la plantilla PDF (diseño factura) ----
+// ---- 1) Relleno de la plantilla del recibo (para la captura) ----
 document.getElementById('pdfOrderNum').textContent = `N° ${orderNum}`;
 document.getElementById('pdfOrderDate').textContent = `Fecha: ${orderDate}`;
 document.getElementById('pdfCustName').textContent = name;
@@ -1713,8 +1710,9 @@ tableBody.innerHTML = CART.map(item => `
 <td style="padding: 10px 12px; text-align: right; color: #333333; font-weight: bold;">${formatReceiptPrice(item.precio * item.qty)}</td>
 </tr>
 `).join('');
-// ---- 2) MENSAJE DE WHATSAPP CON EL MISMO DISEÑO/ESTILO DEL RECIBO ----
+// ---- 2) MENSAJE DE WHATSAPP CON DISEÑO MEJORADO ----
 const sepLine = '▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬';
+const thinLine = '─────────────────────────────────────────';
 let message = `🏁 *FC RACING*\n`;
 message += `_High Performance Off-Road Store_\n`;
 message += `${sepLine}\n`;
@@ -1722,37 +1720,43 @@ message += `📅 Fecha: ${orderDate}\n`;
 message += `🧾 *RECIBO OFICIAL DE COMPRA N° ${orderNum}*\n`;
 message += `${sepLine}\n\n`;
 message += `*DATOS DEL CLIENTE & ENVÍO:*\n`;
-message += `👤 Cliente: ${name}\n`;
-message += `📍 Dirección / Destino: ${address}\n`;
-message += `📧 E-mail: ${email}\n`;
-message += `💳 Método de Pago: ${payment}\n\n`;
-message += `${sepLine}\n`;
-message += `*Cant*  |  *Descripción del Producto*  |  *Precio Unit.*  |  *Subtotal*\n`;
+message += `👤 *Nombre y Apellido:* ${name}\n`;
+message += `📍 *Ciudad y Dirección:* ${address}\n`;
+message += `📧 *Correo Electrónico:* ${email}\n`;
+message += `💳 *Método de Pago:* ${payment}\n\n`;
+message += `🛒 *DETALLE DE PRODUCTOS:*\n`;
+message += `*Cant*  |  *Descripción (COD)*  |  *Precio Unit.*  |  *Subtotal*\n`;
+message += `${thinLine}\n`;
 CART.forEach((item) => {
-message += `${item.qty}x  |  ${item.descripcion} (COD: ${item.codigo})  |  ${formatReceiptPrice(item.precio)}  |  ${formatReceiptPrice(item.precio * item.qty)}\n`;
+message += `${item.qty}x  |  ${item.descripcion} (${item.codigo})  |  ${formatReceiptPrice(item.precio)}  |  *${formatReceiptPrice(item.precio * item.qty)}*\n`;
 });
-message += `${sepLine}\n\n`;
-message += `~Subtotal: ${formatReceiptPrice(subtotal)}~  •  Descuento 5% (Carrito): -${formatReceiptPrice(discount)}\n`;
-message += `*TOTAL FINAL COMPRA: ${formatReceiptPrice(totalFinal)}*\n\n`;
-message += `Gracias por elegir FC RACING. Conserva este comprobante para seguimiento de tu envío.\n`;
-message += `Atención WhatsApp Directa: 3543546389 | Google Maps: https://maps.app.goo.gl/n6a3xVZXCsswcCPf8`;
+message += `${thinLine}\n\n`;
+message += `~Subtotal: ${formatReceiptPrice(subtotal)}~\n`;
+message += `🏷️ Descuento 5% (Carrito): -${formatReceiptPrice(discount)}\n`;
+message += `✅ *TOTAL FINAL COMPRA: ${formatReceiptPrice(totalFinal)}*\n\n`;
+message += `📲 *WhatsApp Directa:* 3543546389\n`;
+message += `🗺️ *Google Maps:* https://maps.app.goo.gl/n6a3xVZXCsswcCPf8`;
 // ---- 3) WhatsApp se abre DENTRO del click (evita bloqueo de pop-ups) ----
 const encodedMsg = encodeURIComponent(message);
 const waTarget = `https://wa.me/5493543546389?text=${encodedMsg}`;
 window.open(waTarget, '_blank');
-// ---- 4) PDF con descarga automática (plantilla siempre renderizada) ----
-const pdfElement = document.getElementById('receiptContent');
-const opt = {
-margin: 10,
-filename: `Recibo_FC_Racing_${orderNum}.pdf`,
-image: { type: 'jpeg', quality: 0.98 },
-html2canvas: { scale: 2, useCORS: true, backgroundColor: '#f7f7f7' },
-jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-};
+// ---- 4) CAPTURA PNG DEL RECIBO (PDF ANULADO) ----
+const receiptEl = document.getElementById('receiptContent');
 try {
-await html2pdf().set(opt).from(pdfElement).save();
+const canvas = await html2canvas(receiptEl, {
+scale: 2,
+useCORS: true,
+backgroundColor: '#f7f7f7',
+logging: false
+});
+const link = document.createElement('a');
+link.download = `Recibo_FC_Racing_${orderNum}.png`;
+link.href = canvas.toDataURL('image/png');
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
 } catch (err) {
-console.warn('PDF generation notice:', err);
+console.warn('Captura del comprobante:', err);
 }
 }
 let currentSlide = 0;
@@ -2315,5 +2319,4 @@ initVideoObserver();
 };
 </script>
 </body>
-</html>
 </html>
