@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,700;1,700&family=Inter:wght@300;400;500;600;700&family=Rajdhani:ital,wght@0,600;0,700;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- [CAMBIO 8] PDF ANULADO: ahora se usa html2canvas para la CAPTURA PNG del recibo -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 tailwind.config = {
@@ -339,6 +338,66 @@ border-color: #e50914;
 background: rgba(229, 9, 20, 0.2);
 color: #ff1e27;
 border-color: rgba(229, 9, 20, 0.5);
+}
+
+/* ============================================================ */
+/* [CAMBIO 11] BOTÓN RECTANGULAR TALLER VICAN CON EFECTO         */
+/* INTERMITENTE (pulse) Y HOVER                                    */
+/* ============================================================ */
+@keyframes tallerVicanPulse {
+0%, 100% {
+box-shadow: 0 0 8px rgba(229, 9, 20, 0.6),
+0 0 18px rgba(229, 9, 20, 0.4),
+0 0 0 0 rgba(229, 9, 20, 0.7);
+border-color: rgba(229, 9, 20, 0.9);
+}
+50% {
+box-shadow: 0 0 20px rgba(255, 30, 39, 1),
+0 0 40px rgba(229, 9, 20, 0.7),
+0 0 0 6px rgba(229, 9, 20, 0.15);
+border-color: #ff1e27;
+}
+}
+.taller-vican-btn {
+display: block;
+width: 100%;
+max-width: 260px;
+padding: 6px;
+background: linear-gradient(135deg, #0a0a0c 0%, #1a1a20 100%);
+border: 2px solid #e50914;
+border-radius: 10px;
+overflow: hidden;
+position: relative;
+cursor: pointer;
+animation: tallerVicanPulse 1.8s ease-in-out infinite;
+transition: transform 0.3s ease, filter 0.3s ease;
+}
+.taller-vican-btn:hover {
+transform: translateY(-3px) scale(1.03);
+filter: brightness(1.15) saturate(1.2);
+animation-play-state: paused;
+box-shadow: 0 10px 30px rgba(229, 9, 20, 0.6), 0 0 50px rgba(255, 30, 39, 0.5);
+}
+.taller-vican-btn img {
+width: 100%;
+height: auto;
+display: block;
+border-radius: 6px;
+object-fit: cover;
+}
+.taller-vican-btn::before {
+content: "";
+position: absolute;
+top: 0; left: -100%;
+width: 60%; height: 100%;
+background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
+transform: skewX(-20deg);
+transition: left 0.6s ease;
+pointer-events: none;
+z-index: 2;
+}
+.taller-vican-btn:hover::before {
+left: 130%;
 }
 </style>
 </head>
@@ -811,6 +870,19 @@ FC <span class="text-brand-red">RACING</span>
 <p class="text-gray-400 text-xs leading-relaxed">
 Especialistas en repuestos, accesorios y equipamiento off-road para Enduro, Motocross y Trail.
 </p>
+
+<!-- [CAMBIO 11] BOTÓN RECTANGULAR TALLER VICAN CON EFECTO INTERMITENTE -->
+<a
+href="https://nexoar-art.github.io/TALLER-VICAN-GNC-FC-RACING-TUNE-MOTOS/"
+target="_blank"
+rel="noopener noreferrer"
+title="Visitar Taller Vican - GNC & Tune Motos"
+class="taller-vican-btn mt-3"
+>
+<img src="TALLERVICAN.jpg" alt="Taller Vican - GNC FC Racing Tune Motos" onerror="this.onerror=null; this.src='https://via.placeholder.com/260x100/e50914/ffffff?text=TALLER+VICAN';">
+</a>
+<!-- [FIN CAMBIO 11] -->
+
 </div>
 <div>
 <h5 class="font-racing font-bold text-white uppercase tracking-wider text-sm mb-3">Navegación</h5>
@@ -1294,7 +1366,6 @@ function formatPrice(value) {
 const n = Number(value) || 0;
 return '$ ' + n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
-// [CAMBIO 5] FORMATO DE PRECIO ESTILO RECIBO (como la imagen: $40.000)
 function formatReceiptPrice(value) {
 const n = Number(value) || 0;
 return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
@@ -1474,10 +1545,6 @@ return `
 </div>
 `;
 }
-// =========================================================
-// [CAMBIO 10] IMÁGENES DE TARJETAS AJUSTADAS (object-contain,
-// marco degradado oscuro, padding y altura uniforme)
-// =========================================================
 function productCardHTML(p) {
 const safeCodigo = escapeAttr(p.codigo);
 return `
@@ -1562,7 +1629,6 @@ function closeProductDetail() {
 const overlay = document.getElementById('productDetailOverlay');
 if (overlay) overlay.classList.add('hidden');
 }
-// [CAMBIO 10] IMÁGENES DE DESTACADOS AJUSTADAS (object-contain + marco degradado)
 function renderFeaturedProducts() {
 const grid = document.getElementById('featuredProductsGrid');
 if (!grid) return;
@@ -1672,10 +1738,6 @@ cartDrawer.classList.add('translate-x-full', 'pointer-events-none');
 cartBackdrop.classList.add('opacity-0');
 }
 }
-// =========================================================
-// [CAMBIO 7] WHATSAPP CON DISEÑO MEJORADO +
-// [CAMBIO 8] CAPTURA PNG DEL RECIBO (REEMPLAZA AL PDF)
-// =========================================================
 async function handleCheckoutSubmit(e) {
 e.preventDefault();
 if (CART.length === 0) {
@@ -1696,7 +1758,6 @@ const orderDate = `${now.toLocaleDateString('es-AR')} ${now.toLocaleTimeString('
 const subtotal = CART.reduce((sum, item) => sum + (item.precio * item.qty), 0);
 const discount = subtotal * 0.05;
 const totalFinal = subtotal - discount;
-// ---- 1) Relleno de la plantilla del recibo (para la captura) ----
 document.getElementById('pdfOrderNum').textContent = `N° ${orderNum}`;
 document.getElementById('pdfOrderDate').textContent = `Fecha: ${orderDate}`;
 document.getElementById('pdfCustName').textContent = name;
@@ -1715,7 +1776,6 @@ tableBody.innerHTML = CART.map(item => `
 <td style="padding: 10px 12px; text-align: right; color: #333333; font-weight: bold;">${formatReceiptPrice(item.precio * item.qty)}</td>
 </tr>
 `).join('');
-// ---- 2) MENSAJE DE WHATSAPP CON DISEÑO MEJORADO ----
 const sepLine = '▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬';
 const thinLine = '─────────────────────────────────────────';
 let message = `🏁 *FC RACING*\n`;
@@ -1741,11 +1801,9 @@ message += `🏷️ Descuento 5% (Carrito): -${formatReceiptPrice(discount)}\n`;
 message += `✅ *TOTAL FINAL COMPRA: ${formatReceiptPrice(totalFinal)}*\n\n`;
 message += `📲 *WhatsApp Directa:* 3543546389\n`;
 message += `🗺️ *Google Maps:* https://maps.app.goo.gl/n6a3xVZXCsswcCPf8`;
-// ---- 3) WhatsApp se abre DENTRO del click (evita bloqueo de pop-ups) ----
 const encodedMsg = encodeURIComponent(message);
 const waTarget = `https://wa.me/5493543546389?text=${encodedMsg}`;
 window.open(waTarget, '_blank');
-// ---- 4) CAPTURA PNG DEL RECIBO (PDF ANULADO) ----
 const receiptEl = document.getElementById('receiptContent');
 try {
 const canvas = await html2canvas(receiptEl, {
@@ -1804,9 +1862,6 @@ drawerBackdrop.classList.add('opacity-0');
 }
 closeMobileMenu.addEventListener('click', closeDrawer);
 drawerBackdrop.addEventListener('click', closeDrawer);
-// =========================================================
-// ============ NAVEGACIÓN JERÁRQUICA + FILTROS ============
-// =========================================================
 function openCategory(catName) {
 browseState = { level: 'category', category: catName, subcategory: null, brand: null };
 renderCatalog();
@@ -1835,7 +1890,6 @@ browseState.level = 'subcategory';
 renderCatalog();
 }
 }
-// CLICK EN DESPLEGABLES = BÚSQUEDA ESPECÍFICA DIRECTA
 function applyFilters() {
 refreshFilterOptions();
 const fCat = document.getElementById('filterCategory').value;
@@ -1849,14 +1903,12 @@ brand: fBr || null
 };
 renderCatalog();
 }
-// Salto directo desde el breadcrumb (mantiene combinación truncada)
 function jumpFiltered(cat, sub, br) {
 document.getElementById('filterCategory').value = cat || '';
 document.getElementById('filterSubcategory').value = sub || '';
 document.getElementById('filterBrand').value = br || '';
 applyFilters();
 }
-// Cascada validada: subcategorías según categoría, marcas según categoría+subcategoría
 function refreshFilterOptions() {
 const fCat = document.getElementById('filterCategory');
 const fSub = document.getElementById('filterSubcategory');
@@ -1894,7 +1946,6 @@ const swipeHint = document.getElementById('swipeHint');
 populateFilters();
 const sep = `<i class="fa-solid fa-chevron-right text-gray-600 text-[9px]"></i>`;
 let bc = `<button onclick="navigateToLevel('home')" class="breadcrumb-btn"><i class="fa-solid fa-house text-[10px]"></i><span>Inicio</span></button>`;
-// ============ NIVEL CATEGORÍA: tarjetas de SUBCATEGORÍAS ============
 if (browseState.level === 'category') {
 bc += sep + `<span class="breadcrumb-btn active"><i class="fa-solid fa-folder text-[10px]"></i><span>${escapeHTML(browseState.category)}</span></span>`;
 breadcrumbBar.innerHTML = bc;
@@ -1922,7 +1973,6 @@ class="fx-card bg-brand-card rounded-lg border border-brand-border p-5 cursor-po
 }
 return;
 }
-// ============ NIVEL SUBCATEGORÍA: tarjetas de MARCAS ============
 if (browseState.level === 'subcategory') {
 bc += sep + `<button onclick="navigateToLevel('category')" class="breadcrumb-btn"><i class="fa-solid fa-folder text-[10px]"></i><span>${escapeHTML(browseState.category)}</span></button>`;
 bc += sep + `<span class="breadcrumb-btn active"><i class="fa-solid fa-folder-open text-[10px]"></i><span>${escapeHTML(browseState.subcategory)}</span></span>`;
@@ -1951,7 +2001,6 @@ class="fx-card bg-brand-card rounded-lg border border-brand-border p-5 cursor-po
 }
 return;
 }
-// ============ NIVEL MARCA: productos finales ============
 if (browseState.level === 'brand') {
 bc += sep + `<button onclick="navigateToLevel('category')" class="breadcrumb-btn"><i class="fa-solid fa-folder text-[10px]"></i><span>${escapeHTML(browseState.category)}</span></button>`;
 bc += sep + `<button onclick="navigateToLevel('subcategory')" class="breadcrumb-btn"><i class="fa-solid fa-folder-open text-[10px]"></i><span>${escapeHTML(browseState.subcategory)}</span></button>`;
@@ -1972,7 +2021,6 @@ productsGrid.innerHTML = filtered.map(p => productCardHTML(p)).join('');
 }
 return;
 }
-// ============ NIVEL FILTRADO (desde desplegables) ============
 if (browseState.level === 'filtered') {
 const c = browseState.category, s = browseState.subcategory, b = browseState.brand;
 if (c) bc += sep + `<button onclick="jumpFiltered('${escapeAttr(c)}','','')" class="breadcrumb-btn ${!s && !b ? 'active' : ''}"><i class="fa-solid fa-folder text-[10px]"></i><span>${escapeHTML(c)}</span></button>`;
@@ -1995,7 +2043,6 @@ productsGrid.innerHTML = filtered.map(p => productCardHTML(p)).join('');
 }
 return;
 }
-// ============ NIVEL HOME: todos los productos ============
 breadcrumbBar.innerHTML = bc;
 modalTitle.textContent = 'TODOS LOS PRODUCTOS';
 modalCount.innerHTML = `<i class="fa-solid fa-database mr-1"></i>${PRODUCTS.length} PRODUCTO${PRODUCTS.length !== 1 ? 'S' : ''} EN TOTAL`;
@@ -2020,16 +2067,12 @@ modal.classList.remove('flex');
 document.body.style.overflow = 'auto';
 browseState = { level: 'home', category: null, subcategory: null, brand: null };
 }
-// =========================================================
-// ============ SCROLL HORIZONTAL CON FLECHAS ==============
-// =========================================================
 function scrollSwipe(dir) {
 const el = document.getElementById('productsSwipeWrapper');
 if (!el) return;
 const amount = Math.max(280, el.clientWidth * 0.7);
 el.scrollBy({ left: dir * amount, behavior: 'smooth' });
 }
-// Drag con mouse (la posición queda donde la dejás)
 function enableDragToScroll(el) {
 let isDown = false, moved = false, startX = 0, scrollLeftStart = 0;
 el.addEventListener('mousedown', e => {
@@ -2294,9 +2337,6 @@ document.getElementById('adminPassword').value = '';
 document.getElementById('adminPassword').focus();
 }
 }
-// =========================================================
-// ============ VIDEO AUTOPLAY AL HACER SCROLL =============
-// =========================================================
 function initVideoObserver() {
 const video = document.getElementById('fcVideo');
 if (!video) return;
