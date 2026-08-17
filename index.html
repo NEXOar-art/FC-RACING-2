@@ -1474,13 +1474,17 @@ return `
 </div>
 `;
 }
+// =========================================================
+// [CAMBIO 10] IMÁGENES DE TARJETAS AJUSTADAS (object-contain,
+// marco degradado oscuro, padding y altura uniforme)
+// =========================================================
 function productCardHTML(p) {
 const safeCodigo = escapeAttr(p.codigo);
 return `
 <div class="fx-card bg-brand-card rounded-lg border border-brand-border p-3 flex flex-col justify-between group hover:border-brand-red transition-all shadow-lg cursor-pointer w-[240px] sm:w-[260px] shrink-0" onclick="openProductDetail('${safeCodigo}')">
 <div>
-<div class="w-full h-36 rounded bg-black overflow-hidden mb-2 relative border border-brand-border/40">
-<img src="${p.imagen}" alt="${p.descripcion}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+<div class="w-full h-40 rounded-lg bg-gradient-to-br from-[#1b1b22] via-[#121216] to-black overflow-hidden mb-2 relative border border-brand-border/40 flex items-center justify-center p-2">
+<img src="${p.imagen}" alt="${p.descripcion}" onerror="this.src='${FALLBACK_IMG}'" loading="lazy" class="w-full h-full object-contain rounded-md group-hover:scale-105 transition-transform duration-300">
 <span class="absolute top-2 left-2 bg-black/80 text-gray-300 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded border border-gray-700">COD: ${p.codigo}</span>
 <span class="absolute top-2 right-2 bg-brand-red/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded border border-white/20 uppercase">${escapeHTML(p.marca || 'S/M')}</span>
 </div>
@@ -1558,6 +1562,7 @@ function closeProductDetail() {
 const overlay = document.getElementById('productDetailOverlay');
 if (overlay) overlay.classList.add('hidden');
 }
+// [CAMBIO 10] IMÁGENES DE DESTACADOS AJUSTADAS (object-contain + marco degradado)
 function renderFeaturedProducts() {
 const grid = document.getElementById('featuredProductsGrid');
 if (!grid) return;
@@ -1565,8 +1570,8 @@ const itemsToDisplay = PRODUCTS.slice(0, 8);
 grid.innerHTML = itemsToDisplay.map(p => `
 <div class="fx-card bg-brand-card rounded-lg border border-brand-border p-3.5 flex flex-col justify-between group hover:border-brand-red transition-all shadow-lg cursor-pointer" onclick="openProductDetail('${escapeAttr(p.codigo)}')">
 <div>
-<div class="w-full h-40 rounded bg-black overflow-hidden mb-3 relative border border-brand-border/40">
-<img src="${p.imagen}" alt="${escapeHTML(p.descripcion)}" onerror="this.src='${FALLBACK_IMG}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+<div class="w-full h-44 rounded-lg bg-gradient-to-br from-[#1b1b22] via-[#121216] to-black overflow-hidden mb-3 relative border border-brand-border/40 flex items-center justify-center p-2">
+<img src="${p.imagen}" alt="${escapeHTML(p.descripcion)}" onerror="this.src='${FALLBACK_IMG}'" loading="lazy" class="w-full h-full object-contain rounded-md group-hover:scale-105 transition-transform duration-300">
 <div class="absolute top-2 left-2">
 <span class="bg-black/80 text-gray-300 text-[10px] font-mono px-1.5 py-0.5 rounded border border-gray-700">
 COD: ${p.codigo}
