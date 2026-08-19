@@ -399,6 +399,31 @@ z-index: 2;
 .taller-vican-btn:hover::before {
 left: 130%;
 }
+
+/* ============================================================ */
+/* [CAMBIO 12] BRILLO SUTIL ANIMADO PARA TÍTULO DESTACADOS      */
+/* ============================================================ */
+@keyframes shineGradient {
+0% { background-position: -200% center; }
+100% { background-position: 200% center; }
+}
+.shine-title {
+background: linear-gradient(
+90deg,
+#ffffff 0%,
+#ffffff 35%,
+#ff1e27 50%,
+#ffffff 65%,
+#ffffff 100%
+);
+background-size: 200% auto;
+-webkit-background-clip: text;
+background-clip: text;
+-webkit-text-fill-color: transparent;
+animation: shineGradient 4s linear infinite;
+display: inline-block;
+filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.35));
+}
 </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased">
@@ -683,12 +708,15 @@ EXPLORA POR SECCIÓN
 </div>
 </div>
 </section>
+<!-- ============================================================ -->
+<!-- [CAMBIO 12] SECCIÓN DESTACADOS: TÍTULO CON BRILLO SUTIL      -->
+<!-- ============================================================ -->
 <section class="max-w-7xl mx-auto px-3 sm:px-6 py-6 border-t border-brand-border">
 <div class="flex items-center justify-between mb-4">
 <div>
 <span class="text-brand-red font-bold text-xs uppercase tracking-widest">// DESTACADOS EN STOCK</span>
-<h2 class="font-racing font-bold text-xl sm:text-2xl text-white tracking-wider uppercase italic">
-REPUESTOS DESTACADOS
+<h2 class="font-racing font-bold text-xl sm:text-2xl tracking-wider uppercase italic">
+<span class="shine-title">REPUESTOS DESTACADOS</span>
 </h2>
 </div>
 <div class="flex items-center space-x-2 text-xs text-gray-400">
@@ -1286,7 +1314,6 @@ Subtotal: <span id="pdfSubtotal" style="text-decoration: line-through;">$ 0</spa
 <div style="text-align: right; margin-bottom: 20px;">
 <span style="font-size: 19px; font-weight: 900; color: #d32f2f;" id="pdfTotalAmount">TOTAL FINAL COMPRA: $ 0</span>
 </div>
-<!-- [CAMBIO 9] SE ELIMINÓ EL PIE "Gracias por elegir... / Atención WhatsApp... Google Maps..." -->
 </div>
 </div>
 </div>
@@ -1545,6 +1572,7 @@ return `
 </div>
 `;
 }
+// [CAMBIO 10] IMÁGENES DE TARJETAS AJUSTADAS
 function productCardHTML(p) {
 const safeCodigo = escapeAttr(p.codigo);
 return `
@@ -1629,10 +1657,18 @@ function closeProductDetail() {
 const overlay = document.getElementById('productDetailOverlay');
 if (overlay) overlay.classList.add('hidden');
 }
+// =========================================================
+// [CAMBIO 12] DESTACADOS: AHORA MUESTRA TODOS LOS PRODUCTOS
+// DE LA MARCA "RTECH" (case-insensitive). Si no hay RTECH,
+// hace fallback a los primeros 8 productos generales.
+// =========================================================
 function renderFeaturedProducts() {
 const grid = document.getElementById('featuredProductsGrid');
 if (!grid) return;
-const itemsToDisplay = PRODUCTS.slice(0, 8);
+// Filtrar productos de la marca RTECH
+const rtechProducts = PRODUCTS.filter(p => normalizeText(p.marca).includes('rtech'));
+// Si hay productos RTECH, mostrarlos todos. Si no, fallback a los primeros 8.
+const itemsToDisplay = rtechProducts.length > 0 ? rtechProducts : PRODUCTS.slice(0, 8);
 grid.innerHTML = itemsToDisplay.map(p => `
 <div class="fx-card bg-brand-card rounded-lg border border-brand-border p-3.5 flex flex-col justify-between group hover:border-brand-red transition-all shadow-lg cursor-pointer" onclick="openProductDetail('${escapeAttr(p.codigo)}')">
 <div>
