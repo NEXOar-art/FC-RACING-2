@@ -128,7 +128,6 @@ animation: marqueeScroll 25s linear infinite;
 50% { opacity: 0.3; transform: scale(0.85); }
 }
 .stock-pulse { animation: stockBlink 1.2s infinite ease-in-out; }
-/* LOGO CIRCULAR CON REFLEJO Y LUZ CONTINUA */
 @keyframes logoGlow {
 0%, 100% { box-shadow: 0 0 20px rgba(229, 9, 20, 0.8), 0 0 35px rgba(229, 9, 20, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.2); }
 50% { box-shadow: 0 0 30px rgba(255, 30, 39, 1), 0 0 50px rgba(229, 9, 20, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.4); }
@@ -199,9 +198,6 @@ width: 56px;
 height: 56px;
 }
 }
-/* ============================================ */
-/* CARRUSEL HORIZONTAL: SIN SNAP-BACK + FLECHAS */
-/* ============================================ */
 .swipe-container {
 overflow-x: auto;
 overflow-y: hidden;
@@ -245,12 +241,10 @@ border-color: #e50914;
 box-shadow: 0 0 18px rgba(229, 9, 20, 0.6);
 transform: translateY(-50%) scale(1.1);
 }
-/* SELECTS OSCUROS (legibilidad del desplegable) */
 select, select option {
 background-color: #121215;
 color: #f3f4f6;
 }
-/* TARJETA AMPLIADA (MODAL DETALLE) */
 .product-detail-overlay {
 position: fixed;
 inset: 0;
@@ -282,7 +276,6 @@ animation: zoomIn 0.3s ease;
 from { transform: scale(0.8); opacity: 0; }
 to { transform: scale(1); opacity: 1; }
 }
-/* AUTOCOMPLETE AGRUPADO */
 .ac-group-title {
 background: linear-gradient(to right, rgba(229, 9, 20, 0.2), transparent);
 color: #ff1e27;
@@ -312,7 +305,6 @@ color: #ff1e27;
 padding: 0 2px;
 border-radius: 2px;
 }
-/* BREADCRUMB NAVEGACIÓN */
 .breadcrumb-btn {
 display: inline-flex;
 align-items: center;
@@ -339,11 +331,6 @@ background: rgba(229, 9, 20, 0.2);
 color: #ff1e27;
 border-color: rgba(229, 9, 20, 0.5);
 }
-
-/* ============================================================ */
-/* [CAMBIO 11] BOTÓN RECTANGULAR TALLER VICAN CON EFECTO         */
-/* INTERMITENTE (pulse) Y HOVER                                    */
-/* ============================================================ */
 @keyframes tallerVicanPulse {
 0%, 100% {
 box-shadow: 0 0 8px rgba(229, 9, 20, 0.6),
@@ -399,10 +386,6 @@ z-index: 2;
 .taller-vican-btn:hover::before {
 left: 130%;
 }
-
-/* ============================================================ */
-/* [CAMBIO 12] BRILLO SUTIL ANIMADO PARA TÍTULO DESTACADOS      */
-/* ============================================================ */
 @keyframes shineGradient {
 0% { background-position: -200% center; }
 100% { background-position: 200% center; }
@@ -423,6 +406,117 @@ background-clip: text;
 animation: shineGradient 4s linear infinite;
 display: inline-block;
 filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.35));
+}
+
+/* ============================================================ */
+/* [CAMBIO 13] BOTÓN INSTAGRAM CON MICRO EFECTO SUTIL           */
+/* ============================================================ */
+@keyframes instagramGlow {
+0%, 100% {
+background-position: 0% 50%;
+box-shadow: 0 0 8px rgba(225, 48, 108, 0.4), 0 0 12px rgba(131, 58, 180, 0.3);
+}
+50% {
+background-position: 100% 50%;
+box-shadow: 0 0 14px rgba(252, 175, 69, 0.5), 0 0 20px rgba(225, 48, 108, 0.4);
+}
+}
+@keyframes instagramRing {
+0% { transform: scale(1); opacity: 0.7; }
+100% { transform: scale(1.5); opacity: 0; }
+}
+.instagram-btn {
+position: relative;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+width: 40px;
+height: 40px;
+border-radius: 10px;
+background: linear-gradient(45deg, 
+#f09433 0%, 
+#e6683c 25%, 
+#dc2743 50%, 
+#cc2366 75%, 
+#bc1888 100%);
+background-size: 200% 200%;
+animation: instagramGlow 3.5s ease-in-out infinite;
+border: 1px solid rgba(255, 255, 255, 0.15);
+color: white;
+text-decoration: none;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+overflow: hidden;
+}
+.instagram-btn::before {
+content: "";
+position: absolute;
+inset: 0;
+border-radius: 10px;
+background: linear-gradient(45deg,
+rgba(255,255,255,0.2) 0%,
+rgba(255,255,255,0) 50%,
+rgba(255,255,255,0.2) 100%);
+background-size: 200% 200%;
+animation: instagramGlow 3.5s ease-in-out infinite reverse;
+pointer-events: none;
+}
+.instagram-btn::after {
+content: "";
+position: absolute;
+inset: -2px;
+border-radius: 12px;
+border: 2px solid rgba(225, 48, 108, 0.6);
+animation: instagramRing 2.5s ease-out infinite;
+pointer-events: none;
+opacity: 0;
+}
+.instagram-btn:hover {
+transform: translateY(-2px) scale(1.08);
+box-shadow: 0 6px 20px rgba(225, 48, 108, 0.6), 0 0 30px rgba(131, 58, 180, 0.5);
+}
+.instagram-btn:hover::after {
+opacity: 1;
+}
+.instagram-btn i {
+position: relative;
+z-index: 2;
+font-size: 1.15rem;
+filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* ============================================================ */
+/* [CAMBIO 13] BOTÓN ADMIN EN FOOTER (DISCRETO E INTELIGENTE)   */
+/* ============================================================ */
+.admin-footer-btn {
+display: inline-flex;
+align-items: center;
+gap: 6px;
+padding: 5px 12px;
+background: rgba(18, 18, 21, 0.7);
+border: 1px solid rgba(34, 34, 42, 0.8);
+border-radius: 6px;
+color: #6b7280;
+font-size: 10px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.8px;
+cursor: pointer;
+transition: all 0.25s ease;
+backdrop-filter: blur(4px);
+}
+.admin-footer-btn:hover {
+background: rgba(147, 51, 234, 0.15);
+border-color: rgba(147, 51, 234, 0.5);
+color: #c4b5fd;
+box-shadow: 0 0 12px rgba(147, 51, 234, 0.2);
+}
+.admin-footer-btn i {
+font-size: 10px;
+opacity: 0.7;
+}
+.admin-footer-btn:hover i {
+opacity: 1;
+color: #a855f7;
 }
 </style>
 </head>
@@ -449,7 +543,6 @@ class="hidden absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/40 hover:b
 <i class="fa-solid fa-bars text-2xl"></i>
 </button>
 
-<!-- [CAMBIO 3] LOGO CIRCULAR A LA IZQUIERDA DEL TÍTULO -->
 <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
 <button
 onclick="goToTop()"
@@ -475,13 +568,19 @@ ACCESORIOS & REPUESTOS OFF ROAD
 </span>
 </a>
 </div>
-<!-- [FIN CAMBIO 3] -->
 
+<!-- [CAMBIO 13] BOTONES SUPERIORES: INSTAGRAM + CARRITO (ADMIN MOVIDO AL FOOTER) -->
 <div class="flex items-center space-x-2 sm:space-x-3">
-<button onclick="openAdminModal()" title="Modo Administrador" class="bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/40 text-purple-300 hover:text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center space-x-1.5 text-xs">
-<i class="fa-solid fa-shield-halved text-sm"></i>
-<span class="hidden sm:inline font-bold">ADMIN</span>
-</button>
+<a
+href="https://www.instagram.com/vicangnc_salsipuedes/"
+target="_blank"
+rel="noopener noreferrer"
+title="Seguinos en Instagram @vicangnc_salsipuedes"
+class="instagram-btn"
+aria-label="Instagram"
+>
+<i class="fa-brands fa-instagram"></i>
+</a>
 <button onclick="toggleCartDrawer()" class="relative flex items-center bg-brand-card hover:bg-brand-red/20 border border-brand-border hover:border-brand-red px-3 py-1.5 rounded-lg text-gray-200 transition-all">
 <div class="relative mr-2">
 <i class="fa-solid fa-cart-shopping text-lg sm:text-xl text-brand-red"></i>
@@ -495,6 +594,7 @@ ACCESORIOS & REPUESTOS OFF ROAD
 </div>
 </button>
 </div>
+<!-- [FIN CAMBIO 13] -->
 </div>
 <!-- SEARCH BAR INTELIGENTE -->
 <div class="max-w-7xl mx-auto px-4 pb-3 flex flex-col sm:flex-row gap-2 items-center">
@@ -529,10 +629,8 @@ Buscar
 </button>
 </form>
 
-<!-- [CAMBIO 1] DROPDOWN CON FONDO GRIS SÓLIDO -->
 <div id="autocompleteDropdown" class="hidden absolute top-full left-0 right-0 mt-1.5 bg-gray-800 border border-brand-border rounded-lg shadow-2xl z-50 overflow-hidden max-h-[70vh] overflow-y-auto divide-y divide-brand-border/60">
 </div>
-<!-- [FIN CAMBIO 1] -->
 
 </div>
 <button onclick="syncGoogleSheetData()" title="Sincronizar productos con Google Sheets" class="shrink-0 bg-brand-card hover:bg-black text-gray-300 hover:text-white border border-brand-border text-xs px-3 py-2 rounded-lg flex items-center space-x-1.5 transition-colors w-full sm:w-auto justify-center">
@@ -708,9 +806,6 @@ EXPLORA POR SECCIÓN
 </div>
 </div>
 </section>
-<!-- ============================================================ -->
-<!-- [CAMBIO 12] SECCIÓN DESTACADOS: TÍTULO CON BRILLO SUTIL      -->
-<!-- ============================================================ -->
 <section class="max-w-7xl mx-auto px-3 sm:px-6 py-6 border-t border-brand-border">
 <div class="flex items-center justify-between mb-4">
 <div>
@@ -774,9 +869,6 @@ Mitas
 </div>
 </div>
 </section>
-<!-- ============================================================ -->
-<!-- ============ NUEVA SECCIÓN: VIDEO FC RACING ================ -->
-<!-- ============================================================ -->
 <section id="videoSection" class="relative bg-black py-10 border-b border-brand-border overflow-hidden">
 <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(circle at 50% 0%, rgba(229,9,20,0.14), transparent 60%);"></div>
 <div class="relative max-w-7xl mx-auto px-4">
@@ -818,7 +910,6 @@ Video no disponible. Verificá que el archivo <strong class="text-white">VIDEOFC
 </div>
 </div>
 </section>
-<!-- ============ FIN SECCIÓN VIDEO ============ -->
 <section class="max-w-7xl mx-auto px-4 py-10">
 <div class="bg-gradient-to-br from-brand-card via-[#16161c] to-black rounded-xl border border-brand-border p-6 sm:p-8 shadow-2xl relative overflow-hidden">
 <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-brand-red/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -899,7 +990,6 @@ FC <span class="text-brand-red">RACING</span>
 Especialistas en repuestos, accesorios y equipamiento off-road para Enduro, Motocross y Trail.
 </p>
 
-<!-- [CAMBIO 11] BOTÓN RECTANGULAR TALLER VICAN CON EFECTO INTERMITENTE -->
 <a
 href="https://nexoar-art.github.io/TALLER-VICAN-GNC-FC-RACING-TUNE-MOTOS/"
 target="_blank"
@@ -909,7 +999,6 @@ class="taller-vican-btn mt-3"
 >
 <img src="TALLERVICAN.jpg" alt="Taller Vican - GNC FC Racing Tune Motos" onerror="this.onerror=null; this.src='https://via.placeholder.com/260x100/e50914/ffffff?text=TALLER+VICAN';">
 </a>
-<!-- [FIN CAMBIO 11] -->
 
 </div>
 <div>
@@ -954,14 +1043,26 @@ Sincronizado vía Google Sheets API.
 © 2026 FC RACING - Todos los derechos reservados.
 </div>
 
-<!-- [CAMBIO 2] FIRMA DEL DISEÑADOR -->
-<div class="max-w-7xl mx-auto pt-3 pb-2 text-center text-[10px] text-gray-600">
+<!-- [CAMBIO 13] FIRMA DEL DISEÑADOR + BOTÓN ADMIN INTELIGENTE EN FOOTER -->
+<div class="max-w-7xl mx-auto pt-3 pb-2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-[10px] text-gray-600">
+<div>
 Diseño y desarrollo web por
 <a href="https://nexoar-art.github.io/NEXO-art/" target="_blank" rel="noopener noreferrer" class="text-brand-red hover:text-white transition-colors font-semibold tracking-wider">
 <i class="fa-solid fa-palette mr-1"></i>NEXO-ART
 </a>
 </div>
-<!-- [FIN CAMBIO 2] -->
+<span class="hidden sm:inline text-gray-700">|</span>
+<!-- Botón ADMIN discreto en footer -->
+<button
+onclick="openAdminModal()"
+title="Acceso Administrador (Solo personal autorizado)"
+class="admin-footer-btn"
+>
+<i class="fa-solid fa-shield-halved"></i>
+<span>Panel Admin</span>
+</button>
+</div>
+<!-- [FIN CAMBIO 13] -->
 
 </footer>
 <!-- FLOATING WHATSAPP BUTTON -->
@@ -1028,7 +1129,6 @@ Solo personal autorizado puede acceder a la edición de la base de datos y del b
 </div>
 </div>
 </div>
-<!-- MODAL EDITOR DE BANNER (SOLO ADMIN) -->
 <div id="bannerEditorModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
 <div class="bg-brand-dark border border-brand-border rounded-xl shadow-2xl p-6 max-w-lg w-full mx-4">
 <div class="flex items-center justify-between mb-5 border-b border-brand-border pb-3">
@@ -1200,7 +1300,6 @@ Al enviar, se descargará automáticamente la <strong class="text-emerald-400">C
 </div>
 </div>
 </div>
-<!-- MODAL CATÁLOGO (Navegación Jerárquica + Filtros + Carrusel con Flechas) -->
 <div id="productsModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex-col overflow-y-auto">
 <div class="max-w-7xl mx-auto w-full px-4 py-6">
 <div class="flex items-center justify-between pb-4 border-b border-brand-border mb-4">
@@ -1217,14 +1316,12 @@ TODOS LOS PRODUCTOS
 <i class="fa-solid fa-xmark"></i>
 </button>
 </div>
-<!-- BREADCRUMB DE NAVEGACIÓN -->
 <div id="breadcrumbBar" class="mb-4 flex flex-wrap items-center gap-2 pb-3 border-b border-brand-border/40">
 <button onclick="navigateToLevel('home')" class="breadcrumb-btn">
 <i class="fa-solid fa-house text-[10px]"></i>
 <span>Inicio</span>
 </button>
 </div>
-<!-- FILTROS DESPLEGABLES (CLICK = BÚSQUEDA ESPECÍFICA) -->
 <div id="filtersBar" class="mb-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
 <select id="filterCategory" onchange="applyFilters()" class="bg-black border border-brand-border rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-red cursor-pointer">
 <option value="">Todas las Categorías</option>
@@ -1240,7 +1337,6 @@ TODOS LOS PRODUCTOS
 <i class="fa-solid fa-arrows-left-right mr-1"></i>
 Usá las flechas o deslizá para explorar • Click en la tarjeta para ampliar
 </div>
-<!-- CARRUSEL HORIZONTAL CON BOTONES FLECHA -->
 <div class="relative">
 <button onclick="scrollSwipe(-1)" class="swipe-arrow left-1 sm:left-2" aria-label="Desplazar a la izquierda" title="Anterior">
 <i class="fa-solid fa-chevron-left"></i>
@@ -1254,16 +1350,10 @@ Usá las flechas o deslizá para explorar • Click en la tarjeta para ampliar
 </div>
 </div>
 </div>
-<!-- PRODUCT DETAIL OVERLAY (VISTA AMPLIADA) -->
 <div id="productDetailOverlay" class="hidden"></div>
 
-<!-- ============================================================ -->
-<!-- [CAMBIO 9] PLANTILLA RECIBO (SIN PIE "GRACIAS/MAPS"):        -->
-<!-- FUERA DE PANTALLA PERO RENDERIZADA PARA LA CAPTURA PNG       -->
-<!-- ============================================================ -->
 <div id="pdfReceiptTemplate" aria-hidden="true" style="position: fixed; left: -10000px; top: 0; width: 720px; z-index: -50; pointer-events: none;">
 <div id="receiptContent" style="padding: 0; background-color: #f7f7f7; color: #111111; font-family: Arial, sans-serif; max-width: 700px; margin: auto;">
-<!-- ENCABEZADO NEGRO -->
 <div style="background-color: #16191d; padding: 35px 40px; display: flex; justify-content: space-between; align-items: center;">
 <div>
 <h1 style="font-size: 30px; font-weight: 900; margin: 0; color: #f4511e; letter-spacing: 1px;">FC RACING</h1>
@@ -1274,9 +1364,7 @@ Usá las flechas o deslizá para explorar • Click en la tarjeta para ampliar
 <p style="font-size: 13px; margin: 12px 0 0 0; font-weight: bold; letter-spacing: 0.5px;">RECIBO OFICIAL DE COMPRA <span id="pdfOrderNum"></span></p>
 </div>
 </div>
-<!-- CUERPO -->
 <div style="padding: 35px 40px;">
-<!-- DATOS DEL CLIENTE & ENVÍO -->
 <div style="background-color: #efefef; padding: 22px 26px; margin-bottom: 32px; font-size: 13px; color: #111111;">
 <h4 style="margin: 0 0 16px 0; color: #111111; font-size: 15px; font-weight: bold;">DATOS DEL CLIENTE &amp; ENVÍO:</h4>
 <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
@@ -1292,7 +1380,6 @@ Usá las flechas o deslizá para explorar • Click en la tarjeta para ampliar
 </tr>
 </table>
 </div>
-<!-- TABLA DE PRODUCTOS (ENCABEZADO NARANJA) -->
 <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
 <thead>
 <tr style="background-color: #f4511e; color: #111111; text-align: left;">
@@ -1305,7 +1392,6 @@ Usá las flechas o deslizá para explorar • Click en la tarjeta para ampliar
 <tbody id="pdfTableBody"></tbody>
 </table>
 <div style="border-top: 2px solid #cccccc; margin: 0 0 26px 0;"></div>
-<!-- TOTALES -->
 <div style="text-align: right; font-size: 12px; color: #777777; margin-bottom: 8px;">
 Subtotal: <span id="pdfSubtotal" style="text-decoration: line-through;">$ 0</span>
 &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -1317,7 +1403,6 @@ Subtotal: <span id="pdfSubtotal" style="text-decoration: line-through;">$ 0</spa
 </div>
 </div>
 </div>
-<!-- [FIN CAMBIO 9] -->
 
 <script>
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1U24EVKy05DUCElXnJ-9yW7VTT8DAwB_3Nu2VZXqOKYI/gviz/tq?tqx=out:csv';
@@ -1572,7 +1657,6 @@ return `
 </div>
 `;
 }
-// [CAMBIO 10] IMÁGENES DE TARJETAS AJUSTADAS
 function productCardHTML(p) {
 const safeCodigo = escapeAttr(p.codigo);
 return `
@@ -1657,17 +1741,10 @@ function closeProductDetail() {
 const overlay = document.getElementById('productDetailOverlay');
 if (overlay) overlay.classList.add('hidden');
 }
-// =========================================================
-// [CAMBIO 12] DESTACADOS: AHORA MUESTRA TODOS LOS PRODUCTOS
-// DE LA MARCA "RTECH" (case-insensitive). Si no hay RTECH,
-// hace fallback a los primeros 8 productos generales.
-// =========================================================
 function renderFeaturedProducts() {
 const grid = document.getElementById('featuredProductsGrid');
 if (!grid) return;
-// Filtrar productos de la marca RTECH
 const rtechProducts = PRODUCTS.filter(p => normalizeText(p.marca).includes('rtech'));
-// Si hay productos RTECH, mostrarlos todos. Si no, fallback a los primeros 8.
 const itemsToDisplay = rtechProducts.length > 0 ? rtechProducts : PRODUCTS.slice(0, 8);
 grid.innerHTML = itemsToDisplay.map(p => `
 <div class="fx-card bg-brand-card rounded-lg border border-brand-border p-3.5 flex flex-col justify-between group hover:border-brand-red transition-all shadow-lg cursor-pointer" onclick="openProductDetail('${escapeAttr(p.codigo)}')">
