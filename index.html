@@ -407,10 +407,6 @@ animation: shineGradient 4s linear infinite;
 display: inline-block;
 filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.35));
 }
-
-/* ============================================================ */
-/* [CAMBIO 13] BOTÓN INSTAGRAM CON MICRO EFECTO SUTIL           */
-/* ============================================================ */
 @keyframes instagramGlow {
 0%, 100% {
 background-position: 0% 50%;
@@ -483,10 +479,6 @@ z-index: 2;
 font-size: 1.15rem;
 filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
 }
-
-/* ============================================================ */
-/* [CAMBIO 13] BOTÓN ADMIN EN FOOTER (DISCRETO E INTELIGENTE)   */
-/* ============================================================ */
 .admin-footer-btn {
 display: inline-flex;
 align-items: center;
@@ -517,6 +509,56 @@ opacity: 0.7;
 .admin-footer-btn:hover i {
 opacity: 1;
 color: #a855f7;
+}
+
+/* ============================================================ */
+/* [CAMBIO 14] BOTÓN FLOTANTE DASHBOARD CON ACCESO PROTEGIDO    */
+/* ============================================================ */
+@keyframes dashboardPulse {
+0%, 100% {
+box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.5),
+0 0 10px rgba(6, 182, 212, 0.3);
+border-color: rgba(6, 182, 212, 0.5);
+}
+50% {
+box-shadow: 0 0 0 8px rgba(6, 182, 212, 0),
+0 0 18px rgba(6, 182, 212, 0.6);
+border-color: #06b6d4;
+}
+}
+.dashboard-footer-btn {
+display: inline-flex;
+align-items: center;
+gap: 6px;
+padding: 5px 12px;
+background: rgba(18, 18, 21, 0.7);
+border: 1px solid rgba(6, 182, 212, 0.4);
+border-radius: 6px;
+color: #06b6d4;
+font-size: 10px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.8px;
+cursor: pointer;
+transition: all 0.25s ease;
+backdrop-filter: blur(4px);
+animation: dashboardPulse 2.5s ease-in-out infinite;
+position: relative;
+}
+.dashboard-footer-btn:hover {
+background: rgba(6, 182, 212, 0.15);
+border-color: #06b6d4;
+color: #22d3ee;
+box-shadow: 0 0 16px rgba(6, 182, 212, 0.4);
+transform: translateY(-1px);
+animation-play-state: paused;
+}
+.dashboard-footer-btn i {
+font-size: 10px;
+color: #06b6d4;
+}
+.dashboard-footer-btn:hover i {
+color: #22d3ee;
 }
 </style>
 </head>
@@ -569,7 +611,6 @@ ACCESORIOS & REPUESTOS OFF ROAD
 </a>
 </div>
 
-<!-- [CAMBIO 13] BOTONES SUPERIORES: INSTAGRAM + CARRITO (ADMIN MOVIDO AL FOOTER) -->
 <div class="flex items-center space-x-2 sm:space-x-3">
 <a
 href="https://www.instagram.com/vicangnc_salsipuedes/"
@@ -594,7 +635,6 @@ aria-label="Instagram"
 </div>
 </button>
 </div>
-<!-- [FIN CAMBIO 13] -->
 </div>
 <!-- SEARCH BAR INTELIGENTE -->
 <div class="max-w-7xl mx-auto px-4 pb-3 flex flex-col sm:flex-row gap-2 items-center">
@@ -1043,7 +1083,7 @@ Sincronizado vía Google Sheets API.
 © 2026 FC RACING - Todos los derechos reservados.
 </div>
 
-<!-- [CAMBIO 13] FIRMA DEL DISEÑADOR + BOTÓN ADMIN INTELIGENTE EN FOOTER -->
+<!-- [CAMBIO 14] FIRMA + ADMIN + DASHBOARD EN FOOTER -->
 <div class="max-w-7xl mx-auto pt-3 pb-2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-[10px] text-gray-600">
 <div>
 Diseño y desarrollo web por
@@ -1052,7 +1092,6 @@ Diseño y desarrollo web por
 </a>
 </div>
 <span class="hidden sm:inline text-gray-700">|</span>
-<!-- Botón ADMIN discreto en footer -->
 <button
 onclick="openAdminModal()"
 title="Acceso Administrador (Solo personal autorizado)"
@@ -1061,8 +1100,17 @@ class="admin-footer-btn"
 <i class="fa-solid fa-shield-halved"></i>
 <span>Panel Admin</span>
 </button>
+<!-- [CAMBIO 14] BOTÓN DASHBOARD FLOTANTE CON ACCESO PROTEGIDO -->
+<button
+onclick="openDashboardModal()"
+title="Tablero de Control FC RACING (Requiere código de acceso)"
+class="dashboard-footer-btn"
+>
+<i class="fa-solid fa-chart-line"></i>
+<span>Dashboard</span>
+</button>
+<!-- [FIN CAMBIO 14] -->
 </div>
-<!-- [FIN CAMBIO 13] -->
 
 </footer>
 <!-- FLOATING WHATSAPP BUTTON -->
@@ -1129,6 +1177,69 @@ Solo personal autorizado puede acceder a la edición de la base de datos y del b
 </div>
 </div>
 </div>
+
+<!-- ============================================================ -->
+<!-- [CAMBIO 14] MODAL DASHBOARD CON CÓDIGO DE ACCESO TABLERO3112 -->
+<!-- ============================================================ -->
+<div id="dashboardModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
+<div class="bg-brand-dark border border-cyan-500/40 rounded-xl shadow-2xl p-6 max-w-md w-full mx-4" style="box-shadow: 0 0 40px rgba(6, 182, 212, 0.2);">
+<div class="flex items-center justify-between mb-5 border-b border-brand-border pb-3">
+<div class="flex items-center space-x-2">
+<i class="fa-solid fa-chart-line text-cyan-400 text-xl"></i>
+<h3 class="font-racing font-bold text-lg text-white uppercase italic tracking-wider">
+Tablero de Control
+</h3>
+</div>
+<button onclick="closeDashboardModal()" class="text-gray-400 hover:text-white text-xl p-1">
+<i class="fa-solid fa-xmark"></i>
+</button>
+</div>
+<div class="space-y-4">
+<div class="bg-cyan-500/5 border border-cyan-500/20 rounded-lg p-3 text-center">
+<p class="text-cyan-300 text-xs font-semibold uppercase tracking-widest mb-1">
+<i class="fa-solid fa-lock mr-1"></i> Acceso Restringido
+</p>
+<p class="text-gray-400 text-[11px]">
+Este panel es exclusivo para gestión interna de FC RACING. Ingresá el código de acceso autorizado.
+</p>
+</div>
+<div>
+<label class="block text-gray-300 font-semibold text-xs mb-2">
+<i class="fa-solid fa-key text-cyan-400 mr-1"></i>
+Código de acceso al Dashboard:
+</label>
+<input
+type="password"
+id="dashboardPassword"
+placeholder="Código secreto..."
+onkeydown="if(event.key === 'Enter') verifyDashboardPassword()"
+class="w-full bg-black border border-brand-border rounded px-3 py-2.5 text-white focus:outline-none focus:border-cyan-500 text-sm"
+autocomplete="off"
+>
+<p id="dashboardError" class="text-red-400 text-xs mt-1.5 hidden">
+<i class="fa-solid fa-triangle-exclamation"></i> Código incorrecto. Acceso denegado.
+</p>
+</div>
+<div class="flex space-x-2">
+<button
+onclick="verifyDashboardPassword()"
+class="flex-grow bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded text-xs uppercase tracking-wider transition-colors flex items-center justify-center space-x-2"
+>
+<i class="fa-solid fa-arrow-right-to-bracket"></i>
+<span>INGRESAR AL DASHBOARD</span>
+</button>
+<button
+onclick="closeDashboardModal()"
+class="bg-brand-card hover:bg-brand-cardHover text-gray-300 border border-brand-border font-bold py-2.5 px-4 rounded text-xs uppercase tracking-wider transition-colors"
+>
+Cancelar
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- [FIN CAMBIO 14] -->
+
 <div id="bannerEditorModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
 <div class="bg-brand-dark border border-brand-border rounded-xl shadow-2xl p-6 max-w-lg w-full mx-4">
 <div class="flex items-center justify-between mb-5 border-b border-brand-border pb-3">
@@ -1408,6 +1519,10 @@ Subtotal: <span id="pdfSubtotal" style="text-decoration: line-through;">$ 0</spa
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1U24EVKy05DUCElXnJ-9yW7VTT8DAwB_3Nu2VZXqOKYI/gviz/tq?tqx=out:csv';
 const ADMIN_SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/1U24EVKy05DUCElXnJ-9yW7VTT8DAwB_3Nu2VZXqOKYI/edit';
 const ADMIN_PASSWORD = 'FABIAN3112';
+// [CAMBIO 14] CÓDIGO DE ACCESO AL DASHBOARD
+const DASHBOARD_URL = 'https://nexoar-art.github.io/DASHBOARD-FC-RACING-/';
+const DASHBOARD_ACCESS_CODE = 'TABLERO3112';
+
 const DEFAULT_BANNER_MESSAGES = [
 'ENVÍOS A TODO EL PAÍS • COMPRA DIRECTA SIN REGISTRO O CUENTA',
 'HOY 5% EN TU COMPRA MEDIANTE EL CARRITO DE COMPRAS',
@@ -2381,6 +2496,7 @@ if (e.key === 'Escape') {
 closeAutocompleteDropdown();
 closeBannerEditor();
 closeProductDetail();
+closeDashboardModal();
 }
 });
 function filterSearchQuery(q) {
@@ -2450,6 +2566,40 @@ document.getElementById('adminPassword').value = '';
 document.getElementById('adminPassword').focus();
 }
 }
+
+// =========================================================
+// [CAMBIO 14] FUNCIONES DEL MODAL DASHBOARD
+// =========================================================
+function openDashboardModal() {
+const modal = document.getElementById('dashboardModal');
+modal.classList.remove('hidden');
+document.getElementById('dashboardPassword').value = '';
+document.getElementById('dashboardError').classList.add('hidden');
+setTimeout(() => document.getElementById('dashboardPassword').focus(), 100);
+}
+function closeDashboardModal() {
+document.getElementById('dashboardModal').classList.add('hidden');
+}
+function verifyDashboardPassword() {
+const password = document.getElementById('dashboardPassword').value.trim();
+const errorMsg = document.getElementById('dashboardError');
+if (password === DASHBOARD_ACCESS_CODE) {
+closeDashboardModal();
+// Redirección al Dashboard
+window.open(DASHBOARD_URL, '_blank');
+// Feedback visual de éxito
+const confirmDiv = document.createElement('div');
+confirmDiv.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-cyan-600 text-white px-6 py-3 rounded-lg shadow-2xl z-[200] text-xs font-bold uppercase tracking-wider flex items-center space-x-2';
+confirmDiv.innerHTML = '<i class="fa-solid fa-chart-line"></i><span>Acceso autorizado. Abriendo Dashboard FC RACING...</span>';
+document.body.appendChild(confirmDiv);
+setTimeout(() => confirmDiv.remove(), 3000);
+} else {
+errorMsg.classList.remove('hidden');
+document.getElementById('dashboardPassword').value = '';
+document.getElementById('dashboardPassword').focus();
+}
+}
+
 function initVideoObserver() {
 const video = document.getElementById('fcVideo');
 if (!video) return;
