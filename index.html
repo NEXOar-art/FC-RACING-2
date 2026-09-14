@@ -118,6 +118,30 @@ img{max-width:100%}
 .section-title h2{font-size:22px;font-style:italic;font-weight:950}
 .section-title .count{font-size:13px;color:var(--muted)}
 
+/* ══════ BOTÓN CATEGORÍAS (SOLO MÓVIL/TABLET) ══════ */
+.mobile-cats-btn{display:none;align-items:center;justify-content:space-between;gap:10px;width:100%;margin-bottom:14px;padding:13px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:13px;font-weight:800;cursor:pointer;transition:.2s;color:var(--text)}
+.mobile-cats-btn:hover{border-color:var(--red);color:var(--red)}
+.mobile-cats-btn .left{display:flex;align-items:center;gap:10px}
+.mobile-cats-btn .left i{color:var(--red);font-size:15px}
+.mobile-cats-btn .right-i{font-size:11px;color:var(--muted)}
+.mobile-cats-btn .sel-count{background:var(--red);color:#fff;font-size:10px;font-weight:800;border-radius:10px;padding:2px 8px;margin-left:6px}
+
+/* ══════ DRAWER DE CATEGORÍAS (MÓVIL) ══════ */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:24;display:none}
+.drawer-overlay.active{display:block}
+.sidebar-drawer{position:fixed;z-index:25;left:-330px;top:0;width:310px;max-width:88vw;height:100vh;background:#fff;box-shadow:8px 0 30px rgba(0,0,0,.15);transition:.3s;display:flex;flex-direction:column}
+.sidebar-drawer.open{left:0}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid #ddd;background:#fff}
+.drawer-head strong{font-size:14px;letter-spacing:.5px}
+.drawer-head .close{border:0;background:none;font-size:26px;cursor:pointer;line-height:1}
+.drawer-body{flex:1;overflow:auto;padding:14px 10px}
+.drawer-foot{padding:12px 14px;border-top:1px solid #eee;background:#fff}
+.drawer-foot .checkout{margin:0}
+/* Ajustes del árbol dentro del drawer (táctil) */
+.sidebar-drawer .sidebar-cat li>a{padding:11px 10px;font-size:13px}
+.sidebar-drawer .sidebar-sub li>a{padding:9px 10px;font-size:12px}
+.sidebar-drawer .sidebar-sub li>a[style]{font-size:11px !important}
+
 /* ── SMART FILTERS ── */
 .smart-filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:flex-start}
 .sf-group{position:relative}
@@ -137,7 +161,7 @@ img{max-width:100%}
 .tag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:#fef5f5;border:1px solid #fcc;border-radius:14px;font-size:11px;color:var(--red);font-weight:600}
 .tag button{background:none;border:0;color:var(--red);cursor:pointer;font-size:14px;line-height:1}
 
-/* ── SIDEBAR ── */
+/* ── SIDEBAR (PC) ── */
 .main-layout{display:flex;gap:24px;max-width:1200px;margin:20px auto 0;padding:0 12px}
 .sidebar{width:240px;flex-shrink:0}
 .sidebar-section{margin-bottom:20px}
@@ -278,6 +302,7 @@ footer a:hover{color:var(--red)}
 /* ══════ RESPONSIVO TOTAL ══════ */
 @media(max-width:1000px){
   .sidebar{display:none}
+  .mobile-cats-btn{display:flex}
   .products{grid-template-columns:repeat(3,1fr)}
   .footer-inner{grid-template-columns:1fr 1fr}
   .brands-group{gap:50px;padding-right:50px}
@@ -312,6 +337,7 @@ footer a:hover{color:var(--red)}
   .map-btn.ghost{margin-left:0;margin-top:10px}
   .map-frame{min-height:260px}
   .map-frame iframe{min-height:260px}
+  .mobile-cats-btn{font-size:12px;padding:12px 14px}
 }
 @media(max-width:400px){
   .products{grid-template-columns:1fr 1fr;gap:8px}
@@ -420,6 +446,13 @@ footer a:hover{color:var(--red)}
   <aside class="sidebar" id="sidebar"></aside>
 
   <div class="main-content">
+
+    <!-- BOTÓN CATEGORÍAS (visible solo en móvil/tablet) -->
+    <button class="mobile-cats-btn" onclick="openCatDrawer()">
+      <span class="left"><i class="fas fa-folder-open"></i> CATEGORÍAS Y SUBCATEGORÍAS <span class="sel-count" id="drawerSelCount" style="display:none"></span></span>
+      <i class="fas fa-chevron-down right-i"></i>
+    </button>
+
     <div class="section-title">
       <h2 id="sectionTitle">NUESTROS PRODUCTOS</h2>
       <span class="count" id="productCount"></span>
@@ -515,8 +548,21 @@ footer a:hover{color:var(--red)}
   </div>
 </footer>
 
-<!-- ══════ OVERLAY ══════ -->
+<!-- ══════ OVERLAYS ══════ -->
 <div class="overlay" id="overlay" onclick="toggleCart()"></div>
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeCatDrawer()"></div>
+
+<!-- ══════ DRAWER CATEGORÍAS (MÓVIL/TABLET) ══════ -->
+<aside class="sidebar-drawer" id="catDrawer">
+  <div class="drawer-head">
+    <strong><i class="fas fa-folder-open" style="color:var(--red)"></i> CATEGORÍAS</strong>
+    <button class="close" onclick="closeCatDrawer()">×</button>
+  </div>
+  <div class="drawer-body" id="drawerSidebar"></div>
+  <div class="drawer-foot">
+    <button class="checkout" onclick="closeCatDrawer()">VER PRODUCTOS FILTRADOS</button>
+  </div>
+</aside>
 
 <!-- ══════ CART PANEL ══════ -->
 <aside class="cart-panel" id="cart">
@@ -671,9 +717,8 @@ async function loadProducts(){
   }
 }
 
-// ── SIDEBAR ──
+// ── SIDEBAR (se renderiza en PC y en el drawer móvil a la vez) ──
 function buildSidebar(){
-  const sb=document.getElementById('sidebar');
   let html='<div class="sidebar-section"><div class="sidebar-title">Categorías</div><ul class="sidebar-cat">';
   const catCounts={};
   ALL.forEach(p=>{if(!catCounts[p.categoria])catCounts[p.categoria]=0;catCounts[p.categoria]++;});
@@ -707,8 +752,34 @@ function buildSidebar(){
     html+='</li>';
   }
   html+='</ul></div>';
-  sb.innerHTML=html;
+
+  // Renderiza en el sidebar de PC y en el drawer móvil
+  const sb=document.getElementById('sidebar');
+  if(sb)sb.innerHTML=html;
+  const dw=document.getElementById('drawerSidebar');
+  if(dw)dw.innerHTML=html;
+
+  // Badge con selección activa en el botón móvil
+  const badge=document.getElementById('drawerSelCount');
+  if(badge){
+    const sel=state.producto||state.subcategoria||state.categoria;
+    if(sel){badge.style.display='inline-block';badge.textContent=sel.length>14?sel.slice(0,14)+'…':sel;}
+    else badge.style.display='none';
+  }
 }
+
+// ── DRAWER MÓVIL DE CATEGORÍAS ──
+function openCatDrawer(){
+  document.getElementById('catDrawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('active');
+  document.body.style.overflow='hidden';
+}
+function closeCatDrawer(){
+  document.getElementById('catDrawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('active');
+  document.body.style.overflow='';
+}
+
 function toggleSidebarCat(cat,e){
   e&&e.preventDefault();
   if(state.categoria===cat){state.categoria=null;state.subcategoria=null;state.producto=null;}
@@ -732,12 +803,12 @@ function toggleSidebarProd(cat,sub,prod,e){
   currentPage=1;buildSidebar();applyFilters();updateNav();
 }
 
-// ── NAV ─
+// ── NAV ──
 function navFilter(cat,e){
   e&&e.preventDefault();
   state={categoria:cat,subcategoria:null,producto:null,marca:null,color:null,talle:null,terreno:null,compatMoto:null,stockFilter:null,search:''};
   document.getElementById('searchInput').value='';
-  currentPage=1;buildSidebar();applyFilters();updateNav();
+  currentPage=1;buildSidebar();applyFilters();updateNav();closeCatDrawer();
   window.scrollTo({top:document.querySelector('.main-layout').offsetTop-20,behavior:'smooth'});
 }
 function updateNav(){
