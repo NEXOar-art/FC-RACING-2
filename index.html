@@ -35,7 +35,7 @@ img{max-width:100%}
 .logo{font-weight:950;font-style:italic;font-size:30px;letter-spacing:-2px;white-space:nowrap}
 .logo span{color:var(--red)}
 
-/* ── SEARCH ─ */
+/* ── SEARCH ── */
 .search-wrapper{flex:1;position:relative}
 .search{height:44px;display:flex;border:1px solid #bbb;border-radius:3px;overflow:hidden}
 .search input{border:0;outline:0;padding:0 16px;flex:1;font-size:14px}
@@ -395,10 +395,10 @@ footer a:hover{color:var(--red)}
 <!-- ══════ HERO CAROUSEL ══════ -->
 <section class="hero">
   <div class="carousel-track" id="carouselTrack">
-    <div class="carousel-slide"><img src="CARRUSELL FC1.jpg" alt="FC Racing 1" onerror="this.src='https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=1800&q=80'"></div>
-    <div class="carousel-slide"><img src="CARRUSELL FC2.jpg" alt="FC Racing 2" onerror="this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1800&q=80'"></div>
-    <div class="carousel-slide"><img src="CARRUSELL FC3.jpg" alt="FC Racing 3" onerror="this.src='https://images.unsplash.com/photo-1558981359-0f0460a1e3d4?auto=format&fit=crop&w=1800&q=80'"></div>
-    <div class="carousel-slide"><img src="CARRUSELL FC4.jpg" alt="FC Racing 4" onerror="this.src='https://images.unsplash.com/photo-1558980664-10ea44e37b0a?auto=format&fit=crop&w=1800&q=80'"></div>
+    <div class="carousel-slide"><img src="FOTOS3/CARRUSELL FC1.jpg" alt="FC Racing 1" onerror="this.src='https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=1800&q=80'"></div>
+    <div class="carousel-slide"><img src="FOTOS3/CARRUSELL FC2.jpg" alt="FC Racing 2" onerror="this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1800&q=80'"></div>
+    <div class="carousel-slide"><img src="FOTOS3/CARRUSELL FC3.jpg" alt="FC Racing 3" onerror="this.src='https://images.unsplash.com/photo-1558981359-0f0460a1e3d4?auto=format&fit=crop&w=1800&q=80'"></div>
+    <div class="carousel-slide"><img src="FOTOS3/CARRUSELL FC4.jpg" alt="FC Racing 4" onerror="this.src='https://images.unsplash.com/photo-1558980664-10ea44e37b0a?auto=format&fit=crop&w=1800&q=80'"></div>
   </div>
   <div class="carousel-dots" id="carouselDots">
     <i class="active" onclick="goToSlide(0)"></i>
@@ -1012,7 +1012,7 @@ let slideIdx=0;
 function goToSlide(i){slideIdx=i;document.getElementById('carouselTrack').style.transform=`translateX(-${i*25}%)`;document.querySelectorAll('.carousel-dots i').forEach((d,j)=>d.classList.toggle('active',j===i));}
 setInterval(()=>{slideIdx=(slideIdx+1)%4;goToSlide(slideIdx)},4500);
 
-// ── CART ─
+// ── CART ──
 function chgQ(id,d){const x=document.getElementById(id);x.value=Math.max(1,Math.min(parseInt(x.max)||999,Number(x.value)+d));}
 function addToCart(gi){
   const p=filtered[gi],qEl=document.getElementById(`q${gi}`),qty=parseInt(qEl?.value)||1;
@@ -1047,10 +1047,11 @@ function completePurchase(){
   document.getElementById('checkoutForm').classList.remove('active');document.getElementById('checkoutBtn').style.display='block';
 }
 
-// ── INIT ─
+// ── INIT ──
 renderCart();
 loadProducts();
 </script>
 </body>
 </html>
+
 
