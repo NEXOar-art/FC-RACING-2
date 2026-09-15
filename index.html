@@ -25,7 +25,6 @@ img{max-width:100%}
 /* ── TOPBAR ── */
 .topbar{min-height:68px;background:#050505;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:6px 20px;font-size:12px;letter-spacing:.5px}
 .topbar-left{display:flex;align-items:center;flex-shrink:0}
-/* LOGO CIRCULAR GRANDE Y NÍTIDO */
 .top-logo{
   width:56px;height:56px;object-fit:contain;display:block;
   border-radius:50%;
@@ -50,7 +49,6 @@ img{max-width:100%}
 .topbar-right{display:flex;align-items:center;gap:15px}
 .social-icon{color:#fff;font-size:18px;transition:.3s}
 .social-icon:hover{color:var(--red)}
-/* MICRO-EFECTO SUTIL ÍCONO INSTAGRAM */
 .social-icon.ig i{display:inline-block;transition:transform .3s,color .3s,text-shadow .3s;animation:igGlow 3s ease-in-out infinite}
 .social-icon.ig:hover i{transform:scale(1.25) rotate(-10deg);color:#e1306c;animation-play-state:paused;text-shadow:0 0 14px rgba(225,48,108,.9)}
 @keyframes igGlow{
@@ -439,7 +437,7 @@ footer a:hover{color:var(--red)}
 
     <div class="search-wrapper">
       <div class="search">
-        <input id="searchInput" placeholder="Buscar por producto, código, marca, categoría..." autocomplete="off">
+        <input id="searchInput" placeholder="Buscar por producto, código, marca, categoría, medida, moto..." autocomplete="off">
         <button onclick="executeSearch()"><i class="fas fa-search"></i></button>
       </div>
       <div class="search-dropdown" id="searchDropdown"></div>
@@ -453,16 +451,7 @@ footer a:hover{color:var(--red)}
   </div>
 
   <nav class="nav">
-    <div class="nav-inner" id="navMenu">
-      <a onclick="navFilter(null,event)" class="active">TODOS</a>
-      <a onclick="navFilter('ACCESORIOS MOTO',event)">ACCESORIOS MOTO</a>
-      <a onclick="navFilter('EQUIPAMIENTO RIDER',event)">EQUIPAMIENTO RIDER</a>
-      <a onclick="navFilter('CUBIERTAS & RUEDAS',event)">CUBIERTAS & RUEDAS</a>
-      <a onclick="navFilter('MANTENIMIENTO',event)">MANTENIMIENTO</a>
-      <a onclick="navFilter('PLÁSTICOS',event)">PLÁSTICOS</a>
-      <a onclick="navFilter('TALLER & TRANSPORTE',event)">TALLER & TRANSPORTE</a>
-      <a onclick="navFilter('CASUAL',event)">CASUAL</a>
-    </div>
+    <div class="nav-inner" id="navMenu"></div>
   </nav>
 </header>
 
@@ -520,7 +509,6 @@ footer a:hover{color:var(--red)}
 
   <div class="main-content">
 
-    <!-- BOTÓN CATEGORÍAS (visible solo en móvil/tablet) -->
     <button class="mobile-cats-btn" onclick="openCatDrawer()">
       <span class="left"><i class="fas fa-folder-open"></i> CATEGORÍAS Y SUBCATEGORÍAS <span class="sel-count" id="drawerSelCount" style="display:none"></span></span>
       <i class="fas fa-chevron-down right-i"></i>
@@ -680,9 +668,12 @@ footer a:hover{color:var(--red)}
 </aside>
 
 <script>
-/* ══════════════════════════════════════════
-   FC RACING — MOTOR DE BÚSQUEDA INTELIGENTE
-   ══════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════
+   FC RACING — MOTOR DE BÚSQUEDA INTELIGENTE  ·  DB V-NUEVA
+   Taxonomía y atributos 100% dinámicos desde Google Sheets
+   ══════════════════════════════════════════════════════ */
+
+const SHEET_URL='https://docs.google.com/spreadsheets/d/1YP1B2HnvjhkbBIg7bXC7uqClL054Unkh3wRcVYoHwAE/export?format=csv';
 
 let ALL = [];
 let filtered = [];
@@ -691,49 +682,57 @@ let currentPage = 1;
 const PER_PAGE = 24;
 const WHATSAPP = '3543546389';
 
+/* Taxonomía construida dinámicamente desde la DB: {categoria:{subcategoria:[productos]}} */
+let TAXONOMY = {};
+
+/* Estado de navegación/filtros */
 let state = {
-  categoria:null,subcategoria:null,producto:null,marca:null,color:null,
-  talle:null,terreno:null,compatMoto:null,stockFilter:null,search:''
+  categoria:null,
+  subcategoria:null,
+  producto:null,
+  stockFilter:null,
+  search:'',
+  attrs:{}            // filtros facetados dinámicos: {color:'NEGRO', medida:'120/80-18', ...}
 };
 
-const TAXONOMY = {
-  'ACCESORIOS MOTO': {
-    'MANUBRIOS & COMANDOS': ['Manubrios','Puños','Cubre Puños','Palancas de Freno & Embrague','Aceleradores','Contrapesos & Tapones','Botones & Comandos','Palancas de Cambio'],
-    'EQUIPAJE': ['Baúles / Bolsos Top Case','Alforjas & Baúles Laterales','Bolsos de Tanque','Mochilas & Estuches','Soportes, Racks & Porta Baúles / Alforjas','Repuestos Equipaje'],
-    'PROTECCIONES METÁLICAS': ['Cubre Carter & Chasis','Defensas / Rejillas'],
-    'ELECTRÓNICA & NAVEGACIÓN': ['Pantallas CarPlay / GPS','Porta Celular & Soportes'],
-    'ESPEJOS': [],'FUNDAS DE ASIENTO': [],'OTROS ACCESORIOS': []
-  },
-  'CUBIERTAS & RUEDAS': {
-    'CUBIERTAS POR TERRENO': ['Street & Custom','90/10 - Adventure Touring','70/30 - Adventure','60/40 - Dual Sport','50/50 - Trail / All-Terrain','30/70 & 20/80 - Enduro Trail XTreme','Motocross','Enduro','Rally'],
-    'LLANTAS': ['Aros','Rayos & Niples','Cámaras','Mousse','Reparación & Accesorios Cubiertas']
-  },
-  'EQUIPAMIENTO RIDER': {
-    'CASCOS': ['Abiertos / Urbanos','Adventure / Dual Sport','Off-Road / Motocross','Repuestos & Accesorios Cascos'],
-    'ANTIPARRAS': ['Strata','Accuri','Racecraft','Armatic','Armega','Barstow / Custom Style','Airflaps','Micas, Tear Off & Repuestos','Estuches Antiparras'],
-    'PROTECCIÓN': ['Cuellos Cervicales','Pecheras','Coderas & Muñequeras','Rodilleras'],
-    'BOTAS & CALZADO': ['Off-Road','Touring, Street & Adventure','Repuestos Botas'],
-    'GUANTES': []
-  },
-  'MANTENIMIENTO': {
-    'TRANSMISIÓN': ['Kits Transmisión','Cadenas','Coronas','Piñones','Rodillos de Cadena'],
-    'FRENOS': ['Pastillas de Freno'],
-    'FILTROS': ['Filtros de Aceite','Filtros de Aire','Cobertores de Filtro'],
-    'ACEITES & LUBRICANTES': [],
-    'SEPARADORES/DISCOS DE EMBRAGUE': []
-  },
-  'PLÁSTICOS': {
-    'KITS PLÁSTICOS': [],
-    'PIEZAS INDIVIDUALES': ['Guardabarros Delantero','Guardabarros Trasero & Colines','Porta Número & Faros','Aletas','Cachas / Paneles Laterales','Tapa Tanque'],
-    'PROTECCIONES PLÁSTICAS': ['Cubre Barrales','Cubre Carter','Cubre Cuadro','Tapas de Motor & Embrague','Cubre Disco & Piñón','Protectores de Horquilla','Cubre Radiador','Cubre Amortiguador','Otras Protecciones','Escape & Líquido de Freno'],
-    'GUÍAS & DESLIZADORES DE CADENA': ['Guías de Cadena','Deslizadores de Cadena']
-  },
-  'TALLER & TRANSPORTE': {},
-  'CASUAL': {
-    'EXHIBIDORES': [],'REMERAS': [],'PANTALONES': [],'LENTES': [],
-    'GORRAS, GORROS & ACCESORIOS': [],'MEDIAS': [],'ABRIGO': [],'IMPERMEABLES & PARAGUAS': []
-  }
-};
+/* ── DEFINICIÓN DE ATRIBUTOS FILTRABLES (mapeo columna→propiedad→etiqueta) ── */
+const ATTR_DEFS = [
+  {k:'marca',          l:'Marca'},
+  {k:'color',          l:'Color'},
+  {k:'talle',          l:'Talle'},
+  {k:'terreno',        l:'Terreno'},
+  {k:'material',       l:'Material'},
+  {k:'medida',         l:'Medida'},
+  {k:'rodado',         l:'Rodado'},
+  {k:'tipoCubierta',   l:'Tipo cubierta'},
+  {k:'construccion',   l:'Construcción'},
+  {k:'indiceCV',       l:'Índice carga/vel.'},
+  {k:'pasoCadena',     l:'Paso de cadena'},
+  {k:'dientes',        l:'Dientes / eslabones'},
+  {k:'viscosidad',     l:'Viscosidad'},
+  {k:'volumen',        l:'Volumen'},
+  {k:'capacidad',      l:'Capacidad (L)'},
+  {k:'tipoLubricante', l:'Lubricante'},
+  {k:'tipoFiltro',     l:'Tipo de filtro'},
+  {k:'tipoFreno',      l:'Tipo de freno'},
+  {k:'tipoEquipaje',   l:'Tipo de equipaje'},
+  {k:'publico',        l:'Público'},
+  {k:'tipoCasco',      l:'Tipo de casco'},
+  {k:'uso',            l:'Uso'},
+  {k:'modeloAntiparra',l:'Modelo antiparra'},
+  {k:'posicion',       l:'Posición'},
+  {k:'lado',           l:'Lado'},
+  {k:'moto',           l:'Marca de moto'},
+  {k:'modeloMoto',     l:'Modelo de moto'}
+];
+const BAD_VALUES = ['','SIN DATO','N/A','NA','-'];
+const isBad = v => !v || BAD_VALUES.includes(String(v).trim().toUpperCase());
+
+/* Orden preferido de categorías (si la DB trae otras, se agregan al final) */
+const CAT_ORDER = ['ACCESORIOS MOTO','EQUIPAMIENTO RIDER','CUBIERTAS & RUEDAS','MANTENIMIENTO','PLÁSTICOS','TALLER & TRANSPORTE','CASUAL'];
+function orderedCats(list){
+  return CAT_ORDER.filter(c=>list.includes(c)).concat(list.filter(c=>!CAT_ORDER.includes(c)).sort());
+}
 
 const money = n => n.toLocaleString("es-AR",{minimumFractionDigits:2,maximumFractionDigits:2});
 function parsePrice(s){
@@ -758,58 +757,134 @@ function parseCSV(text){
   if(row.length>1)rows.push(row);
   return rows;
 }
+const clean = v => (v||'').trim();
 
-// ── LOAD DATA ──
+// ── LOAD DATA + CONSTRUCCIÓN DE TAXONOMÍA DINÁMICA ──
 async function loadProducts(){
   try{
-    const r=await fetch('https://docs.google.com/spreadsheets/d/1at0NjomYHIAocXAw0-B3WzmnCOcbRvabPaquXGfbqsw/export?format=csv');
+    const r=await fetch(SHEET_URL);
     const csv=await r.text();
     const rows=parseCSV(csv);
     if(!rows.length)throw new Error('empty');
     const hdr=rows[0].map(h=>h.toUpperCase().trim());
-    const col=(name)=>hdr.indexOf(name);
-    const iCat=col('CATEGORIA'),iSub=col('SUBCATEGORIA'),iProd=col('PRODUCTO'),iMarca=col('MARCAS'),
-          iCod=col('CODIGO'),iDesc=col('DESCRIPCION'),iPrice=col('PRECIO'),iStock=col('STOCK'),
-          iImg=col('IMAGEN'),iFamily=col('FAMILIA_PRODUCTO'),iAppModel=col('APLICACION_MODELO'),
-          iColor=col('COLOR'),iTalle=col('TALLE'),iTerr=col('TERRENO'),iCompat=col('COMPATIBILIDAD_MOTO'),
-          iRuta=col('RUTA_CATALOGO_V6'),iMarcaMoto=col('MARCA_MOTO_APLICACION'),
-          iModeloMoto=col('MODELO_MOTO_APLICACION'),iTipoProd=col('TIPO_PRODUCTO');
+    const col=n=>hdr.indexOf(n);
+
+    const C={
+      cat:col('CATEGORIA'), sub:col('SUBCATEGORIA'), prod:col('PRODUCTO'), marca:col('MARCAS'),
+      cod:col('CODIGO'), desc:col('DESCRIPCION'), price:col('PRECIO'), stock:col('STOCK'), img:col('IMAGEN'),
+      familia:col('FAMILIA_PRODUCTO'), aplic:col('APLICACION_MODELO'), aniosAplic:col('AÑOS_APLICACION'),
+      talle:col('TALLE'), color:col('COLOR'), terreno:col('TERRENO'), posicion:col('POSICION'),
+      rodado:col('RODADO'), medida:col('MEDIDA'), tipoCubierta:col('TIPO_CUBIERTA'),
+      construccion:col('CONSTRUCCION_TUBO'), indiceCV:col('INDICE_CARGA_VELOCIDAD'),
+      pasoCadena:col('PASO_CADENA'), dientes:col('DIENTES_ESLABONES'), viscosidad:col('VISCOSIDAD'),
+      volumen:col('VOLUMEN'), ruta:col('RUTA_CATALOGO'),
+      marcaMoto:col('MARCA_MOTO_APLICACION'), modeloMotoApp:col('MODELO_MOTO_APLICACION'),
+      anioDesde:col('AÑO_DESDE'), anioHasta:col('AÑO_HASTA'), aniosDet:col('AÑOS_DETALLE'),
+      cilindrada:col('CILINDRADA_CC'), lado:col('LADO'), material:col('MATERIAL'),
+      capacidad:col('CAPACIDAD_LITROS'), tipoLubricante:col('TIPO_LUBRICANTE'), tipoFiltro:col('TIPO_FILTRO'),
+      tipoFreno:col('TIPO_FRENO'), tipoEquipaje:col('TIPO_EQUIPAJE'), publico:col('PUBLICO'),
+      tipoCasco:col('TIPO_CASCO'), uso:col('USO'), modeloAntiparra:col('MODELO_ANTIPARRA'),
+      tipoProducto:col('TIPO_PRODUCTO'), attrsRel:col('ATRIBUTOS_RELEVANTES'), valoresFiltro:col('VALORES_FILTRO'),
+      compatMarca:col('COMPAT_MARCA_MOTO'), compatModelo:col('COMPAT_MODELO_MOTO'),
+      compatDesde:col('COMPAT_AÑO_DESDE'), compatHasta:col('COMPAT_AÑO_HASTA'),
+      compat:col('COMPATIBILIDAD_MOTO'), compatClave:col('COMPAT_CLAVE_BUSQUEDA'),
+      rutaV6:col('RUTA_CATALOGO_V6')
+    };
+    const g=(v,i)=>(i>=0&&i<v.length)?clean(v[i]):'';
 
     ALL=[];
+    const taxTmp={};
     for(let i=1;i<rows.length;i++){
       const v=rows[i];
       if(!v||v.length<5)continue;
-      const g=(idx)=>idx>=0&&idx<v.length?v[idx]:'';
-      const desc=g(iDesc),codigo=g(iCod);
+      const desc=g(v,C.desc), codigo=g(v,C.cod);
       if(!desc&&!codigo)continue;
-      ALL.push({
-        id: ALL.length,
-        categoria:g(iCat),subcategoria:g(iSub),producto:g(iProd),marca:g(iMarca),
-        codigo:codigo,descripcion:desc,precio:parsePrice(g(iPrice)),
-        stock:parseInt(g(iStock))||0,imagen:g(iImg),familia:g(iFamily),
-        aplicacion:g(iAppModel),color:g(iColor),talle:g(iTalle),terreno:g(iTerr),
-        compat:g(iCompat),rutaCatalogo:g(iRuta),marcaMoto:g(iMarcaMoto),
-        modeloMoto:g(iModeloMoto),tipoProducto:g(iTipoProd),
-        _idx:[desc,codigo,g(iMarca),g(iCat),g(iSub),g(iProd),g(iFamily),g(iAppModel),g(iColor),g(iTerr),g(iCompat),g(iMarcaMoto),g(iModeloMoto),g(iTipoProd)].join(' ').toLowerCase()
-      });
+
+      const categoria=g(v,C.cat)||'SIN CATEGORÍA';
+      const subcategoria=g(v,C.sub)||g(v,C.prod)||'GENERAL';
+      const producto=g(v,C.prod)||subcategoria;
+
+      const p={
+        id:0,
+        categoria, subcategoria, producto,
+        marca:g(v,C.marca), codigo, descripcion:desc,
+        precio:parsePrice(g(v,C.price)), stock:parseInt(g(v,C.stock))||0, imagen:g(v,C.img),
+        familia:g(v,C.familia), aplicacion:g(v,C.aplic), aniosAplic:g(v,C.aniosAplic),
+        talle:g(v,C.talle), color:g(v,C.color), terreno:g(v,C.terreno), posicion:g(v,C.posicion),
+        rodado:g(v,C.rodado), medida:g(v,C.medida), tipoCubierta:g(v,C.tipoCubierta),
+        construccion:g(v,C.construccion), indiceCV:g(v,C.indiceCV), pasoCadena:g(v,C.pasoCadena),
+        dientes:g(v,C.dientes), viscosidad:g(v,C.viscosidad), volumen:g(v,C.volumen),
+        rutaCatalogo:g(v,C.ruta), rutaV6:g(v,C.rutaV6),
+        marcaMoto:g(v,C.marcaMoto), modeloMotoApp:g(v,C.modeloMotoApp),
+        anioDesde:g(v,C.anioDesde), anioHasta:g(v,C.anioHasta), aniosDet:g(v,C.aniosDet),
+        cilindrada:g(v,C.cilindrada), lado:g(v,C.lado), material:g(v,C.material),
+        capacidad:g(v,C.capacidad), tipoLubricante:g(v,C.tipoLubricante), tipoFiltro:g(v,C.tipoFiltro),
+        tipoFreno:g(v,C.tipoFreno), tipoEquipaje:g(v,C.tipoEquipaje), publico:g(v,C.publico),
+        tipoCasco:g(v,C.tipoCasco), uso:g(v,C.uso), modeloAntiparra:g(v,C.modeloAntiparra),
+        tipoProducto:g(v,C.tipoProducto), attrsRel:g(v,C.attrsRel), valoresFiltro:g(v,C.valoresFiltro),
+        compatMarca:g(v,C.compatMarca), compatModelo:g(v,C.compatModelo),
+        compatDesde:g(v,C.compatDesde), compatHasta:g(v,C.compatHasta),
+        compat:g(v,C.compat), compatClave:g(v,C.compatClave)
+      };
+      /* Campos derivados para filtros y búsqueda */
+      p.moto = p.compatMarca || p.marcaMoto;
+      p.modeloMoto = p.compatModelo || p.modeloMotoApp;
+      p.anios = (p.anioDesde||p.compatDesde) ? `${p.anioDesde||p.compatDesde}-${p.anioHasta||p.compatHasta||''}` : (p.aniosDet||'');
+
+      /* Índice de búsqueda: TODO (texto + códigos + taxonomía + atributos + compat + años) */
+      p._idx=[
+        desc,codigo,p.marca,categoria,subcategoria,producto,p.familia,p.aplicacion,
+        p.color,p.talle,p.terreno,p.medida,p.rodado,p.tipoCubierta,p.construccion,p.indiceCV,
+        p.pasoCadena,p.dientes,p.viscosidad,p.volumen,p.capacidad,p.tipoLubricante,p.tipoFiltro,
+        p.tipoFreno,p.tipoEquipaje,p.publico,p.tipoCasco,p.uso,p.modeloAntiparra,p.posicion,p.lado,
+        p.material,p.cilindrada,p.moto,p.modeloMoto,p.anios,p.aniosDet,p.compat,p.compatClave,
+        p.tipoProducto,p.attrsRel,p.valoresFiltro,p.rutaCatalogo,p.rutaV6
+      ].join(' ').toLowerCase();
+
+      p.id=ALL.length;
+      ALL.push(p);
+
+      /* Taxonomía dinámica */
+      if(!taxTmp[categoria])taxTmp[categoria]={};
+      if(!taxTmp[categoria][subcategoria])taxTmp[categoria][subcategoria]=new Set();
+      if(producto&&producto!==subcategoria)taxTmp[categoria][subcategoria].add(producto);
     }
 
+    /* Reordenar taxonomía según orden preferido y convertir Sets→arrays */
+    TAXONOMY={};
+    orderedCats(Object.keys(taxTmp)).forEach(cat=>{
+      TAXONOMY[cat]={};
+      Object.keys(taxTmp[cat]).sort().forEach(sub=>{
+        TAXONOMY[cat][sub]=[...taxTmp[cat][sub]];
+      });
+    });
+
     filtered=[...ALL];
+    buildNav();
     buildSidebar();
     buildCategoryGrid();
     applyFilters();
     renderRtech();
   }catch(e){
     console.error(e);
-    document.getElementById('products').innerHTML='<div class="no-results"><i class="fas fa-exclamation-triangle"></i>Error al cargar. Recargá la página.</div>';
+    document.getElementById('products').innerHTML='<div class="no-results"><i class="fas fa-exclamation-triangle"></i>Error al cargar la base de datos. Recargá la página.</div>';
   }
 }
 
-// ── SIDEBAR (PC + drawer móvil) ──
+/* ── NAV dinámico desde la DB ── */
+function buildNav(){
+  const cats=orderedCats(Object.keys(TAXONOMY));
+  document.getElementById('navMenu').innerHTML=
+    `<a onclick="navFilter(null,event)" class="active">TODOS</a>`+
+    cats.map(c=>`<a onclick="navFilter('${c.replace(/'/g,"\\'")}',event)">${c}</a>`).join('');
+  updateNav();
+}
+
+/* ── SIDEBAR (PC + drawer móvil) con taxonomía dinámica ── */
 function buildSidebar(){
   let html='<div class="sidebar-section"><div class="sidebar-title">Categorías</div><ul class="sidebar-cat">';
   const catCounts={};
-  ALL.forEach(p=>{if(!catCounts[p.categoria])catCounts[p.categoria]=0;catCounts[p.categoria]++;});
+  ALL.forEach(p=>{catCounts[p.categoria]=(catCounts[p.categoria]||0)+1;});
   for(const cat of Object.keys(TAXONOMY)){
     const count=catCounts[cat]||0;
     if(!count)continue;
@@ -870,7 +945,7 @@ function toggleSidebarCat(cat,e){
   e&&e.preventDefault();
   if(state.categoria===cat){state.categoria=null;state.subcategoria=null;state.producto=null;}
   else{state.categoria=cat;state.subcategoria=null;state.producto=null;}
-  state.marca=null;state.color=null;state.talle=null;state.terreno=null;state.compatMoto=null;
+  state.attrs={};
   currentPage=1;buildSidebar();applyFilters();updateNav();
 }
 function toggleSidebarSub(cat,sub,e){
@@ -878,21 +953,21 @@ function toggleSidebarSub(cat,sub,e){
   state.categoria=cat;
   if(state.subcategoria===sub){state.subcategoria=null;state.producto=null;}
   else{state.subcategoria=sub;state.producto=null;}
-  state.marca=null;state.color=null;state.talle=null;state.terreno=null;state.compatMoto=null;
+  state.attrs={};
   currentPage=1;buildSidebar();applyFilters();updateNav();
 }
 function toggleSidebarProd(cat,sub,prod,e){
   e&&e.preventDefault();
   state.categoria=cat;state.subcategoria=sub;
   if(state.producto===prod)state.producto=null;else state.producto=prod;
-  state.marca=null;state.color=null;state.talle=null;state.terreno=null;state.compatMoto=null;
+  state.attrs={};
   currentPage=1;buildSidebar();applyFilters();updateNav();
 }
 
 // ── NAV ─
 function navFilter(cat,e){
   e&&e.preventDefault();
-  state={categoria:cat,subcategoria:null,producto:null,marca:null,color:null,talle:null,terreno:null,compatMoto:null,stockFilter:null,search:''};
+  state={categoria:cat,subcategoria:null,producto:null,stockFilter:null,search:'',attrs:{}};
   document.getElementById('searchInput').value='';
   currentPage=1;buildSidebar();applyFilters();updateNav();closeCatDrawer();
   window.scrollTo({top:document.querySelector('.main-layout').offsetTop-20,behavior:'smooth'});
@@ -905,7 +980,18 @@ function updateNav(){
   });
 }
 
-// ── APPLY FILTERS ──
+/* ── MATCH DE ATRIBUTOS (soporta multi-valor "AZUL, GRIS") ── */
+function matchAttr(p,key,val){
+  const raw=String(p[key]||'').toUpperCase().trim();
+  const v=String(val).toUpperCase().trim();
+  if(!raw||isBad(raw))return false;
+  if(raw.includes(',')){
+    return raw.split(',').map(s=>s.trim()).some(part=>part===v||part.includes(v));
+  }
+  return raw===v||raw.includes(v);
+}
+
+// ── APPLY FILTERS (taxonomía + búsqueda + atributos facetados + stock) ──
 function applyFilters(){
   filtered=ALL.filter(p=>{
     if(state.search){
@@ -915,13 +1001,8 @@ function applyFilters(){
     if(state.categoria&&p.categoria!==state.categoria)return false;
     if(state.subcategoria&&p.subcategoria!==state.subcategoria)return false;
     if(state.producto&&p.producto!==state.producto)return false;
-    if(state.marca&&p.marca!==state.marca)return false;
-    if(state.color&&!p.color.toUpperCase().includes(state.color.toUpperCase()))return false;
-    if(state.talle&&p.talle!==state.talle)return false;
-    if(state.terreno&&p.terreno!==state.terreno)return false;
-    if(state.compatMoto){
-      const cm=(p.compat+' '+p.marcaMoto+' '+p.modeloMoto+' '+p.aplicacion).toLowerCase();
-      if(!cm.includes(state.compatMoto.toLowerCase()))return false;
+    for(const [k,v] of Object.entries(state.attrs)){
+      if(!matchAttr(p,k,v))return false;
     }
     if(state.stockFilter==='in'&&p.stock<=0)return false;
     if(state.stockFilter==='low'&&(p.stock<=0||p.stock>5))return false;
@@ -931,40 +1012,54 @@ function applyFilters(){
   buildSmartFilters();renderBreadcrumb();renderTitle();renderProducts();renderPagination();
 }
 
-// ── SMART FILTERS ──
+/* ── FILTROS FACETADOS CONTEXTUALES: solo atributos con valores útiles en el resultado actual ── */
 function buildSmartFilters(){
   const container=document.getElementById('smartFilters');
   const tagsContainer=document.getElementById('activeTags');
   let fHTML='',tHTML='';
-  const hasAny=state.marca||state.color||state.talle||state.terreno||state.compatMoto||state.stockFilter;
-  const brands={},colors={},talles={},terrenos={},compats={};
-  filtered.forEach(p=>{
-    if(p.marca)brands[p.marca]=(brands[p.marca]||0)+1;
-    if(p.color){p.color.split(',').forEach(c=>{c=c.trim();if(c&&c!=='SIN DATO')colors[c]=(colors[c]||0)+1;});}
-    if(p.talle&&p.talle!=='SIN DATO')talles[p.talle]=(talles[p.talle]||0)+1;
-    if(p.terreno&&p.terreno!=='SIN DATO')terrenos[p.terreno]=(terrenos[p.terreno]||0)+1;
-    const cm=p.marcaMoto;
-    if(cm&&cm!=='SIN DATO')compats[cm]=(compats[cm]||0)+1;
+
+  const facets=[];
+  for(const def of ATTR_DEFS){
+    const counts={};
+    filtered.forEach(p=>{
+      const raw=clean(p[def.k]);
+      if(isBad(raw))return;
+      raw.split(',').forEach(part=>{
+        part=part.trim();
+        if(!isBad(part))counts[part]=(counts[part]||0)+1;
+      });
+    });
+    const distinct=Object.keys(counts).length;
+    /* Solo se muestra si aporta valor: más de 1 opción y no tantas que mareen */
+    if(distinct>=2&&distinct<=60)facets.push({def,counts,distinct});
+    if(facets.length>=8)break;   /* máx 8 filtros visibles: fluidez sin saturación */
+  }
+
+  facets.forEach(f=>{
+    const active=state.attrs[f.def.k]||null;
+    fHTML+=buildFG(f.def.l,f.def.k,f.counts,active);
   });
-  if(Object.keys(brands).length>1||state.marca)fHTML+=buildFG('Marca','marca',brands,state.marca);
-  if(Object.keys(colors).length>1||state.color)fHTML+=buildFG('Color','color',colors,state.color);
-  if(Object.keys(talles).length>1||state.talle)fHTML+=buildFG('Talle','talle',talles,state.talle);
-  if(Object.keys(terrenos).length>1||state.terreno)fHTML+=buildFG('Terreno','terreno',terrenos,state.terreno);
-  if(Object.keys(compats).length>1||state.compatMoto)fHTML+=buildFG('Moto','compatMoto',compats,state.compatMoto);
+
+  /* Disponibilidad siempre visible */
   fHTML+=`<div class="sf-group"><button class="sf-btn ${state.stockFilter?'active':''}" onclick="togglePanel(this)">Disponibilidad <i class="fas fa-chevron-down"></i></button><div class="sf-panel">
     <div class="sf-option ${!state.stockFilter?'selected':''}" onclick="setFilter('stockFilter',null)">Todos</div>
     <div class="sf-option ${state.stockFilter==='in'?'selected':''}" onclick="setFilter('stockFilter','in')">En stock</div>
     <div class="sf-option ${state.stockFilter==='low'?'selected':''}" onclick="setFilter('stockFilter','low')">Stock bajo (≤5)</div>
     <div class="sf-option ${state.stockFilter==='out'?'selected':''}" onclick="setFilter('stockFilter','out')">Sin stock</div>
   </div></div>`;
-  if(hasAny)fHTML+=`<button class="sf-clear" onclick="clearAllFilters()"><i class="fas fa-times"></i> Limpiar filtros</button>`;
-  if(state.marca)tHTML+=mkTag('Marca',state.marca,'marca');
-  if(state.color)tHTML+=mkTag('Color',state.color,'color');
-  if(state.talle)tHTML+=mkTag('Talle',state.talle,'talle');
-  if(state.terreno)tHTML+=mkTag('Terreno',state.terreno,'terreno');
-  if(state.compatMoto)tHTML+=mkTag('Moto',state.compatMoto,'compatMoto');
+
+  const hasAttrs=Object.keys(state.attrs).length>0;
+  if(hasAttrs||state.stockFilter)fHTML+=`<button class="sf-clear" onclick="clearAllFilters()"><i class="fas fa-times"></i> Limpiar filtros</button>`;
+
+  /* Tags activos */
+  Object.entries(state.attrs).forEach(([k,v])=>{
+    const def=ATTR_DEFS.find(d=>d.k===k);
+    tHTML+=mkTag(def?def.l:k,v,k);
+  });
   if(state.stockFilter)tHTML+=mkTag('Stock',state.stockFilter==='in'?'En stock':state.stockFilter==='low'?'Bajo':'Sin stock','stockFilter');
-  container.innerHTML=fHTML;tagsContainer.innerHTML=tHTML;
+
+  container.innerHTML=fHTML;
+  tagsContainer.innerHTML=tHTML;
 }
 function mkTag(l,v,k){return `<span class="tag">${l}: ${v} <button onclick="setFilter('${k}',null)">×</button></span>`;}
 function buildFG(label,key,opts,active){
@@ -972,7 +1067,7 @@ function buildFG(label,key,opts,active){
   if(!sorted.length&&!active)return '';
   let h=`<div class="sf-group"><button class="sf-btn ${active?'active':''}" onclick="togglePanel(this)">${active?label+': '+active:label} <i class="fas fa-chevron-down"></i></button><div class="sf-panel"><div class="sf-option ${!active?'selected':''}" onclick="setFilter('${key}',null)">Todos</div>`;
   sorted.slice(0,30).forEach(([val,cnt])=>{
-    const escaped=val.replace(/'/g,"\\'").replace(/`/g,'');
+    const escaped=val.replace(/'/g,"\\'").replace(/`/g,'').replace(/\\/g,'');
     h+=`<div class="sf-option ${active===val?'selected':''}" onclick="setFilter('${key}','${escaped}')">${val} <span class="cnt">${cnt}</span></div>`;
   });
   return h+'</div></div>';
@@ -982,8 +1077,17 @@ function togglePanel(btn){
   document.querySelectorAll('.sf-panel').forEach(x=>x.classList.remove('open'));
   if(!was)p.classList.add('open');
 }
-function setFilter(key,val){state[key]=val;currentPage=1;document.querySelectorAll('.sf-panel').forEach(p=>p.classList.remove('open'));applyFilters();}
-function clearAllFilters(){state.marca=null;state.color=null;state.talle=null;state.terreno=null;state.compatMoto=null;state.stockFilter=null;currentPage=1;applyFilters();}
+function setFilter(key,val){
+  if(key==='stockFilter'){state.stockFilter=val;}
+  else{
+    if(val===null||val===undefined)delete state.attrs[key];
+    else state.attrs[key]=val;
+  }
+  currentPage=1;
+  document.querySelectorAll('.sf-panel').forEach(p=>p.classList.remove('open'));
+  applyFilters();
+}
+function clearAllFilters(){state.attrs={};state.stockFilter=null;currentPage=1;applyFilters();}
 document.addEventListener('click',e=>{
   if(!e.target.closest('.sf-group'))document.querySelectorAll('.sf-panel').forEach(p=>p.classList.remove('open'));
   if(!e.target.closest('.search-wrapper'))document.getElementById('searchDropdown').classList.remove('active');
@@ -1077,30 +1181,29 @@ function addToCartById(id,qid){
   document.getElementById('overlay').classList.add('active');
 }
 
-// ══════ QUICK VIEW ══════
+// ══════ QUICK VIEW con atributos completos de la DB ══════
 function openQuickView(id){
   const p=ALL.find(x=>x.id===id);
   if(!p)return;
   const fb='https://via.placeholder.com/400x300/f9f9f9/ccc?text=Sin+Imagen';
   const low=p.stock>0&&p.stock<=5;
-  const attrs=[
-    p.color&&p.color!=='SIN DATO'?`Color: ${p.color}`:null,
-    p.talle&&p.talle!=='SIN DATO'?`Talle: ${p.talle}`:null,
-    p.terreno&&p.terreno!=='SIN DATO'?`Terreno: ${p.terreno}`:null,
-    p.aplicacion?`Aplicación: ${p.aplicacion}`:null,
-    p.marcaMoto&&p.marcaMoto!=='SIN DATO'?`Moto: ${p.marcaMoto}`:null
-  ].filter(Boolean);
+  const attrChips=ATTR_DEFS
+    .filter(d=>d.k!=='marca'&&!isBad(p[d.k]))
+    .slice(0,10)
+    .map(d=>`<span class="qv-attr">${d.l}: ${p[d.k]}</span>`);
+  if(p.anios)attrChips.push(`<span class="qv-attr">Años: ${p.anios}</span>`);
+  if(p.cilindrada)attrChips.push(`<span class="qv-attr">Cilindrada: ${p.cilindrada} cc</span>`);
   document.getElementById('qvBody').innerHTML=`
     <div class="qv-grid">
       <div class="qv-img"><img src="${p.imagen||fb}" alt="${p.descripcion}" onerror="this.onerror=null;this.src='${fb}'"></div>
       <div class="qv-info">
-        <div class="qv-cat">${p.categoria} › ${p.subcategoria} › ${p.producto}</div>
+        <div class="qv-cat">${p.categoria} › ${p.subcategoria}${p.producto&&p.producto!==p.subcategoria?' › '+p.producto:''}</div>
         <h3>${p.descripcion}</h3>
         <div class="qv-brand">${p.marca}</div>
         <div class="qv-code">Código: ${p.codigo}</div>
         <div class="qv-stock ${p.stock===0||low?'low':''}">${p.stock===0?'SIN STOCK':low?`¡Solo ${p.stock} disponibles!`:`Stock disponible: ${p.stock} unidades`}</div>
         <div class="qv-price">$ ${money(p.precio)}</div>
-        ${attrs.length?`<div class="qv-attrs">${attrs.map(a=>`<span class="qv-attr">${a}</span>`).join('')}</div>`:''}
+        ${attrChips.length?`<div class="qv-attrs">${attrChips.join('')}</div>`:''}
         ${p.stock>0?`
           <div class="qty"><input id="qvQty" value="1" type="number" min="1" max="${p.stock}"><button onclick="chgQ('qvQty',1)">▲</button><button onclick="chgQ('qvQty',-1)">▼</button></div>
           <button class="buy" onclick="addFromModal(${p.id})"><i class="fas fa-shopping-cart"></i> AGREGAR AL CARRITO</button>
@@ -1147,7 +1250,7 @@ function renderPagination(){
 }
 function goPage(p){currentPage=p;renderProducts();renderPagination();window.scrollTo({top:document.querySelector('.main-layout').offsetTop-20,behavior:'smooth'});}
 
-// ── SMART SEARCH ──
+// ── SMART SEARCH (sugerencias en vivo) ──
 const searchInput=document.getElementById('searchInput');
 const searchDrop=document.getElementById('searchDropdown');
 let searchTimer=null;
@@ -1165,17 +1268,17 @@ function showSuggestions(q){
   const terms=q.toLowerCase().split(/\s+/);
   const matches=ALL.filter(p=>terms.every(t=>p._idx.includes(t))).slice(0,8);
   const catSet=new Set();
-  ALL.forEach(p=>{if(terms.every(t=>p._idx.includes(t))){catSet.add(p.categoria);if(p.subcategoria)catSet.add(p.categoria+' › '+p.subcategoria);}});
+  ALL.forEach(p=>{if(terms.every(t=>p._idx.includes(t))){catSet.add(p.categoria);catSet.add(p.categoria+' › '+p.subcategoria);}});
   if(!matches.length&&!catSet.size){searchDrop.classList.remove('active');return;}
   const fb='https://via.placeholder.com/44x44/f9f9f9/ccc?text=IMG';
   let h='';
   if(catSet.size){
-    h+=`<div class="sd-group-title"><i class="fas fa-folder"></i> Categorías</div>`;
+    h+=`<div class="sd-group-title"><i class="fas fa-folder"></i> Categorías / subcategorías</div>`;
     let i=0;for(const c of catSet){if(i++>=5)break;const parts=c.split(' › ');h+=`<div class="sd-cat-item" onclick="searchCategory('${parts[0].replace(/'/g,"\\'")}','${(parts[1]||'').replace(/'/g,"\\'")}')"><i class="fas fa-chevron-right"></i>${c}</div>`;}
   }
   if(matches.length){
     h+=`<div class="sd-group-title"><i class="fas fa-box"></i> Productos</div>`;
-    matches.forEach(p=>{h+=`<div class="sd-item" onclick="quickGo('${p.codigo.replace(/'/g,"\\'")}')"><img src="${p.imagen||fb}" onerror="this.src='${fb}'"><div class="sd-item-info"><b>${hlText(p.descripcion,q)}</b><small>${p.marca} · ${p.codigo}</small></div><div class="sd-item-price">$ ${money(p.precio)}</div></div>`;});
+    matches.forEach(p=>{h+=`<div class="sd-item" onclick="quickGo('${p.codigo.replace(/'/g,"\\'")}')"><img src="${p.imagen||fb}" onerror="this.src='${fb}'"><div class="sd-item-info"><b>${hlText(p.descripcion,q)}</b><small>${p.marca} · ${p.codigo}${p.medida?' · '+p.medida:''}</small></div><div class="sd-item-price">$ ${money(p.precio)}</div></div>`;});
   }
   const total=ALL.filter(p=>terms.every(t=>p._idx.includes(t))).length;
   h+=`<div class="sd-footer" onclick="executeSearch()">Ver los ${total} resultados →</div>`;
@@ -1188,23 +1291,23 @@ function hlText(text,q){
 }
 function executeSearch(){
   const q=searchInput.value.trim();searchDrop.classList.remove('active');
-  state={categoria:null,subcategoria:null,producto:null,marca:null,color:null,talle:null,terreno:null,compatMoto:null,stockFilter:null,search:q};
+  state={categoria:null,subcategoria:null,producto:null,stockFilter:null,search:q,attrs:{}};
   currentPage=1;buildSidebar();applyFilters();updateNav();
   window.scrollTo({top:document.querySelector('.main-layout').offsetTop-20,behavior:'smooth'});
 }
 function searchCategory(cat,sub){
   searchDrop.classList.remove('active');searchInput.value='';
-  state={categoria:cat||null,subcategoria:sub||null,producto:null,marca:null,color:null,talle:null,terreno:null,compatMoto:null,stockFilter:null,search:''};
+  state={categoria:cat||null,subcategoria:sub||null,producto:null,stockFilter:null,search:'',attrs:{}};
   currentPage=1;buildSidebar();applyFilters();updateNav();
   window.scrollTo({top:document.querySelector('.main-layout').offsetTop-20,behavior:'smooth'});
 }
 function quickGo(codigo){
   searchDrop.classList.remove('active');searchInput.value=codigo;
-  state={categoria:null,subcategoria:null,producto:null,marca:null,color:null,talle:null,terreno:null,compatMoto:null,stockFilter:null,search:codigo};
+  state={categoria:null,subcategoria:null,producto:null,stockFilter:null,search:codigo,attrs:{}};
   currentPage=1;buildSidebar();applyFilters();updateNav();
 }
 
-// ── CATEGORY GRID ──
+// ── CATEGORY GRID dinámico ──
 function buildCategoryGrid(){
   const g=document.getElementById('categoryGrid');
   g.innerHTML=Object.keys(TAXONOMY).map(c=>{
@@ -1231,11 +1334,8 @@ function buildCategoryGrid(){
   if('IntersectionObserver' in window){
     const io=new IntersectionObserver(entries=>{
       entries.forEach(en=>{
-        if(en.isIntersecting&&en.intersectionRatio>=0.35){
-          video.play().catch(()=>{});
-        }else{
-          video.pause();
-        }
+        if(en.isIntersecting&&en.intersectionRatio>=0.35){video.play().catch(()=>{});}
+        else{video.pause();}
       });
     },{threshold:[0,0.35,0.7,1]});
     io.observe(video);
@@ -1282,12 +1382,14 @@ function completePurchase(){
   document.getElementById('checkoutForm').classList.remove('active');document.getElementById('checkoutBtn').style.display='block';
 }
 
-// ── INIT ──
+// ── INIT ─
 renderCart();
 loadProducts();
 </script>
 </body>
 </html>
+
+
 
 
 
