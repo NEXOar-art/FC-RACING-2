@@ -211,7 +211,7 @@ img{max-width:100%}
 .sidebar-sub li>a.active{color:var(--red);font-weight:700}
 .main-content{flex:1;min-width:0}
 
-/* ── PRODUCTS ─ */
+/* ── PRODUCTS ── */
 .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:18px}
 .product{border:1px solid #e0e0e0;background:#fff;position:relative;padding:9px 12px 13px;display:flex;flex-direction:column;min-height:370px;transition:.2s;border-radius:4px}
 .product:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);border-color:#ccc}
@@ -670,11 +670,15 @@ footer a:hover{color:var(--red)}
 
 <script>
 /* ══════════════════════════════════════════════════════
-   FC RACING — MOTOR DE BÚSQUEDA INTELIGENTE  ·  DB V-NUEVA
-   Taxonomía y atributos 100% dinámicos desde Google Sheets
+   FC RACING — MOTOR DE BÚSQUEDA INTELIGENTE
+   DB actualizada + regla de stock: STOCK < 2 = SIN STOCK
    ══════════════════════════════════════════════════════ */
 
-const SHEET_URL='https://docs.google.com/spreadsheets/d/1YP1B2HnvjhkbBIg7bXC7uqClL054Unkh3wRcVYoHwAE/export?format=csv';
+const SHEET_URL='https://docs.google.com/spreadsheets/d/1rwkyjRBflkvi66Pt9UbhTzAXa6qovjkocokC5rovPbA/export?format=csv';
+
+/* Regla de negocio: stock mínimo vendible = 2 unidades.
+   Si STOCK < 2 → el producto se trata y se muestra como SIN STOCK. */
+const MIN_STOCK_VENDIBLE = 2;
 
 let ALL = [];
 let filtered = [];
@@ -696,7 +700,7 @@ let state = {
   attrs:{}            // filtros facetados dinámicos: {color:'NEGRO', medida:'120/80-18', ...}
 };
 
-/* ── DEFINICIÓN DE ATRIBUTOS FILTRABLES (mapeo columna→propiedad→etiqueta) ── */
+/* ── DEFINICIÓN DE ATRIBUTOS FILTRABLES ── */
 const ATTR_DEFS = [
   {k:'marca',          l:'Marca'},
   {k:'color',          l:'Color'},
@@ -760,6 +764,12 @@ function parseCSV(text){
 }
 const clean = v => (v||'').trim();
 
+/* Normaliza stock según regla de negocio: < 2 unidades → 0 (SIN STOCK) */
+function normalizeStock(raw){
+  const n = parseInt(raw)||0;
+  return n < MIN_STOCK_VENDIBLE ? 0 : n;
+}
+
 // ── LOAD DATA + CONSTRUCCIÓN DE TAXONOMÍA DINÁMICA ──
 async function loadProducts(){
   try{
@@ -809,7 +819,9 @@ async function loadProducts(){
         id:0,
         categoria, subcategoria, producto,
         marca:g(v,C.marca), codigo, descripcion:desc,
-        precio:parsePrice(g(v,C.price)), stock:parseInt(g(v,C.stock))||0, imagen:g(v,C.img),
+        precio:parsePrice(g(v,C.price)),
+        stock:normalizeStock(g(v,C.stock)),   /* ← regla: STOCK < 2 = SIN STOCK */
+        imagen:g(v,C.img),
         familia:g(v,C.familia), aplicacion:g(v,C.aplic), aniosAplic:g(v,C.aniosAplic),
         talle:g(v,C.talle), color:g(v,C.color), terreno:g(v,C.terreno), posicion:g(v,C.posicion),
         rodado:g(v,C.rodado), medida:g(v,C.medida), tipoCubierta:g(v,C.tipoCubierta),
@@ -965,7 +977,7 @@ function toggleSidebarProd(cat,sub,prod,e){
   currentPage=1;buildSidebar();applyFilters();updateNav();
 }
 
-// ── NAV 
+// ── NAV ─
 function navFilter(cat,e){
   e&&e.preventDefault();
   state={categoria:cat,subcategoria:null,producto:null,stockFilter:null,search:'',attrs:{}};
@@ -1013,7 +1025,7 @@ function applyFilters(){
   buildSmartFilters();renderBreadcrumb();renderTitle();renderProducts();renderPagination();
 }
 
-/* ── FILTROS FACETADOS CONTEXTUALES: solo atributos con valores útiles en el resultado actual ── */
+/* ── FILTROS FACETADOS CONTEXTUALES ── */
 function buildSmartFilters(){
   const container=document.getElementById('smartFilters');
   const tagsContainer=document.getElementById('activeTags');
@@ -1031,9 +1043,8 @@ function buildSmartFilters(){
       });
     });
     const distinct=Object.keys(counts).length;
-    /* Solo se muestra si aporta valor: más de 1 opción y no tantas que mareen */
     if(distinct>=2&&distinct<=60)facets.push({def,counts,distinct});
-    if(facets.length>=8)break;   /* máx 8 filtros visibles: fluidez sin saturación */
+    if(facets.length>=8)break;
   }
 
   facets.forEach(f=>{
@@ -1383,18 +1394,10 @@ function completePurchase(){
   document.getElementById('checkoutForm').classList.remove('active');document.getElementById('checkoutBtn').style.display='block';
 }
 
-// ── INIT ──
+// ── INIT ─
 renderCart();
 loadProducts();
 </script>
 </body>
 </html>
-<meta name="google-site-verification" content="6mIhBBtzvDt-qs0NoBVwcRg939KLQWJLbmYEM06Ic3g" />
-
-
-
-
-
-
-
 
