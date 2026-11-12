@@ -671,14 +671,16 @@ footer a:hover{color:var(--red)}
 <script>
 /* ══════════════════════════════════════════════════════
    FC RACING — MOTOR DE BÚSQUEDA INTELIGENTE
-   DB actualizada + regla de stock: STOCK < 2 = SIN STOCK
+   DB 11112026 (4040 filas) · Taxonomía y atributos dinámicos
    ══════════════════════════════════════════════════════ */
 
-const SHEET_URL='https://docs.google.com/spreadsheets/d/1rwkyjRBflkvi66Pt9UbhTzAXa6qovjkocokC5rovPbA/export?format=csv';
+/* ── NUEVA BASE DE DATOS ACTUALIZADA 11112026 ── */
+const SHEET_URL='https://docs.google.com/spreadsheets/d/1ZdDpS40MahlGbieZq9T9ZttnW_D1oumAcxW9_FQTNBw/export?format=csv';
 
-/* Regla de negocio: stock mínimo vendible = 2 unidades.
-   Si STOCK < 2 → el producto se trata y se muestra como SIN STOCK. */
-const MIN_STOCK_VENDIBLE = 2;
+/* ── REGLA DE STOCK: con menos de MIN_STOCK unidades → "SIN STOCK" ── */
+const MIN_STOCK = 2;
+const isOut = p => p.stock < MIN_STOCK;          // 0 o 1 → SIN STOCK
+const isLow = p => !isOut(p) && p.stock <= 5;    // 2 a 5 → stock bajo
 
 let ALL = [];
 let filtered = [];
@@ -764,12 +766,6 @@ function parseCSV(text){
 }
 const clean = v => (v||'').trim();
 
-/* Normaliza stock según regla de negocio: < 2 unidades → 0 (SIN STOCK) */
-function normalizeStock(raw){
-  const n = parseInt(raw)||0;
-  return n < MIN_STOCK_VENDIBLE ? 0 : n;
-}
-
 // ── LOAD DATA + CONSTRUCCIÓN DE TAXONOMÍA DINÁMICA ──
 async function loadProducts(){
   try{
@@ -819,9 +815,7 @@ async function loadProducts(){
         id:0,
         categoria, subcategoria, producto,
         marca:g(v,C.marca), codigo, descripcion:desc,
-        precio:parsePrice(g(v,C.price)),
-        stock:normalizeStock(g(v,C.stock)),   /* ← regla: STOCK < 2 = SIN STOCK */
-        imagen:g(v,C.img),
+        precio:parsePrice(g(v,C.price)), stock:parseInt(g(v,C.stock))||0, imagen:g(v,C.img),
         familia:g(v,C.familia), aplicacion:g(v,C.aplic), aniosAplic:g(v,C.aniosAplic),
         talle:g(v,C.talle), color:g(v,C.color), terreno:g(v,C.terreno), posicion:g(v,C.posicion),
         rodado:g(v,C.rodado), medida:g(v,C.medida), tipoCubierta:g(v,C.tipoCubierta),
@@ -1004,7 +998,7 @@ function matchAttr(p,key,val){
   return raw===v||raw.includes(v);
 }
 
-// ── APPLY FILTERS (taxonomía + búsqueda + atributos facetados + stock) ──
+// ── APPLY FILTERS (taxonomía + búsqueda + atributos facetados + stock con regla MIN_STOCK) ──
 function applyFilters(){
   filtered=ALL.filter(p=>{
     if(state.search){
@@ -1017,9 +1011,10 @@ function applyFilters(){
     for(const [k,v] of Object.entries(state.attrs)){
       if(!matchAttr(p,k,v))return false;
     }
-    if(state.stockFilter==='in'&&p.stock<=0)return false;
-    if(state.stockFilter==='low'&&(p.stock<=0||p.stock>5))return false;
-    if(state.stockFilter==='out'&&p.stock>0)return false;
+    if(state.stockFilter==='in'&&!isOut(p)===false)return false;   // "En stock" = stock >= 2
+    if(state.stockFilter==='in'&&isOut(p))return false;
+    if(state.stockFilter==='low'&&!isLow(p))return false;          // "Stock bajo" = 2 a 5
+    if(state.stockFilter==='out'&&!isOut(p))return false;          // "Sin stock" = stock < 2
     return true;
   });
   buildSmartFilters();renderBreadcrumb();renderTitle();renderProducts();renderPagination();
@@ -1052,23 +1047,22 @@ function buildSmartFilters(){
     fHTML+=buildFG(f.def.l,f.def.k,f.counts,active);
   });
 
-  /* Disponibilidad siempre visible */
+  /* Disponibilidad siempre visible (coherente con regla MIN_STOCK) */
   fHTML+=`<div class="sf-group"><button class="sf-btn ${state.stockFilter?'active':''}" onclick="togglePanel(this)">Disponibilidad <i class="fas fa-chevron-down"></i></button><div class="sf-panel">
     <div class="sf-option ${!state.stockFilter?'selected':''}" onclick="setFilter('stockFilter',null)">Todos</div>
-    <div class="sf-option ${state.stockFilter==='in'?'selected':''}" onclick="setFilter('stockFilter','in')">En stock</div>
-    <div class="sf-option ${state.stockFilter==='low'?'selected':''}" onclick="setFilter('stockFilter','low')">Stock bajo (≤5)</div>
-    <div class="sf-option ${state.stockFilter==='out'?'selected':''}" onclick="setFilter('stockFilter','out')">Sin stock</div>
+    <div class="sf-option ${state.stockFilter==='in'?'selected':''}" onclick="setFilter('stockFilter','in')">En stock (≥${MIN_STOCK})</div>
+    <div class="sf-option ${state.stockFilter==='low'?'selected':''}" onclick="setFilter('stockFilter','low')">Stock bajo (${MIN_STOCK}-5)</div>
+    <div class="sf-option ${state.stockFilter==='out'?'selected':''}" onclick="setFilter('stockFilter','out')">Sin stock (&lt;${MIN_STOCK})</div>
   </div></div>`;
 
   const hasAttrs=Object.keys(state.attrs).length>0;
   if(hasAttrs||state.stockFilter)fHTML+=`<button class="sf-clear" onclick="clearAllFilters()"><i class="fas fa-times"></i> Limpiar filtros</button>`;
 
-  /* Tags activos */
   Object.entries(state.attrs).forEach(([k,v])=>{
     const def=ATTR_DEFS.find(d=>d.k===k);
     tHTML+=mkTag(def?def.l:k,v,k);
   });
-  if(state.stockFilter)tHTML+=mkTag('Stock',state.stockFilter==='in'?'En stock':state.stockFilter==='low'?'Bajo':'Sin stock','stockFilter');
+  if(state.stockFilter)tHTML+=mkTag('Stock',state.stockFilter==='in'?`En stock (≥${MIN_STOCK})`:state.stockFilter==='low'?`Bajo (${MIN_STOCK}-5)`:`Sin stock (<${MIN_STOCK})`,'stockFilter');
 
   container.innerHTML=fHTML;
   tagsContainer.innerHTML=tHTML;
@@ -1126,17 +1120,17 @@ function renderTitle(){
   cnt.textContent=`${filtered.length} producto${filtered.length!==1?'s':''}`;
 }
 
-// ── RENDER PRODUCTS ──
+// ── RENDER PRODUCTS (regla SIN STOCK: stock < 2) ──
 function renderProducts(){
   const c=document.getElementById('products');
   if(!filtered.length){c.innerHTML=`<div class="no-results"><i class="fas fa-search"></i><p>No se encontraron productos.</p><p style="font-size:14px">Probá con otros términos o quitá filtros.</p></div>`;return;}
   const start=(currentPage-1)*PER_PAGE,page=filtered.slice(start,start+PER_PAGE);
   const fb='https://via.placeholder.com/200x150/f9f9f9/ccc?text=Sin+Imagen';
   c.innerHTML=page.map((p,idx)=>{
-    const gi=start+idx,low=p.stock>0&&p.stock<=5;
-    const stxt=p.stock===0?'SIN STOCK':low?`¡Solo ${p.stock}!`:`Stock: ${p.stock}`;
+    const gi=start+idx, out=isOut(p), low=isLow(p);
+    const stxt=out?'SIN STOCK':low?`¡Solo ${p.stock}!`:`Stock: ${p.stock}`;
     return `<article class="product">
-      ${p.stock===0?'<span class="out-badge">SIN STOCK</span>':''}
+      ${out?'<span class="out-badge">SIN STOCK</span>':''}
       <div class="product-image" onclick="openQuickView(${p.id})" title="Ver más grande">
         <img src="${p.imagen||fb}" alt="${p.descripcion}" onerror="this.onerror=null;this.src='${fb}'">
       </div>
@@ -1144,15 +1138,15 @@ function renderProducts(){
       <h3>${p.descripcion}</h3>
       <div class="brand-tag">${p.marca}</div>
       <div class="code">Cód: ${p.codigo}</div>
-      <div class="stock-info ${p.stock===0||low?'low':''}">${stxt}</div>
+      <div class="stock-info ${out||low?'low':''}">${stxt}</div>
       <div class="price">$ ${money(p.precio)}</div>
-      ${p.stock>0?`<div class="qty"><input id="q${gi}" value="1" type="number" min="1" max="${p.stock}"><button onclick="chgQ('q${gi}',1)">▲</button><button onclick="chgQ('q${gi}',-1)">▼</button></div><button class="buy" onclick="addToCart(${gi})"><i class="fas fa-shopping-cart"></i> COMPRAR</button>`:`<button class="buy out" disabled>SIN STOCK</button>`}
+      ${!out?`<div class="qty"><input id="q${gi}" value="1" type="number" min="1" max="${p.stock}"><button onclick="chgQ('q${gi}',1)">▲</button><button onclick="chgQ('q${gi}',-1)">▼</button></div><button class="buy" onclick="addToCart(${gi})"><i class="fas fa-shopping-cart"></i> COMPRAR</button>`:`<button class="buy out" disabled>SIN STOCK</button>`}
       <div class="tax">c/iva</div>
     </article>`;
   }).join('');
 }
 
-// ── DESTACADOS RTECH ──
+// ── DESTACADOS RTECH (misma regla de stock) ──
 function renderRtech(){
   const grid=document.getElementById('rtechGrid');
   const cnt=document.getElementById('rtechCount');
@@ -1164,10 +1158,10 @@ function renderRtech(){
   }
   const fb='https://via.placeholder.com/200x150/f9f9f9/ccc?text=RTECH';
   grid.innerHTML=list.map(p=>{
-    const low=p.stock>0&&p.stock<=5;
+    const out=isOut(p), low=isLow(p);
     return `<article class="product">
       <span class="feat-badge">RTECH DESTACADO</span>
-      ${p.stock===0?'<span class="out-badge">SIN STOCK</span>':''}
+      ${out?'<span class="out-badge">SIN STOCK</span>':''}
       <div class="product-image" onclick="openQuickView(${p.id})" title="Ver más grande">
         <img src="${p.imagen||fb}" alt="${p.descripcion}" onerror="this.onerror=null;this.src='${fb}'">
       </div>
@@ -1175,16 +1169,16 @@ function renderRtech(){
       <h3>${p.descripcion}</h3>
       <div class="brand-tag">${p.marca}</div>
       <div class="code">Cód: ${p.codigo}</div>
-      <div class="stock-info ${p.stock===0||low?'low':''}">${p.stock===0?'SIN STOCK':low?`¡Solo ${p.stock}!`:`Stock: ${p.stock}`}</div>
+      <div class="stock-info ${out||low?'low':''}">${out?'SIN STOCK':low?`¡Solo ${p.stock}!`:`Stock: ${p.stock}`}</div>
       <div class="price">$ ${money(p.precio)}</div>
-      ${p.stock>0?`<div class="qty"><input id="rq${p.id}" value="1" type="number" min="1" max="${p.stock}"><button onclick="chgQ('rq${p.id}',1)">▲</button><button onclick="chgQ('rq${p.id}',-1)">▼</button></div><button class="buy" onclick="addToCartById(${p.id},'rq${p.id}')"><i class="fas fa-shopping-cart"></i> COMPRAR</button>`:`<button class="buy out" disabled>SIN STOCK</button>`}
+      ${!out?`<div class="qty"><input id="rq${p.id}" value="1" type="number" min="1" max="${p.stock}"><button onclick="chgQ('rq${p.id}',1)">▲</button><button onclick="chgQ('rq${p.id}',-1)">▼</button></div><button class="buy" onclick="addToCartById(${p.id},'rq${p.id}')"><i class="fas fa-shopping-cart"></i> COMPRAR</button>`:`<button class="buy out" disabled>SIN STOCK</button>`}
       <div class="tax">c/iva</div>
     </article>`;
   }).join('');
 }
 function addToCartById(id,qid){
   const p=ALL.find(x=>x.id===id);
-  if(!p)return;
+  if(!p||isOut(p))return;
   const qty=parseInt(document.getElementById(qid)?.value)||1;
   const ex=cart.find(i=>i.codigo===p.codigo);
   if(ex)ex.qty+=qty;else cart.push({...p,qty});
@@ -1198,7 +1192,7 @@ function openQuickView(id){
   const p=ALL.find(x=>x.id===id);
   if(!p)return;
   const fb='https://via.placeholder.com/400x300/f9f9f9/ccc?text=Sin+Imagen';
-  const low=p.stock>0&&p.stock<=5;
+  const out=isOut(p), low=isLow(p);
   const attrChips=ATTR_DEFS
     .filter(d=>d.k!=='marca'&&!isBad(p[d.k]))
     .slice(0,10)
@@ -1213,10 +1207,10 @@ function openQuickView(id){
         <h3>${p.descripcion}</h3>
         <div class="qv-brand">${p.marca}</div>
         <div class="qv-code">Código: ${p.codigo}</div>
-        <div class="qv-stock ${p.stock===0||low?'low':''}">${p.stock===0?'SIN STOCK':low?`¡Solo ${p.stock} disponibles!`:`Stock disponible: ${p.stock} unidades`}</div>
+        <div class="qv-stock ${out||low?'low':''}">${out?'SIN STOCK':low?`¡Solo ${p.stock} disponibles!`:`Stock disponible: ${p.stock} unidades`}</div>
         <div class="qv-price">$ ${money(p.precio)}</div>
         ${attrChips.length?`<div class="qv-attrs">${attrChips.join('')}</div>`:''}
-        ${p.stock>0?`
+        ${!out?`
           <div class="qty"><input id="qvQty" value="1" type="number" min="1" max="${p.stock}"><button onclick="chgQ('qvQty',1)">▲</button><button onclick="chgQ('qvQty',-1)">▼</button></div>
           <button class="buy" onclick="addFromModal(${p.id})"><i class="fas fa-shopping-cart"></i> AGREGAR AL CARRITO</button>
         `:`<button class="buy out" disabled>SIN STOCK</button>`}
@@ -1232,7 +1226,7 @@ function closeQuickView(){
 }
 function addFromModal(id){
   const p=ALL.find(x=>x.id===id);
-  if(!p)return;
+  if(!p||isOut(p))return;
   const qty=parseInt(document.getElementById('qvQty')?.value)||1;
   const ex=cart.find(i=>i.codigo===p.codigo);
   if(ex)ex.qty+=qty;else cart.push({...p,qty});
@@ -1362,7 +1356,9 @@ setInterval(()=>{slideIdx=(slideIdx+1)%4;goToSlide(slideIdx)},4500);
 // ── CART ──
 function chgQ(id,d){const x=document.getElementById(id);x.value=Math.max(1,Math.min(parseInt(x.max)||999,Number(x.value)+d));}
 function addToCart(gi){
-  const p=filtered[gi],qEl=document.getElementById(`q${gi}`),qty=parseInt(qEl?.value)||1;
+  const p=filtered[gi];
+  if(!p||isOut(p))return;
+  const qEl=document.getElementById(`q${gi}`),qty=parseInt(qEl?.value)||1;
   const ex=cart.find(i=>i.codigo===p.codigo);
   if(ex)ex.qty+=qty;else cart.push({...p,qty});
   renderCart();document.getElementById('cart').classList.add('open');document.getElementById('overlay').classList.add('active');
@@ -1400,4 +1396,3 @@ loadProducts();
 </script>
 </body>
 </html>
-
