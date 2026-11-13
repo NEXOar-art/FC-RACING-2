@@ -63,7 +63,7 @@ img{max-width:100%}
 .logo{font-weight:950;font-style:italic;font-size:30px;letter-spacing:-2px;white-space:nowrap}
 .logo span{color:var(--red)}
 
-/* ── SEARCH ─ */
+/* ── SEARCH ── */
 .search-wrapper{flex:1;position:relative}
 .search{height:44px;display:flex;border:1px solid #bbb;border-radius:3px;overflow:hidden}
 .search input{border:0;outline:0;padding:0 16px;flex:1;font-size:14px}
@@ -211,10 +211,30 @@ img{max-width:100%}
 .sidebar-sub li>a.active{color:var(--red);font-weight:700}
 .main-content{flex:1;min-width:0}
 
-/* ── PRODUCTS ── */
+/* ══════ PRODUCTS + EFECTO DE CONTORNO ══════ */
 .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:18px}
-.product{border:1px solid #e0e0e0;background:#fff;position:relative;padding:9px 12px 13px;display:flex;flex-direction:column;min-height:370px;transition:.2s;border-radius:4px}
-.product:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);border-color:#ccc}
+.product{border:1px solid #e0e0e0;background:#fff;position:relative;padding:9px 12px 13px;display:flex;flex-direction:column;min-height:370px;transition:transform .25s,box-shadow .25s,border-color .25s;border-radius:4px}
+.product:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(239,17,17,.16);border-color:var(--red)}
+/* Borde degradado animado alrededor de la tarjeta (contorno) */
+@supports ((-webkit-mask-composite:xor) or (mask-composite:exclude)){
+  .product::before{
+    content:"";position:absolute;inset:-1px;border-radius:5px;padding:1.5px;
+    background:linear-gradient(135deg,var(--red),var(--yellow),var(--red),var(--green),var(--red));
+    background-size:300% 300%;
+    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;
+    mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    mask-composite:exclude;
+    opacity:0;transition:opacity .35s;pointer-events:none;z-index:3;
+  }
+  .product:hover::before{opacity:1;animation:borderFlow 2.6s linear infinite}
+  .product:hover{border-color:transparent}
+}
+@keyframes borderFlow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
 .product-image{height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px;background:#f9f9f9;border-radius:4px;cursor:pointer;position:relative}
 .product-image img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;transition:transform .3s}
 .product-image:hover img{transform:scale(1.08)}
@@ -234,8 +254,8 @@ img{max-width:100%}
 .buy:hover{background:#12a54a}
 .buy.out{background:var(--yellow);cursor:not-allowed}
 .tax{font-size:8px;text-align:right;color:#777;margin-top:3px}
-.out-badge{position:absolute;left:0;top:0;background:var(--red);color:#fff;font-size:9px;padding:3px 8px;border-radius:0 0 8px 0;font-weight:700;z-index:2}
-.feat-badge{position:absolute;right:0;top:0;background:var(--yellow);color:#000;font-size:9px;padding:3px 8px;border-radius:0 0 0 8px;font-weight:800;z-index:2}
+.out-badge{position:absolute;left:0;top:0;background:var(--red);color:#fff;font-size:9px;padding:3px 8px;border-radius:0 0 8px 0;font-weight:700;z-index:4}
+.feat-badge{position:absolute;right:0;top:0;background:var(--yellow);color:#000;font-size:9px;padding:3px 8px;border-radius:0 0 0 8px;font-weight:800;z-index:4}
 
 /* ══════ QUICK VIEW ══════ */
 .qv-overlay{position:fixed;inset:0;background:rgba(0,0,0,.68);z-index:60;display:none;align-items:center;justify-content:center;padding:20px}
@@ -669,18 +689,18 @@ footer a:hover{color:var(--red)}
 </aside>
 
 <script>
-/* ══════════════════════════════════════════════════════
-   FC RACING — MOTOR DE BÚSQUEDA INTELIGENTE
-   DB 11112026 (4040 filas) · Taxonomía y atributos dinámicos
-   ══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   FC RACING — MOTOR INTELIGENTE MULTI-BASE DE DATOS
+   Fusiona la DB actualizada + la DB extendida (4040 filas)
+   Regla de negocio: STOCK < 2 ⇒ "SIN STOCK"
+   ══════════════════════════════════════════════════════════ */
 
-/* ── NUEVA BASE DE DATOS ACTUALIZADA 11112026 ── */
-const SHEET_URL='https://docs.google.com/spreadsheets/d/1ZdDpS40MahlGbieZq9T9ZttnW_D1oumAcxW9_FQTNBw/export?format=csv';
-
-/* ── REGLA DE STOCK: con menos de MIN_STOCK unidades → "SIN STOCK" ── */
-const MIN_STOCK = 2;
-const isOut = p => p.stock < MIN_STOCK;          // 0 o 1 → SIN STOCK
-const isLow = p => !isOut(p) && p.stock <= 5;    // 2 a 5 → stock bajo
+/* Ambas hojas se cargan en paralelo y se fusionan deduplicando por CODIGO
+   (prioridad: hoja actualizada). Taxonomía y atributos 100% dinámicos. */
+const SHEET_URLS=[
+  'https://docs.google.com/spreadsheets/d/1chAASVuqNDXJ0f76Mq8nI5JTbfFxOQebXKWV-O6OXKI/export?format=csv',
+  'https://docs.google.com/spreadsheets/d/1ZdDpS40MahlGbieZq9T9ZttnW_D1oumAcxW9_FQTNBw/export?format=csv'
+];
 
 let ALL = [];
 let filtered = [];
@@ -689,20 +709,22 @@ let currentPage = 1;
 const PER_PAGE = 24;
 const WHATSAPP = '3543546389';
 
-/* Taxonomía construida dinámicamente desde la DB: {categoria:{subcategoria:[productos]}} */
+/* REGLA DE STOCK: menor a 2 = SIN STOCK */
+const MIN_STOCK = 2;
+const isOut = p => p.stock < MIN_STOCK;
+const isLow = p => p.stock >= MIN_STOCK && p.stock <= 5;
+
 let TAXONOMY = {};
 
-/* Estado de navegación/filtros */
 let state = {
   categoria:null,
   subcategoria:null,
   producto:null,
   stockFilter:null,
   search:'',
-  attrs:{}            // filtros facetados dinámicos: {color:'NEGRO', medida:'120/80-18', ...}
+  attrs:{}
 };
 
-/* ── DEFINICIÓN DE ATRIBUTOS FILTRABLES ── */
 const ATTR_DEFS = [
   {k:'marca',          l:'Marca'},
   {k:'color',          l:'Color'},
@@ -735,7 +757,6 @@ const ATTR_DEFS = [
 const BAD_VALUES = ['','SIN DATO','N/A','NA','-'];
 const isBad = v => !v || BAD_VALUES.includes(String(v).trim().toUpperCase());
 
-/* Orden preferido de categorías (si la DB trae otras, se agregan al final) */
 const CAT_ORDER = ['ACCESORIOS MOTO','EQUIPAMIENTO RIDER','CUBIERTAS & RUEDAS','MANTENIMIENTO','PLÁSTICOS','TALLER & TRANSPORTE','CASUAL'];
 function orderedCats(list){
   return CAT_ORDER.filter(c=>list.includes(c)).concat(list.filter(c=>!CAT_ORDER.includes(c)).sort());
@@ -766,104 +787,108 @@ function parseCSV(text){
 }
 const clean = v => (v||'').trim();
 
-// ── LOAD DATA + CONSTRUCCIÓN DE TAXONOMÍA DINÁMICA ──
+/* ── PARSEO DE UNA HOJA → array de productos (sin id aún) ── */
+function parseSheet(csv){
+  const rows=parseCSV(csv);
+  if(!rows.length)return [];
+  const hdr=rows[0].map(h=>h.toUpperCase().trim());
+  const col=n=>hdr.indexOf(n);
+  const C={
+    cat:col('CATEGORIA'), sub:col('SUBCATEGORIA'), prod:col('PRODUCTO'), marca:col('MARCAS'),
+    cod:col('CODIGO'), desc:col('DESCRIPCION'), price:col('PRECIO'), stock:col('STOCK'), img:col('IMAGEN'),
+    familia:col('FAMILIA_PRODUCTO'), aplic:col('APLICACION_MODELO'), aniosAplic:col('AÑOS_APLICACION'),
+    talle:col('TALLE'), color:col('COLOR'), terreno:col('TERRENO'), posicion:col('POSICION'),
+    rodado:col('RODADO'), medida:col('MEDIDA'), tipoCubierta:col('TIPO_CUBIERTA'),
+    construccion:col('CONSTRUCCION_TUBO'), indiceCV:col('INDICE_CARGA_VELOCIDAD'),
+    pasoCadena:col('PASO_CADENA'), dientes:col('DIENTES_ESLABONES'), viscosidad:col('VISCOSIDAD'),
+    volumen:col('VOLUMEN'), ruta:col('RUTA_CATALOGO'),
+    marcaMoto:col('MARCA_MOTO_APLICACION'), modeloMotoApp:col('MODELO_MOTO_APLICACION'),
+    anioDesde:col('AÑO_DESDE'), anioHasta:col('AÑO_HASTA'), aniosDet:col('AÑOS_DETALLE'),
+    cilindrada:col('CILINDRADA_CC'), lado:col('LADO'), material:col('MATERIAL'),
+    capacidad:col('CAPACIDAD_LITROS'), tipoLubricante:col('TIPO_LUBRICANTE'), tipoFiltro:col('TIPO_FILTRO'),
+    tipoFreno:col('TIPO_FRENO'), tipoEquipaje:col('TIPO_EQUIPAJE'), publico:col('PUBLICO'),
+    tipoCasco:col('TIPO_CASCO'), uso:col('USO'), modeloAntiparra:col('MODELO_ANTIPARRA'),
+    tipoProducto:col('TIPO_PRODUCTO'), attrsRel:col('ATRIBUTOS_RELEVANTES'), valoresFiltro:col('VALORES_FILTRO'),
+    compatMarca:col('COMPAT_MARCA_MOTO'), compatModelo:col('COMPAT_MODELO_MOTO'),
+    compatDesde:col('COMPAT_AÑO_DESDE'), compatHasta:col('COMPAT_AÑO_HASTA'),
+    compat:col('COMPATIBILIDAD_MOTO'), compatClave:col('COMPAT_CLAVE_BUSQUEDA'),
+    rutaV6:col('RUTA_CATALOGO_V6')
+  };
+  const g=(v,i)=>(i>=0&&i<v.length)?clean(v[i]):'';
+  const out=[];
+  for(let i=1;i<rows.length;i++){
+    const v=rows[i];
+    if(!v||v.length<5)continue;
+    const desc=g(v,C.desc), codigo=g(v,C.cod);
+    if(!desc&&!codigo)continue;
+    const categoria=g(v,C.cat)||'SIN CATEGORÍA';
+    const subcategoria=g(v,C.sub)||g(v,C.prod)||'GENERAL';
+    const producto=g(v,C.prod)||subcategoria;
+    const p={
+      categoria, subcategoria, producto,
+      marca:g(v,C.marca), codigo, descripcion:desc,
+      precio:parsePrice(g(v,C.price)), stock:parseInt(g(v,C.stock))||0, imagen:g(v,C.img),
+      familia:g(v,C.familia), aplicacion:g(v,C.aplic), aniosAplic:g(v,C.aniosAplic),
+      talle:g(v,C.talle), color:g(v,C.color), terreno:g(v,C.terreno), posicion:g(v,C.posicion),
+      rodado:g(v,C.rodado), medida:g(v,C.medida), tipoCubierta:g(v,C.tipoCubierta),
+      construccion:g(v,C.construccion), indiceCV:g(v,C.indiceCV), pasoCadena:g(v,C.pasoCadena),
+      dientes:g(v,C.dientes), viscosidad:g(v,C.viscosidad), volumen:g(v,C.volumen),
+      rutaCatalogo:g(v,C.ruta), rutaV6:g(v,C.rutaV6),
+      marcaMoto:g(v,C.marcaMoto), modeloMotoApp:g(v,C.modeloMotoApp),
+      anioDesde:g(v,C.anioDesde), anioHasta:g(v,C.anioHasta), aniosDet:g(v,C.aniosDet),
+      cilindrada:g(v,C.cilindrada), lado:g(v,C.lado), material:g(v,C.material),
+      capacidad:g(v,C.capacidad), tipoLubricante:g(v,C.tipoLubricante), tipoFiltro:g(v,C.tipoFiltro),
+      tipoFreno:g(v,C.tipoFreno), tipoEquipaje:g(v,C.tipoEquipaje), publico:g(v,C.publico),
+      tipoCasco:g(v,C.tipoCasco), uso:g(v,C.uso), modeloAntiparra:g(v,C.modeloAntiparra),
+      tipoProducto:g(v,C.tipoProducto), attrsRel:g(v,C.attrsRel), valoresFiltro:g(v,C.valoresFiltro),
+      compatMarca:g(v,C.compatMarca), compatModelo:g(v,C.compatModelo),
+      compatDesde:g(v,C.compatDesde), compatHasta:g(v,C.compatHasta),
+      compat:g(v,C.compat), compatClave:g(v,C.compatClave)
+    };
+    p.moto = p.compatMarca || p.marcaMoto;
+    p.modeloMoto = p.compatModelo || p.modeloMotoApp;
+    p.anios = (p.anioDesde||p.compatDesde) ? `${p.anioDesde||p.compatDesde}-${p.anioHasta||p.compatHasta||''}` : (p.aniosDet||'');
+    p._idx=[
+      desc,codigo,p.marca,categoria,subcategoria,producto,p.familia,p.aplicacion,
+      p.color,p.talle,p.terreno,p.medida,p.rodado,p.tipoCubierta,p.construccion,p.indiceCV,
+      p.pasoCadena,p.dientes,p.viscosidad,p.volumen,p.capacidad,p.tipoLubricante,p.tipoFiltro,
+      p.tipoFreno,p.tipoEquipaje,p.publico,p.tipoCasco,p.uso,p.modeloAntiparra,p.posicion,p.lado,
+      p.material,p.cilindrada,p.moto,p.modeloMoto,p.anios,p.aniosDet,p.compat,p.compatClave,
+      p.tipoProducto,p.attrsRel,p.valoresFiltro,p.rutaCatalogo,p.rutaV6
+    ].join(' ').toLowerCase();
+    out.push(p);
+  }
+  return out;
+}
+
+/* ── CARGA MULTI-HOJA + FUSIÓN INTELIGENTE ── */
 async function loadProducts(){
   try{
-    const r=await fetch(SHEET_URL);
-    const csv=await r.text();
-    const rows=parseCSV(csv);
-    if(!rows.length)throw new Error('empty');
-    const hdr=rows[0].map(h=>h.toUpperCase().trim());
-    const col=n=>hdr.indexOf(n);
-
-    const C={
-      cat:col('CATEGORIA'), sub:col('SUBCATEGORIA'), prod:col('PRODUCTO'), marca:col('MARCAS'),
-      cod:col('CODIGO'), desc:col('DESCRIPCION'), price:col('PRECIO'), stock:col('STOCK'), img:col('IMAGEN'),
-      familia:col('FAMILIA_PRODUCTO'), aplic:col('APLICACION_MODELO'), aniosAplic:col('AÑOS_APLICACION'),
-      talle:col('TALLE'), color:col('COLOR'), terreno:col('TERRENO'), posicion:col('POSICION'),
-      rodado:col('RODADO'), medida:col('MEDIDA'), tipoCubierta:col('TIPO_CUBIERTA'),
-      construccion:col('CONSTRUCCION_TUBO'), indiceCV:col('INDICE_CARGA_VELOCIDAD'),
-      pasoCadena:col('PASO_CADENA'), dientes:col('DIENTES_ESLABONES'), viscosidad:col('VISCOSIDAD'),
-      volumen:col('VOLUMEN'), ruta:col('RUTA_CATALOGO'),
-      marcaMoto:col('MARCA_MOTO_APLICACION'), modeloMotoApp:col('MODELO_MOTO_APLICACION'),
-      anioDesde:col('AÑO_DESDE'), anioHasta:col('AÑO_HASTA'), aniosDet:col('AÑOS_DETALLE'),
-      cilindrada:col('CILINDRADA_CC'), lado:col('LADO'), material:col('MATERIAL'),
-      capacidad:col('CAPACIDAD_LITROS'), tipoLubricante:col('TIPO_LUBRICANTE'), tipoFiltro:col('TIPO_FILTRO'),
-      tipoFreno:col('TIPO_FRENO'), tipoEquipaje:col('TIPO_EQUIPAJE'), publico:col('PUBLICO'),
-      tipoCasco:col('TIPO_CASCO'), uso:col('USO'), modeloAntiparra:col('MODELO_ANTIPARRA'),
-      tipoProducto:col('TIPO_PRODUCTO'), attrsRel:col('ATRIBUTOS_RELEVANTES'), valoresFiltro:col('VALORES_FILTRO'),
-      compatMarca:col('COMPAT_MARCA_MOTO'), compatModelo:col('COMPAT_MODELO_MOTO'),
-      compatDesde:col('COMPAT_AÑO_DESDE'), compatHasta:col('COMPAT_AÑO_HASTA'),
-      compat:col('COMPATIBILIDAD_MOTO'), compatClave:col('COMPAT_CLAVE_BUSQUEDA'),
-      rutaV6:col('RUTA_CATALOGO_V6')
-    };
-    const g=(v,i)=>(i>=0&&i<v.length)?clean(v[i]):'';
-
+    const texts=await Promise.all(SHEET_URLS.map(u=>fetch(u).then(r=>{if(!r.ok)throw new Error('http '+r.status);return r.text();})));
+    const seen=new Set();
     ALL=[];
+    texts.forEach(csv=>{
+      parseSheet(csv).forEach(p=>{
+        const key=(p.codigo||p.descripcion+'|'+p.marca).toUpperCase();
+        if(seen.has(key))return;   // dedupe: gana la hoja actualizada (primera)
+        seen.add(key);
+        p.id=ALL.length;
+        ALL.push(p);
+      });
+    });
+    if(!ALL.length)throw new Error('empty');
+
+    /* Taxonomía dinámica sobre el catálogo fusionado */
     const taxTmp={};
-    for(let i=1;i<rows.length;i++){
-      const v=rows[i];
-      if(!v||v.length<5)continue;
-      const desc=g(v,C.desc), codigo=g(v,C.cod);
-      if(!desc&&!codigo)continue;
-
-      const categoria=g(v,C.cat)||'SIN CATEGORÍA';
-      const subcategoria=g(v,C.sub)||g(v,C.prod)||'GENERAL';
-      const producto=g(v,C.prod)||subcategoria;
-
-      const p={
-        id:0,
-        categoria, subcategoria, producto,
-        marca:g(v,C.marca), codigo, descripcion:desc,
-        precio:parsePrice(g(v,C.price)), stock:parseInt(g(v,C.stock))||0, imagen:g(v,C.img),
-        familia:g(v,C.familia), aplicacion:g(v,C.aplic), aniosAplic:g(v,C.aniosAplic),
-        talle:g(v,C.talle), color:g(v,C.color), terreno:g(v,C.terreno), posicion:g(v,C.posicion),
-        rodado:g(v,C.rodado), medida:g(v,C.medida), tipoCubierta:g(v,C.tipoCubierta),
-        construccion:g(v,C.construccion), indiceCV:g(v,C.indiceCV), pasoCadena:g(v,C.pasoCadena),
-        dientes:g(v,C.dientes), viscosidad:g(v,C.viscosidad), volumen:g(v,C.volumen),
-        rutaCatalogo:g(v,C.ruta), rutaV6:g(v,C.rutaV6),
-        marcaMoto:g(v,C.marcaMoto), modeloMotoApp:g(v,C.modeloMotoApp),
-        anioDesde:g(v,C.anioDesde), anioHasta:g(v,C.anioHasta), aniosDet:g(v,C.aniosDet),
-        cilindrada:g(v,C.cilindrada), lado:g(v,C.lado), material:g(v,C.material),
-        capacidad:g(v,C.capacidad), tipoLubricante:g(v,C.tipoLubricante), tipoFiltro:g(v,C.tipoFiltro),
-        tipoFreno:g(v,C.tipoFreno), tipoEquipaje:g(v,C.tipoEquipaje), publico:g(v,C.publico),
-        tipoCasco:g(v,C.tipoCasco), uso:g(v,C.uso), modeloAntiparra:g(v,C.modeloAntiparra),
-        tipoProducto:g(v,C.tipoProducto), attrsRel:g(v,C.attrsRel), valoresFiltro:g(v,C.valoresFiltro),
-        compatMarca:g(v,C.compatMarca), compatModelo:g(v,C.compatModelo),
-        compatDesde:g(v,C.compatDesde), compatHasta:g(v,C.compatHasta),
-        compat:g(v,C.compat), compatClave:g(v,C.compatClave)
-      };
-      /* Campos derivados para filtros y búsqueda */
-      p.moto = p.compatMarca || p.marcaMoto;
-      p.modeloMoto = p.compatModelo || p.modeloMotoApp;
-      p.anios = (p.anioDesde||p.compatDesde) ? `${p.anioDesde||p.compatDesde}-${p.anioHasta||p.compatHasta||''}` : (p.aniosDet||'');
-
-      /* Índice de búsqueda: TODO (texto + códigos + taxonomía + atributos + compat + años) */
-      p._idx=[
-        desc,codigo,p.marca,categoria,subcategoria,producto,p.familia,p.aplicacion,
-        p.color,p.talle,p.terreno,p.medida,p.rodado,p.tipoCubierta,p.construccion,p.indiceCV,
-        p.pasoCadena,p.dientes,p.viscosidad,p.volumen,p.capacidad,p.tipoLubricante,p.tipoFiltro,
-        p.tipoFreno,p.tipoEquipaje,p.publico,p.tipoCasco,p.uso,p.modeloAntiparra,p.posicion,p.lado,
-        p.material,p.cilindrada,p.moto,p.modeloMoto,p.anios,p.aniosDet,p.compat,p.compatClave,
-        p.tipoProducto,p.attrsRel,p.valoresFiltro,p.rutaCatalogo,p.rutaV6
-      ].join(' ').toLowerCase();
-
-      p.id=ALL.length;
-      ALL.push(p);
-
-      /* Taxonomía dinámica */
-      if(!taxTmp[categoria])taxTmp[categoria]={};
-      if(!taxTmp[categoria][subcategoria])taxTmp[categoria][subcategoria]=new Set();
-      if(producto&&producto!==subcategoria)taxTmp[categoria][subcategoria].add(producto);
-    }
-
-    /* Reordenar taxonomía según orden preferido y convertir Sets→arrays */
+    ALL.forEach(p=>{
+      if(!taxTmp[p.categoria])taxTmp[p.categoria]={};
+      if(!taxTmp[p.categoria][p.subcategoria])taxTmp[p.categoria][p.subcategoria]=new Set();
+      if(p.producto&&p.producto!==p.subcategoria)taxTmp[p.categoria][p.subcategoria].add(p.producto);
+    });
     TAXONOMY={};
     orderedCats(Object.keys(taxTmp)).forEach(cat=>{
       TAXONOMY[cat]={};
-      Object.keys(taxTmp[cat]).sort().forEach(sub=>{
-        TAXONOMY[cat][sub]=[...taxTmp[cat][sub]];
-      });
+      Object.keys(taxTmp[cat]).sort().forEach(sub=>{TAXONOMY[cat][sub]=[...taxTmp[cat][sub]];});
     });
 
     filtered=[...ALL];
@@ -878,7 +903,7 @@ async function loadProducts(){
   }
 }
 
-/* ── NAV dinámico desde la DB ── */
+/* ── NAV dinámico ── */
 function buildNav(){
   const cats=orderedCats(Object.keys(TAXONOMY));
   document.getElementById('navMenu').innerHTML=
@@ -887,7 +912,7 @@ function buildNav(){
   updateNav();
 }
 
-/* ── SIDEBAR (PC + drawer móvil) con taxonomía dinámica ── */
+/* ── SIDEBAR (PC + drawer móvil) ── */
 function buildSidebar(){
   let html='<div class="sidebar-section"><div class="sidebar-title">Categorías</div><ul class="sidebar-cat">';
   const catCounts={};
@@ -971,7 +996,7 @@ function toggleSidebarProd(cat,sub,prod,e){
   currentPage=1;buildSidebar();applyFilters();updateNav();
 }
 
-// ── NAV ─
+// ── NAV ──
 function navFilter(cat,e){
   e&&e.preventDefault();
   state={categoria:cat,subcategoria:null,producto:null,stockFilter:null,search:'',attrs:{}};
@@ -987,7 +1012,7 @@ function updateNav(){
   });
 }
 
-/* ── MATCH DE ATRIBUTOS (soporta multi-valor "AZUL, GRIS") ── */
+/* ── MATCH DE ATRIBUTOS ── */
 function matchAttr(p,key,val){
   const raw=String(p[key]||'').toUpperCase().trim();
   const v=String(val).toUpperCase().trim();
@@ -998,7 +1023,7 @@ function matchAttr(p,key,val){
   return raw===v||raw.includes(v);
 }
 
-// ── APPLY FILTERS (taxonomía + búsqueda + atributos facetados + stock con regla MIN_STOCK) ──
+/* ── APPLY FILTERS (con regla STOCK<2) ── */
 function applyFilters(){
   filtered=ALL.filter(p=>{
     if(state.search){
@@ -1011,10 +1036,10 @@ function applyFilters(){
     for(const [k,v] of Object.entries(state.attrs)){
       if(!matchAttr(p,k,v))return false;
     }
-    if(state.stockFilter==='in'&&!isOut(p)===false)return false;   // "En stock" = stock >= 2
+    if(state.stockFilter==='in'&&!isOut(p)===false)return false;
     if(state.stockFilter==='in'&&isOut(p))return false;
-    if(state.stockFilter==='low'&&!isLow(p))return false;          // "Stock bajo" = 2 a 5
-    if(state.stockFilter==='out'&&!isOut(p))return false;          // "Sin stock" = stock < 2
+    if(state.stockFilter==='low'&&!isLow(p))return false;
+    if(state.stockFilter==='out'&&!isOut(p))return false;
     return true;
   });
   buildSmartFilters();renderBreadcrumb();renderTitle();renderProducts();renderPagination();
@@ -1047,12 +1072,11 @@ function buildSmartFilters(){
     fHTML+=buildFG(f.def.l,f.def.k,f.counts,active);
   });
 
-  /* Disponibilidad siempre visible (coherente con regla MIN_STOCK) */
   fHTML+=`<div class="sf-group"><button class="sf-btn ${state.stockFilter?'active':''}" onclick="togglePanel(this)">Disponibilidad <i class="fas fa-chevron-down"></i></button><div class="sf-panel">
     <div class="sf-option ${!state.stockFilter?'selected':''}" onclick="setFilter('stockFilter',null)">Todos</div>
-    <div class="sf-option ${state.stockFilter==='in'?'selected':''}" onclick="setFilter('stockFilter','in')">En stock (≥${MIN_STOCK})</div>
-    <div class="sf-option ${state.stockFilter==='low'?'selected':''}" onclick="setFilter('stockFilter','low')">Stock bajo (${MIN_STOCK}-5)</div>
-    <div class="sf-option ${state.stockFilter==='out'?'selected':''}" onclick="setFilter('stockFilter','out')">Sin stock (&lt;${MIN_STOCK})</div>
+    <div class="sf-option ${state.stockFilter==='in'?'selected':''}" onclick="setFilter('stockFilter','in')">En stock</div>
+    <div class="sf-option ${state.stockFilter==='low'?'selected':''}" onclick="setFilter('stockFilter','low')">Stock bajo (2-5)</div>
+    <div class="sf-option ${state.stockFilter==='out'?'selected':''}" onclick="setFilter('stockFilter','out')">Sin stock</div>
   </div></div>`;
 
   const hasAttrs=Object.keys(state.attrs).length>0;
@@ -1062,7 +1086,7 @@ function buildSmartFilters(){
     const def=ATTR_DEFS.find(d=>d.k===k);
     tHTML+=mkTag(def?def.l:k,v,k);
   });
-  if(state.stockFilter)tHTML+=mkTag('Stock',state.stockFilter==='in'?`En stock (≥${MIN_STOCK})`:state.stockFilter==='low'?`Bajo (${MIN_STOCK}-5)`:`Sin stock (<${MIN_STOCK})`,'stockFilter');
+  if(state.stockFilter)tHTML+=mkTag('Stock',state.stockFilter==='in'?'En stock':state.stockFilter==='low'?'Bajo':'Sin stock','stockFilter');
 
   container.innerHTML=fHTML;
   tagsContainer.innerHTML=tHTML;
@@ -1120,14 +1144,14 @@ function renderTitle(){
   cnt.textContent=`${filtered.length} producto${filtered.length!==1?'s':''}`;
 }
 
-// ── RENDER PRODUCTS (regla SIN STOCK: stock < 2) ──
+/* ── RENDER PRODUCTS (STOCK<2 ⇒ SIN STOCK) ── */
 function renderProducts(){
   const c=document.getElementById('products');
   if(!filtered.length){c.innerHTML=`<div class="no-results"><i class="fas fa-search"></i><p>No se encontraron productos.</p><p style="font-size:14px">Probá con otros términos o quitá filtros.</p></div>`;return;}
   const start=(currentPage-1)*PER_PAGE,page=filtered.slice(start,start+PER_PAGE);
   const fb='https://via.placeholder.com/200x150/f9f9f9/ccc?text=Sin+Imagen';
   c.innerHTML=page.map((p,idx)=>{
-    const gi=start+idx, out=isOut(p), low=isLow(p);
+    const gi=start+idx,out=isOut(p),low=isLow(p);
     const stxt=out?'SIN STOCK':low?`¡Solo ${p.stock}!`:`Stock: ${p.stock}`;
     return `<article class="product">
       ${out?'<span class="out-badge">SIN STOCK</span>':''}
@@ -1146,7 +1170,7 @@ function renderProducts(){
   }).join('');
 }
 
-// ── DESTACADOS RTECH (misma regla de stock) ──
+/* ── DESTACADOS RTECH (misma regla de stock) ── */
 function renderRtech(){
   const grid=document.getElementById('rtechGrid');
   const cnt=document.getElementById('rtechCount');
@@ -1158,7 +1182,7 @@ function renderRtech(){
   }
   const fb='https://via.placeholder.com/200x150/f9f9f9/ccc?text=RTECH';
   grid.innerHTML=list.map(p=>{
-    const out=isOut(p), low=isLow(p);
+    const out=isOut(p),low=isLow(p);
     return `<article class="product">
       <span class="feat-badge">RTECH DESTACADO</span>
       ${out?'<span class="out-badge">SIN STOCK</span>':''}
@@ -1187,12 +1211,12 @@ function addToCartById(id,qid){
   document.getElementById('overlay').classList.add('active');
 }
 
-// ══════ QUICK VIEW con atributos completos de la DB ══════
+/* ══════ QUICK VIEW (regla de stock aplicada) ══════ */
 function openQuickView(id){
   const p=ALL.find(x=>x.id===id);
   if(!p)return;
   const fb='https://via.placeholder.com/400x300/f9f9f9/ccc?text=Sin+Imagen';
-  const out=isOut(p), low=isLow(p);
+  const out=isOut(p),low=isLow(p);
   const attrChips=ATTR_DEFS
     .filter(d=>d.k!=='marca'&&!isBad(p[d.k]))
     .slice(0,10)
@@ -1256,7 +1280,7 @@ function renderPagination(){
 }
 function goPage(p){currentPage=p;renderProducts();renderPagination();window.scrollTo({top:document.querySelector('.main-layout').offsetTop-20,behavior:'smooth'});}
 
-// ── SMART SEARCH (sugerencias en vivo) ──
+// ── SMART SEARCH ──
 const searchInput=document.getElementById('searchInput');
 const searchDrop=document.getElementById('searchDropdown');
 let searchTimer=null;
@@ -1323,7 +1347,7 @@ function buildCategoryGrid(){
   }).join('');
 }
 
-// ── MARQUESINA: duplicar grupo para loop infinito ──
+// ── MARQUESINA ──
 (function initMarquee(){
   const track=document.getElementById('brandsTrack');
   const group=document.getElementById('brandsGroup');
@@ -1333,7 +1357,7 @@ function buildCategoryGrid(){
   track.appendChild(clone);
 })();
 
-// ══════ VIDEO PROMO: autoplay al entrar en viewport ══════
+// ══════ VIDEO PROMO ══════
 (function initVideo(){
   const video=document.getElementById('promoVideo');
   if(!video)return;
