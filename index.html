@@ -63,7 +63,7 @@ img{max-width:100%}
 .logo{font-weight:950;font-style:italic;font-size:30px;letter-spacing:-2px;white-space:nowrap}
 .logo span{color:var(--red)}
 
-/* ── SEARCH ── */
+/* ── SEARCH ─ */
 .search-wrapper{flex:1;position:relative}
 .search{height:44px;display:flex;border:1px solid #bbb;border-radius:3px;overflow:hidden}
 .search input{border:0;outline:0;padding:0 16px;flex:1;font-size:14px}
@@ -150,6 +150,8 @@ img{max-width:100%}
 .section-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:15px}
 .section-title h2{font-size:22px;font-style:italic;font-weight:950}
 .section-title .count{font-size:13px;color:var(--muted)}
+.more{background:var(--red);color:#fff;padding:10px 18px;font-weight:900;font-style:italic;border:0;cursor:pointer;border-radius:4px;transition:.25s;font-size:12px}
+.more:hover{background:#d00;transform:translateY(-2px);box-shadow:0 6px 16px rgba(239,17,17,.35)}
 
 /* ══════ BOTÓN CATEGORÍAS (SOLO MÓVIL/TABLET) ══════ */
 .mobile-cats-btn{display:none;align-items:center;justify-content:space-between;gap:10px;width:100%;margin-bottom:14px;padding:13px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:13px;font-weight:800;cursor:pointer;transition:.2s;color:var(--text)}
@@ -215,7 +217,6 @@ img{max-width:100%}
 .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:18px}
 .product{border:1px solid #e0e0e0;background:#fff;position:relative;padding:9px 12px 13px;display:flex;flex-direction:column;min-height:370px;transition:transform .25s,box-shadow .25s,border-color .25s;border-radius:4px}
 .product:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(239,17,17,.16);border-color:var(--red)}
-/* Borde degradado animado alrededor de la tarjeta (contorno) */
 @supports ((-webkit-mask-composite:xor) or (mask-composite:exclude)){
   .product::before{
     content:"";position:absolute;inset:-1px;border-radius:5px;padding:1.5px;
@@ -305,6 +306,8 @@ img{max-width:100%}
   100%{background-position:-220% center}
 }
 .rtech-wrap{max-width:1200px;margin:auto;padding:0 12px}
+.dest-sub{margin-top:42px}
+.dest-cta{text-align:center;margin:26px 0 0}
 
 /* ══════ SECCIÓN MAPA / UBICACIÓN ══════ */
 .map-section{margin-top:50px;background:#0d0d0d;padding:48px 20px;color:#fff}
@@ -426,6 +429,7 @@ footer a:hover{color:var(--red)}
   .qv-info{padding:20px 18px 18px}
   .qv-info h3{font-size:14px}
   .qv-price{font-size:22px}
+  .section-title h2{font-size:18px}
 }
 @media(max-width:400px){
   .products{grid-template-columns:1fr 1fr;gap:8px}
@@ -558,16 +562,31 @@ footer a:hover{color:var(--red)}
   </div>
 </section>
 
-<!-- ══════ DESTACADOS RTECH ══════ -->
+<!-- ══════ DESTACADOS: PLÁSTICOS RTECH + CUBIERTAS ══════ -->
 <div class="divider" id="liquidacion">&gt;&gt;&gt; &nbsp; <span class="shine">DESTACADOS</span> &nbsp; &lt;&lt;&lt;</div>
 <section class="rtech-wrap">
+
   <div class="section-title">
-    <h2>DESTACADOS RTECH</h2>
+    <h2>PLÁSTICOS RTECH</h2>
     <span class="count" id="rtechCount"></span>
   </div>
   <div class="products" id="rtechGrid">
-    <div class="loading"><i class="fas fa-spinner"></i>Cargando destacados RTECH...</div>
+    <div class="loading"><i class="fas fa-spinner"></i>Cargando plásticos RTECH...</div>
   </div>
+
+  <div class="dest-sub">
+    <div class="section-title">
+      <h2>CUBIERTAS DESTACADAS</h2>
+      <span class="count" id="cubCount"></span>
+    </div>
+    <div class="products" id="cubGrid">
+      <div class="loading"><i class="fas fa-spinner"></i>Cargando cubiertas...</div>
+    </div>
+    <div class="dest-cta">
+      <button class="more" onclick="navFilter('CUBIERTAS & RUEDAS',event)"><i class="fas fa-circle-notch"></i> VER CATEGORÍA COMPLETA DE CUBIERTAS & RUEDAS</button>
+    </div>
+  </div>
+
 </section>
 
 <!-- ══════ CATEGORIES ══════ -->
@@ -691,12 +710,11 @@ footer a:hover{color:var(--red)}
 <script>
 /* ══════════════════════════════════════════════════════════
    FC RACING — MOTOR INTELIGENTE MULTI-BASE DE DATOS
-   Fusiona la DB actualizada + la DB extendida (4040 filas)
-   Regla de negocio: STOCK < 2 ⇒ "SIN STOCK"
+   Fusiona DB actualizada + DB extendida (4040 filas)
+   Regla: STOCK < 2 ⇒ "SIN STOCK"
+   Destacados: PLÁSTICOS RTECH + CUBIERTAS
    ══════════════════════════════════════════════════════════ */
 
-/* Ambas hojas se cargan en paralelo y se fusionan deduplicando por CODIGO
-   (prioridad: hoja actualizada). Taxonomía y atributos 100% dinámicos. */
 const SHEET_URLS=[
   'https://docs.google.com/spreadsheets/d/1chAASVuqNDXJ0f76Mq8nI5JTbfFxOQebXKWV-O6OXKI/export?format=csv',
   'https://docs.google.com/spreadsheets/d/1ZdDpS40MahlGbieZq9T9ZttnW_D1oumAcxW9_FQTNBw/export?format=csv'
@@ -708,8 +726,8 @@ let cart = [];
 let currentPage = 1;
 const PER_PAGE = 24;
 const WHATSAPP = '3543546389';
+const CUB_DESTACADAS_MAX = 24;   /* vitrina de cubiertas en portada */
 
-/* REGLA DE STOCK: menor a 2 = SIN STOCK */
 const MIN_STOCK = 2;
 const isOut = p => p.stock < MIN_STOCK;
 const isLow = p => p.stock >= MIN_STOCK && p.stock <= 5;
@@ -787,7 +805,7 @@ function parseCSV(text){
 }
 const clean = v => (v||'').trim();
 
-/* ── PARSEO DE UNA HOJA → array de productos (sin id aún) ── */
+/* ── PARSEO DE HOJA ── */
 function parseSheet(csv){
   const rows=parseCSV(csv);
   if(!rows.length)return [];
@@ -861,7 +879,7 @@ function parseSheet(csv){
   return out;
 }
 
-/* ── CARGA MULTI-HOJA + FUSIÓN INTELIGENTE ── */
+/* ── CARGA MULTI-HOJA + FUSIÓN ── */
 async function loadProducts(){
   try{
     const texts=await Promise.all(SHEET_URLS.map(u=>fetch(u).then(r=>{if(!r.ok)throw new Error('http '+r.status);return r.text();})));
@@ -870,7 +888,7 @@ async function loadProducts(){
     texts.forEach(csv=>{
       parseSheet(csv).forEach(p=>{
         const key=(p.codigo||p.descripcion+'|'+p.marca).toUpperCase();
-        if(seen.has(key))return;   // dedupe: gana la hoja actualizada (primera)
+        if(seen.has(key))return;
         seen.add(key);
         p.id=ALL.length;
         ALL.push(p);
@@ -878,7 +896,6 @@ async function loadProducts(){
     });
     if(!ALL.length)throw new Error('empty');
 
-    /* Taxonomía dinámica sobre el catálogo fusionado */
     const taxTmp={};
     ALL.forEach(p=>{
       if(!taxTmp[p.categoria])taxTmp[p.categoria]={};
@@ -897,6 +914,7 @@ async function loadProducts(){
     buildCategoryGrid();
     applyFilters();
     renderRtech();
+    renderCubiertas();
   }catch(e){
     console.error(e);
     document.getElementById('products').innerHTML='<div class="no-results"><i class="fas fa-exclamation-triangle"></i>Error al cargar la base de datos. Recargá la página.</div>';
@@ -912,7 +930,7 @@ function buildNav(){
   updateNav();
 }
 
-/* ── SIDEBAR (PC + drawer móvil) ── */
+/* ── SIDEBAR ── */
 function buildSidebar(){
   let html='<div class="sidebar-section"><div class="sidebar-title">Categorías</div><ul class="sidebar-cat">';
   const catCounts={};
@@ -996,7 +1014,7 @@ function toggleSidebarProd(cat,sub,prod,e){
   currentPage=1;buildSidebar();applyFilters();updateNav();
 }
 
-// ── NAV ──
+// ── NAV ─
 function navFilter(cat,e){
   e&&e.preventDefault();
   state={categoria:cat,subcategoria:null,producto:null,stockFilter:null,search:'',attrs:{}};
@@ -1023,7 +1041,7 @@ function matchAttr(p,key,val){
   return raw===v||raw.includes(v);
 }
 
-/* ── APPLY FILTERS (con regla STOCK<2) ── */
+// ── APPLY FILTERS ──
 function applyFilters(){
   filtered=ALL.filter(p=>{
     if(state.search){
@@ -1036,7 +1054,6 @@ function applyFilters(){
     for(const [k,v] of Object.entries(state.attrs)){
       if(!matchAttr(p,k,v))return false;
     }
-    if(state.stockFilter==='in'&&!isOut(p)===false)return false;
     if(state.stockFilter==='in'&&isOut(p))return false;
     if(state.stockFilter==='low'&&!isLow(p))return false;
     if(state.stockFilter==='out'&&!isOut(p))return false;
@@ -1045,7 +1062,7 @@ function applyFilters(){
   buildSmartFilters();renderBreadcrumb();renderTitle();renderProducts();renderPagination();
 }
 
-/* ── FILTROS FACETADOS CONTEXTUALES ── */
+/* ── FILTROS FACETADOS ── */
 function buildSmartFilters(){
   const container=document.getElementById('smartFilters');
   const tagsContainer=document.getElementById('activeTags');
@@ -1144,33 +1161,37 @@ function renderTitle(){
   cnt.textContent=`${filtered.length} producto${filtered.length!==1?'s':''}`;
 }
 
-/* ── RENDER PRODUCTS (STOCK<2 ⇒ SIN STOCK) ── */
+/* ══════ TARJETA UNIFICADA (misma visual en grid y destacados) ══════ */
+function cardHTML(p,prefix,badge){
+  const out=isOut(p),low=isLow(p);
+  const qid=`q${prefix}${p.id}`;
+  const fb='https://via.placeholder.com/200x150/f9f9f9/ccc?text=Sin+Imagen';
+  return `<article class="product">
+    ${badge?`<span class="feat-badge">${badge}</span>`:''}
+    ${out?'<span class="out-badge">SIN STOCK</span>':''}
+    <div class="product-image" onclick="openQuickView(${p.id})" title="Ver más grande">
+      <img src="${p.imagen||fb}" alt="${p.descripcion}" onerror="this.onerror=null;this.src='${fb}'">
+    </div>
+    <div class="product-category">${p.categoria} › ${p.subcategoria}</div>
+    <h3>${p.descripcion}</h3>
+    <div class="brand-tag">${p.marca}</div>
+    <div class="code">Cód: ${p.codigo}</div>
+    <div class="stock-info ${out||low?'low':''}">${out?'SIN STOCK':low?`¡Solo ${p.stock}!`:`Stock: ${p.stock}`}</div>
+    <div class="price">$ ${money(p.precio)}</div>
+    ${!out?`<div class="qty"><input id="${qid}" value="1" type="number" min="1" max="${p.stock}"><button onclick="chgQ('${qid}',1)">▲</button><button onclick="chgQ('${qid}',-1)">▼</button></div><button class="buy" onclick="addToCartById(${p.id},'${qid}')"><i class="fas fa-shopping-cart"></i> COMPRAR</button>`:`<button class="buy out" disabled>SIN STOCK</button>`}
+    <div class="tax">c/iva</div>
+  </article>`;
+}
+
+// ── RENDER PRODUCTS (grid principal) ──
 function renderProducts(){
   const c=document.getElementById('products');
   if(!filtered.length){c.innerHTML=`<div class="no-results"><i class="fas fa-search"></i><p>No se encontraron productos.</p><p style="font-size:14px">Probá con otros términos o quitá filtros.</p></div>`;return;}
   const start=(currentPage-1)*PER_PAGE,page=filtered.slice(start,start+PER_PAGE);
-  const fb='https://via.placeholder.com/200x150/f9f9f9/ccc?text=Sin+Imagen';
-  c.innerHTML=page.map((p,idx)=>{
-    const gi=start+idx,out=isOut(p),low=isLow(p);
-    const stxt=out?'SIN STOCK':low?`¡Solo ${p.stock}!`:`Stock: ${p.stock}`;
-    return `<article class="product">
-      ${out?'<span class="out-badge">SIN STOCK</span>':''}
-      <div class="product-image" onclick="openQuickView(${p.id})" title="Ver más grande">
-        <img src="${p.imagen||fb}" alt="${p.descripcion}" onerror="this.onerror=null;this.src='${fb}'">
-      </div>
-      <div class="product-category">${p.categoria} › ${p.subcategoria}</div>
-      <h3>${p.descripcion}</h3>
-      <div class="brand-tag">${p.marca}</div>
-      <div class="code">Cód: ${p.codigo}</div>
-      <div class="stock-info ${out||low?'low':''}">${stxt}</div>
-      <div class="price">$ ${money(p.precio)}</div>
-      ${!out?`<div class="qty"><input id="q${gi}" value="1" type="number" min="1" max="${p.stock}"><button onclick="chgQ('q${gi}',1)">▲</button><button onclick="chgQ('q${gi}',-1)">▼</button></div><button class="buy" onclick="addToCart(${gi})"><i class="fas fa-shopping-cart"></i> COMPRAR</button>`:`<button class="buy out" disabled>SIN STOCK</button>`}
-      <div class="tax">c/iva</div>
-    </article>`;
-  }).join('');
+  c.innerHTML=page.map(p=>cardHTML(p,'m',null)).join('');
 }
 
-/* ── DESTACADOS RTECH (misma regla de stock) ── */
+/* ── DESTACADOS 1: PLÁSTICOS RTECH ── */
 function renderRtech(){
   const grid=document.getElementById('rtechGrid');
   const cnt=document.getElementById('rtechCount');
@@ -1180,26 +1201,30 @@ function renderRtech(){
     grid.innerHTML='<div class="no-results" style="grid-column:1/-1"><i class="fas fa-star"></i><p>Próximamente productos RTECH destacados.</p></div>';
     return;
   }
-  const fb='https://via.placeholder.com/200x150/f9f9f9/ccc?text=RTECH';
-  grid.innerHTML=list.map(p=>{
-    const out=isOut(p),low=isLow(p);
-    return `<article class="product">
-      <span class="feat-badge">RTECH DESTACADO</span>
-      ${out?'<span class="out-badge">SIN STOCK</span>':''}
-      <div class="product-image" onclick="openQuickView(${p.id})" title="Ver más grande">
-        <img src="${p.imagen||fb}" alt="${p.descripcion}" onerror="this.onerror=null;this.src='${fb}'">
-      </div>
-      <div class="product-category">${p.categoria} › ${p.subcategoria}</div>
-      <h3>${p.descripcion}</h3>
-      <div class="brand-tag">${p.marca}</div>
-      <div class="code">Cód: ${p.codigo}</div>
-      <div class="stock-info ${out||low?'low':''}">${out?'SIN STOCK':low?`¡Solo ${p.stock}!`:`Stock: ${p.stock}`}</div>
-      <div class="price">$ ${money(p.precio)}</div>
-      ${!out?`<div class="qty"><input id="rq${p.id}" value="1" type="number" min="1" max="${p.stock}"><button onclick="chgQ('rq${p.id}',1)">▲</button><button onclick="chgQ('rq${p.id}',-1)">▼</button></div><button class="buy" onclick="addToCartById(${p.id},'rq${p.id}')"><i class="fas fa-shopping-cart"></i> COMPRAR</button>`:`<button class="buy out" disabled>SIN STOCK</button>`}
-      <div class="tax">c/iva</div>
-    </article>`;
-  }).join('');
+  grid.innerHTML=list.map(p=>cardHTML(p,'r','RTECH DESTACADO')).join('');
 }
+
+/* ── DESTACADOS 2: SOLO CUBIERTAS (réplica en portada) ── */
+function isCubierta(p){
+  if(p.categoria!=='CUBIERTAS & RUEDAS')return false;
+  const s=(p.subcategoria+' '+p.producto+' '+p.familia+' '+p.tipoProducto+' '+p.descripcion).toUpperCase();
+  /* Excluye llantas, cámaras, mousse y accesorios de rueda: SOLO CUBIERTAS */
+  if(/CAMARA|CÁMARA|MOUSSE|AROS|RAYOS|NIPLES|REPARAC|LLANTA|BUJES|BALANCER/.test(s))return false;
+  return s.includes('CUBIERTA') || (p.tipoCubierta||'')!=='' || ((p.terreno||'')!==''&&(p.medida||'')!=='');
+}
+function renderCubiertas(){
+  const grid=document.getElementById('cubGrid');
+  const cnt=document.getElementById('cubCount');
+  const list=ALL.filter(isCubierta);
+  const show=list.slice(0,CUB_DESTACADAS_MAX);
+  cnt.textContent=list.length?`${list.length} cubiertas en catálogo · mostrando ${show.length}`:'';
+  if(!list.length){
+    grid.innerHTML='<div class="no-results" style="grid-column:1/-1"><i class="fas fa-circle-notch"></i><p>Próximamente cubiertas destacadas.</p></div>';
+    return;
+  }
+  grid.innerHTML=show.map(p=>cardHTML(p,'c','CUBIERTA DESTACADA')).join('');
+}
+
 function addToCartById(id,qid){
   const p=ALL.find(x=>x.id===id);
   if(!p||isOut(p))return;
@@ -1211,7 +1236,7 @@ function addToCartById(id,qid){
   document.getElementById('overlay').classList.add('active');
 }
 
-/* ══════ QUICK VIEW (regla de stock aplicada) ══════ */
+/* ══════ QUICK VIEW ══════ */
 function openQuickView(id){
   const p=ALL.find(x=>x.id===id);
   if(!p)return;
@@ -1414,7 +1439,7 @@ function completePurchase(){
   document.getElementById('checkoutForm').classList.remove('active');document.getElementById('checkoutBtn').style.display='block';
 }
 
-// ── INIT ─
+// ── INIT ──
 renderCart();
 loadProducts();
 </script>
